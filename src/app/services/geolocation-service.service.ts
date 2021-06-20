@@ -16,6 +16,7 @@ export class GeolocationService {
     timeout: 5000,
     maximumAge: 0,
   };
+  public randomizedLocations: LngLat[];
 
   constructor() {}
   public askPermission() {
@@ -55,12 +56,8 @@ export class GeolocationService {
     });
   }
 
-  public getRandomLocations(
-    latLng: ILocation,
-    count,
-    range
-  ): LngLat[] {
-    return new Array(count).fill(0).map((value) => {
+  randomizeLocations(latLng: ILocation, count, range) {
+    this.randomizedLocations = new Array(count).fill(0).map((value) => {
       return new LngLat(
         Math.random() * (latLng.lng + range - (latLng.lng - range)) +
           (latLng.lng - range),
@@ -69,4 +66,11 @@ export class GeolocationService {
       );
     });
   }
+  // public getRandomLocations(
+  //   latLng: ILocation,
+  //   count,
+  //   range
+  // ): LngLat[] {
+
+  // }
 }

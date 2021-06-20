@@ -22,6 +22,8 @@
     "@angular/platform-browser-dynamic": "~11.2.9",
     "@angular/router": "~11.2.9",
     "@types/mapbox-gl": "^2.3.0",
+    "avatar-generator": "^2.0.4",
+    "generate-avatar": "^1.4.10",
     "mapbox-gl": "^2.3.0",
     "ngx-mapbox-gl": "^6.0.4",
     "rxjs": "~6.6.0",

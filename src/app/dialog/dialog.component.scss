@@ -1,0 +1,66 @@
+.header {
+    padding: 24px 24px 16px 24px;
+    border-bottom: 1px solid rgb(175, 175, 175);
+    display: flex;
+    place-content: space-between;
+    flex-direction: row;
+    align-items: center;
+    .mat-h2 {
+        margin: 0;
+    }
+}
+::ng-deep .mat-dialog-container {
+    padding: 0;
+    border-radius: 24px;
+}
+::ng-deep .cdk-overlay-pane {
+    min-width: 80%;
+}
+.wallet {
+    padding: 16px 24px 16px 24px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.buttons {
+    display: flex;
+    flex-direction: row;
+    padding: 0px 24px 16px 24px;
+    place-content: space-between;
+    align-items: center;
+    button {
+        border-radius: 24px;
+        width: 49%;
+        padding-left: 4px;
+        padding-right: 4px;
+        mat-icon {
+            width: 16px;
+            height: 16px;
+            font-size: 16px;
+            margin-left: 2px;
+        }
+        span {
+            font-size: 13px;
+            font-weight: 600;
+        }
+    }
+}
+::ng-deep .mat-button-wrapper {
+    display: flex;
+    align-items: center;
+    place-content: center;
+}
+.logout {
+    display: flex;
+    align-items: center;
+    place-content: center;
+    padding: 0px 24px 24px 24px;
+    button {
+        border-radius: 24px;
+        width: 50%;
+        span {
+            font-size: 13px;
+            font-weight: 600;
+        }
+    }
+}

@@ -1,0 +1,26 @@
+<div class="header">
+  <span class="mat-h2"> Your wallet </span>
+  <button mat-icon-button mat-dialog-close>
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div class="wallet">
+  <span class="mat-h4">
+    6Tgdf6fDHDbh7GhBF7YGVGGHVGVgghjtfrfg77YFGBui78TFd4R4FEdE2g
+  </span>
+</div>
+<div class="buttons">
+  <button mat-button color="secondary">
+    <span> View on BscScan </span>
+    <mat-icon>open_in_new</mat-icon>
+  </button>
+  <button mat-button color="secondary" (click)="openSnackBar()">
+    <span> Copy address </span>
+    <mat-icon><mat-icon>file_copy</mat-icon></mat-icon>
+  </button>
+</div>
+<div class="logout">
+  <button mat-raised-button color="primary">
+    <span> Logout </span>
+  </button>
+</div>

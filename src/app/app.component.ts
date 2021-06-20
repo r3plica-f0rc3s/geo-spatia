@@ -1,3 +1,4 @@
+import { NFTsService, GeoNFT } from './services/NFTs.service';
 import {
   GeolocationService,
   ILocation,
@@ -5,6 +6,9 @@ import {
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { LngLat, LngLatBounds, Map, LngLatLike } from 'mapbox-gl';
 import { MarkerComponent } from 'ngx-mapbox-gl/lib/marker/marker.component';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from './dialog/dialog.component';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -16,9 +20,12 @@ export class AppComponent implements OnInit {
   userLocation: ILocation = null;
   public map: Map;
   public bounds: LngLatBounds;
-  public NFTs: LngLat[];
+  public NFTs: GeoNFT[];
   @ViewChildren('markers') public markers: QueryList<MarkerComponent>;
-  constructor(private locationService: GeolocationService) {}
+  constructor(
+    private locationService: GeolocationService, 
+    private NFTsService: NFTsService, 
+    public dialog: MatDialog) {}
   ngOnInit(): void {}
 
   queryLocation() {
@@ -32,19 +39,21 @@ export class AppComponent implements OnInit {
       lat: coords.latitude,
       lng: coords.longitude,
     };
+    // console.log('svg length', this.svgGeneratorService.generateAvatar(`${this.userLocation.lng},${this.userLocation.lat}`));
     // mapbox fit bounds
     // load 10 local NFT's
     if (!this.bounds) {
       this.bounds = new LngLatBounds();
     }
-
-    this.NFTs = this.locationService.getRandomLocations(
+    this.NFTsService.randomizeLocations(
       this.userLocation,
       10,
       0.25
     );
-    this.NFTs.forEach((location) => {
-      this.bounds.extend(location);
+    this.NFTs = this.NFTsService.NFTs; 
+
+    this.NFTs.forEach((nft) => {
+      this.bounds.extend(nft.location);
     });
     console.log(this.NFTs);
     this.map.fitBounds(this.bounds, { padding: 50 });
@@ -52,5 +61,14 @@ export class AppComponent implements OnInit {
 
   onMapLoaded($event): void {
     this.map = $event;
+  }
+  openDialog() {
+    const dialogRef = this.dialog.open(DialogComponent, {
+      backdropClass: 'backdropBackground'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 }

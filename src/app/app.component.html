@@ -1,4 +1,5 @@
 <mat-drawer-container class="example-container">
+  <!-- Move to separate component -->
   <mgl-map
     [style]="'mapbox://styles/mapbox/streets-v9'"
     [zoom]="[0]"
@@ -10,27 +11,27 @@
       [lngLat]="[userLocation.lng, userLocation.lat]"
       #markers
     >
-      <div class="marker">
-        <svg height="100" width="100">
-          <circle
-            cx="50"
-            cy="50"
-            r="10"
-            stroke="white"
-            stroke-width="2"
-            fill="#4E8EF7"
-          />
-        </svg>
-      </div>
+      <svg height="100" width="100">
+        <circle
+          cx="50"
+          cy="50"
+          r="10"
+          stroke="white"
+          stroke-width="2"
+          fill="#4E8EF7"
+        />
+      </svg>
     </mgl-marker>
     <mgl-marker
       *ngFor="let nft of NFTs"
-      [lngLat]="[nft.lng, nft.lat]"
+      [lngLat]="[nft.location.lng, nft.location.lat]"
     >
-      <div class="marker">
-        <svg height="100" width="100">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2m0 10c2.7 0 5.8 1.29 6 2H6c.23-.72 3.31-2 6-2m0-12C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 10c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-        </svg>
+      <div class="marker" height="24" width="24">
+        <svg
+          preserveAspectRatio="none"
+          viewBox="0 0 300 300"
+          [innerHTML]="nft.image"
+        ></svg>
       </div>
     </mgl-marker>
   </mgl-map>
@@ -52,10 +53,43 @@
     </button>
   </div>
   <mat-drawer #drawer class="example-sidenav" mode="side">
+    <!-- Move to separate component -->
+    <mat-toolbar color="secondary">
+      <button
+        (click)="openDialog()"
+        class="wallet-button-wrapper"
+        mat-raised-button
+        color="primary"
+        aria-label="Example icon-button with menu icon"
+      >
+        <button class="mini-fab" disableRipple mat-mini-fab color="secondary">
+          <mat-icon>person</mat-icon>
+        </button>
+
+        <div class="wallet-button">
+          <div class="start">
+            6Tgdf6fDHDbh7GhBF7YGVGGHVGVgghjtfrfg77YFGBui78TFd4R4FE
+          </div>
+          <div class="end">dE2g</div>
+        </div>
+      </button>
+    </mat-toolbar>
     <div *ngIf="userLocation" class="sidenav-open fab-close">
       <button (click)="drawer.toggle()" mat-icon-button>
-        <mat-icon>close</mat-icon>
+        <mat-icon color="primary">close</mat-icon>
       </button>
     </div>
+    <mat-selection-list [multiple]="false">
+      <mat-list-option *ngFor="let nft of NFTs">
+        <div class="token-name">
+          <span>Token name: {{ nft.name }}</span>
+        </div>
+        <!-- <div>Location {{ nft.location }}</div>
+        <div>Price {{ nft.price }}</div>
+        
+        <div>AVAILABLE</div>
+        <button>Buy</button> -->
+      </mat-list-option>
+    </mat-selection-list>
   </mat-drawer>
 </mat-drawer-container>
