@@ -6,7 +6,6 @@ import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { LngLat, LngLatBounds, Map, LngLatLike } from 'mapbox-gl';
 import { MarkerComponent } from 'ngx-mapbox-gl/lib/marker/marker.component';
 
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -31,7 +30,7 @@ export class AppComponent implements OnInit {
   onUserLocated(coords): void {
     this.userLocation = {
       lat: coords.latitude,
-      lng: coords.longitude
+      lng: coords.longitude,
     };
     // mapbox fit bounds
     // load 10 local NFT's
@@ -39,17 +38,19 @@ export class AppComponent implements OnInit {
       this.bounds = new LngLatBounds();
     }
 
-    this.NFTs = this.locationService.getRandomLocations(this.userLocation, 10, 0.25);
+    this.NFTs = this.locationService.getRandomLocations(
+      this.userLocation,
+      10,
+      0.25
+    );
     this.NFTs.forEach((location) => {
       this.bounds.extend(location);
     });
     console.log(this.NFTs);
     this.map.fitBounds(this.bounds, { padding: 50 });
-
   }
 
   onMapLoaded($event): void {
     this.map = $event;
-
   }
 }
