@@ -102,4 +102,70 @@ mgl-map {
   height: 32px;
   border-radius: 50%;
 }
+.list-item {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
 
+  span {
+    letter-spacing: 1px;
+  }
+}
+mat-list-option {
+  border-bottom: rgb(92, 92, 92) 1px solid;
+  display: flex;
+  flex-direction: row;
+}
+::ng-deep .mat-list-base .mat-list-item .mat-list-text,
+.mat-list-base .mat-list-option .mat-list-text {
+  flex-direction: row !important;
+  display: flex;
+  align-items: center;
+}
+
+.details {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: calc(100% - 100px);
+
+  span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.label {
+  width: 100px;
+  font-weight: 600;
+  font-size: 12px;
+  color: #d0a0e4;
+}
+.name {
+  span {
+    font-size: 16px;
+  }
+}
+::ng-deep .mat-list-base .mat-list-item,
+.mat-list-base .mat-list-option {
+  height: 100%;
+}
+::ng-deep .mat-list-base .mat-list-item .mat-list-item-content-reverse,
+.mat-list-base .mat-list-option .mat-list-item-content-reverse {
+  padding: 16px !important;
+}
+.section {
+  margin-bottom: 8px !important;
+}
+.nft-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  margin-right: 16px !important;
+  overflow: hidden;
+}
+.second {
+  width: calc(100% - 56px);
+}
