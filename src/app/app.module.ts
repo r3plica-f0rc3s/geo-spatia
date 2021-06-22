@@ -7,17 +7,24 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MapService, NgxMapboxGLModule } from 'ngx-mapbox-gl';
+import { MapComponent, MapService, NgxMapboxGLModule } from 'ngx-mapbox-gl';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DialogComponent } from './dialog/dialog.component';
+import { MapGlComponent } from './map-gl/map-gl.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatListModule } from '@angular/material/list';
+import { ConfirmOrderComponent } from './confirm-order/confirm-order.component';
 @NgModule({
-  declarations: [AppComponent, DialogComponent],
+  declarations: [
+    AppComponent,
+    DialogComponent,
+    MapGlComponent,
+    ConfirmOrderComponent,
+  ],
   imports: [
     BrowserModule,
     MatSidenavModule,

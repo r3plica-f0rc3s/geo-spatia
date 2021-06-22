@@ -1,0 +1,35 @@
+<mgl-map
+[style]="'mapbox://styles/mapbox/streets-v9'"
+[zoom]="[0]"
+[center]="[-74.5, 40]"
+(load)="onMapLoaded($event)"
+>
+<mgl-marker
+  *ngIf="userLocation"
+  [lngLat]="[userLocation.lng, userLocation.lat]"
+  #markers
+>
+  <svg height="100" width="100">
+    <circle
+      cx="50"
+      cy="50"
+      r="10"
+      stroke="white"
+      stroke-width="2"
+      fill="#4E8EF7"
+    />
+  </svg>
+</mgl-marker>
+<mgl-marker
+  *ngFor="let marker of markers"
+  [lngLat]="marker.coordinates"
+>
+  <div class="marker" height="24" width="24">
+    <svg
+      preserveAspectRatio="none"
+      viewBox="0 0 300 300"
+      [innerHTML]="marker.image"
+    ></svg>
+  </div>
+</mgl-marker>
+</mgl-map>

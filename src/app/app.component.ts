@@ -1,14 +1,11 @@
-import { NFTsService, GeoNFT } from './services/NFTs.service';
-import {
-  GeolocationService,
-  ILocation,
-} from './services/geolocation-service.service';
-import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { LngLat, LngLatBounds, Map, LngLatLike } from 'mapbox-gl';
-import { MarkerComponent } from 'ngx-mapbox-gl/lib/marker/marker.component';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { LngLat, Map } from 'mapbox-gl';
 import { DialogComponent } from './dialog/dialog.component';
-import { DomSanitizer } from '@angular/platform-browser';
+import { ImageMarker } from './map-gl/map-gl.component';
+import { GeolocationService } from './services/geolocation-service.service';
+import { GeoNFT, NFTsService } from './services/NFTs.service';
 
 @Component({
   selector: 'app-root',
@@ -17,15 +14,17 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class AppComponent implements OnInit {
   title = 'geo-spatia';
-  userLocation: ILocation = null;
+  public markers: ImageMarker[];
+  public userLocation: LngLat;
   public map: Map;
-  public bounds: LngLatBounds;
+  public confirmOrderOpened = false;
   public NFTs: GeoNFT[];
-  @ViewChildren('markers') public markers: QueryList<MarkerComponent>;
   constructor(
-    private locationService: GeolocationService, 
-    private NFTsService: NFTsService, 
-    public dialog: MatDialog) {}
+    private locationService: GeolocationService,
+    private NFTsService: NFTsService,
+    public dialog: MatDialog,
+    private router: Router
+  ) {}
   ngOnInit(): void {}
 
   queryLocation() {
@@ -33,30 +32,17 @@ export class AppComponent implements OnInit {
       this.onUserLocated(coords);
     });
   }
-
   onUserLocated(coords): void {
-    this.userLocation = {
-      lat: coords.latitude,
-      lng: coords.longitude,
-    };
-    // console.log('svg length', this.svgGeneratorService.generateAvatar(`${this.userLocation.lng},${this.userLocation.lat}`));
-    // mapbox fit bounds
-    // load 10 local NFT's
-    if (!this.bounds) {
-      this.bounds = new LngLatBounds();
-    }
-    this.NFTsService.randomizeLocations(
-      this.userLocation,
-      10,
-      0.25
-    );
-    this.NFTs = this.NFTsService.NFTs; 
+    this.userLocation = new LngLat(coords.longitude, coords.latitude);
 
-    this.NFTs.forEach((nft) => {
-      this.bounds.extend(nft.location);
+    this.NFTsService.randomizeLocations(this.userLocation, 10, 0.25);
+    this.NFTs = this.NFTsService.NFTs;
+    this.markers = this.NFTs.map((NFT: GeoNFT) => {
+      return {
+        image: NFT.image,
+        coordinates: NFT.location,
+      };
     });
-    console.log(this.NFTs);
-    this.map.fitBounds(this.bounds, { padding: 50 });
   }
 
   onMapLoaded($event): void {
@@ -64,11 +50,24 @@ export class AppComponent implements OnInit {
   }
   openDialog() {
     const dialogRef = this.dialog.open(DialogComponent, {
-      backdropClass: 'backdropBackground'
+      backdropClass: 'backdropBackground',
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       console.log(`Dialog result: ${result}`);
     });
+  }
+  confirmOrder(drawer, i: number) {
+    drawer.close();
+    this.confirmOrderOpened = true;
+    const nft = this.NFTs[i];
+    const imageMarker = {
+      image: nft.image,
+      coordinates: nft.location,
+    };
+    this.markers = [imageMarker];
+    this.router.navigate(['/confirm-order', nft.name]);
+
+
   }
 }
