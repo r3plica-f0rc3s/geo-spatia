@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import * as EventEmitter from 'events';
 import { GeoNFT, NFTsService } from '../services/NFTs.service';
 @Component({
   templateUrl: './confirm-order.component.html',
   styleUrls: ['./confirm-order.component.scss'],
 })
 export class ConfirmOrderComponent implements OnInit {
+
   public nft: GeoNFT;
   constructor(
     private NFTsService: NFTsService,

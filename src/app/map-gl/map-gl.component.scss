@@ -7,3 +7,6 @@ mgl-map {
   height: 32px;
   border-radius: 50%;
 }
+::ng-deep a.mapboxgl-ctrl-logo {
+  display: none;
+}

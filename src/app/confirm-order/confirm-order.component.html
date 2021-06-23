@@ -1,0 +1,25 @@
+<div class="close-wrapper">
+  <button mat-icon-button>
+    <mat-icon color="primary">close</mat-icon>
+  </button>
+</div>
+
+<div class="nft-name">
+  <div class="nft-image">
+    <svg
+      preserveAspectRatio="none"
+      viewBox="0 0 300 300"
+      [innerHTML]="nft.image"
+    ></svg>
+  </div>
+  <div class="description">
+    <span class="mat-h1">{{ nft.name }}</span>
+    <span class="mat-h3">{{ nft.price }}</span>
+  </div>
+</div>
+<div class="buy-button">
+  <button mat-raised-button color="primary">
+    <mat-icon>shopping_basket</mat-icon>
+    <span> Buy </span>
+  </button>
+</div>
