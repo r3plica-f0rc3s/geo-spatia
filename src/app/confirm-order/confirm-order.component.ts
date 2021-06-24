@@ -7,7 +7,6 @@ import { GeoNFT, NFTsService } from '../services/NFTs.service';
   styleUrls: ['./confirm-order.component.scss'],
 })
 export class ConfirmOrderComponent implements OnInit {
-
   public nft: GeoNFT;
   constructor(
     private NFTsService: NFTsService,
@@ -17,6 +16,5 @@ export class ConfirmOrderComponent implements OnInit {
     this.activatedRoute.params.subscribe((param) => {
       this.nft = this.NFTsService.NFTs.find((x) => x.name === param.name);
     });
-
   }
 }

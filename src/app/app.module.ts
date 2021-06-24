@@ -18,12 +18,16 @@ import { MapGlComponent } from './map-gl/map-gl.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatListModule } from '@angular/material/list';
 import { ConfirmOrderComponent } from './confirm-order/confirm-order.component';
+import { StartComponent } from './start/start.component';
+import { NearbyComponent } from './nearby/nearby.component';
 @NgModule({
   declarations: [
     AppComponent,
     DialogComponent,
     MapGlComponent,
     ConfirmOrderComponent,
+    StartComponent,
+    NearbyComponent,
   ],
   imports: [
     BrowserModule,

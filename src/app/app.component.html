@@ -7,20 +7,9 @@
     </button>
   </div>
 
-  <div class="location-button">
-    <button
-      *ngIf="!userLocation"
-      (click)="queryLocation()"
-      mat-raised-button
-      color="primary"
-    >
-      <mat-icon> location_on</mat-icon>
-      <span> Location </span>
-    </button>
-  </div>
-<div *ngIf="confirmOrderOpened">
+<app-start></app-start>
   <router-outlet></router-outlet>
-</div>
+
 
 
 

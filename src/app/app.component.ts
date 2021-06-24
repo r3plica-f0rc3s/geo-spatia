@@ -20,18 +20,14 @@ export class AppComponent implements OnInit {
   public confirmOrderOpened = false;
   public NFTs: GeoNFT[];
   constructor(
-    private locationService: GeolocationService,
+
     private NFTsService: NFTsService,
     public dialog: MatDialog,
     private router: Router
   ) {}
   ngOnInit(): void {}
 
-  queryLocation() {
-    this.locationService.getCurrentLocation().then((coords) => {
-      this.onUserLocated(coords);
-    });
-  }
+
   onUserLocated(coords): void {
     this.userLocation = new LngLat(coords.longitude, coords.latitude);
 
