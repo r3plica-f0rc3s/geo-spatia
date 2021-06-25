@@ -4,10 +4,8 @@
 
   <router-outlet></router-outlet>
 
-
-
-
-  <mat-drawer #drawer class="example-sidenav" mode="side" [opened]="uxService.sidenavOpened$ | async">
+  <mat-drawer #drawer class="example-sidenav" mode="side"
+   [opened]="uxService.sidenavOpened$ | async">
     <!-- Move to separate component -->
     <mat-toolbar color="secondary">
       <button
@@ -30,54 +28,10 @@
       </button>
     </mat-toolbar>
     <div class="sidenav-open fab-close">
-      <button (click)="drawer.toggle()" mat-icon-button>
+      <button (click)="uxService.closeSidenav()" mat-icon-button>
         <mat-icon color="primary">close</mat-icon>
       </button>
     </div>
-    <mat-selection-list #drawer [multiple]="false">
-      <mat-list-option *ngFor="let nft of NFTs; let i = index" (click)="confirmOrder(drawer, i)">
-        <div class="nft-image">
-          <svg
-            preserveAspectRatio="none"
-            viewBox="0 0 300 300"
-            [innerHTML]="nft.image"
-          ></svg>
-        </div>
-        <div class="second">
-          <div class="list-item section">
-            <span class="label">Token name:</span>
-            <div class="name">
-              <span>
-                {{ nft.name }}
-              </span>
-            </div>
-          </div>
-          <div class="list-item section">
-            <span class="label">Location</span>
-            <div class="details">
-              <span>
-                {{ nft.location }}
-              </span>
-            </div>
-          </div>
-          <div class="list-item section">
-            <span class="label">Price</span>
-            <div class="details">
-              <span>
-                {{ nft.price }}
-              </span>
-            </div>
-          </div>
-          <div class="list-item">
-            <span class="label">AVAILABLE</span>
-            <div class="details">
-              <span>
-                <button mat-raised-button color="accent">Buy</button>
-              </span>
-            </div>
-          </div>
-        </div>
-      </mat-list-option>
-    </mat-selection-list>
+    <app-nft-list></app-nft-list>
   </mat-drawer>
 </mat-drawer-container>

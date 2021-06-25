@@ -20,6 +20,7 @@ import { MatListModule } from '@angular/material/list';
 import { ConfirmOrderComponent } from './confirm-order/confirm-order.component';
 import { StartComponent } from './start/start.component';
 import { NearbyComponent } from './nearby/nearby.component';
+import { NftListComponent } from './nft-list/nft-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,6 +29,7 @@ import { NearbyComponent } from './nearby/nearby.component';
     ConfirmOrderComponent,
     StartComponent,
     NearbyComponent,
+    NftListComponent,
   ],
   imports: [
     BrowserModule,

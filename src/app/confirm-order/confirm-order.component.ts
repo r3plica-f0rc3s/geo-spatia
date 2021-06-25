@@ -1,7 +1,7 @@
 import { Component, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import * as EventEmitter from 'events';
 import { GeoNFT, NFTsService } from '../services/NFTs.service';
+import { switchMap, withLatestFrom } from 'rxjs/operators';
 @Component({
   templateUrl: './confirm-order.component.html',
   styleUrls: ['./confirm-order.component.scss'],
@@ -11,10 +11,13 @@ export class ConfirmOrderComponent implements OnInit {
   constructor(
     private NFTsService: NFTsService,
     private activatedRoute: ActivatedRoute
-  ) {}
+  ) { }
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe((param) => {
-      this.nft = this.NFTsService.NFTs.find((x) => x.name === param.name);
+    this.activatedRoute.params.pipe(
+      withLatestFrom(this.NFTsService.NFTs$)
+    ).subscribe(([param, nfts]) => {
+      this.nft = nfts.find((x) => x.name === param.name);
     });
   }
 }
+

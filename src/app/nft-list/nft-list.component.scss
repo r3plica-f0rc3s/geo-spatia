@@ -1,0 +1,29 @@
+
+.list-item {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+
+  span {
+    letter-spacing: 1px;
+  }
+}
+mat-list-option {
+  border-bottom: rgb(92, 92, 92) 1px solid;
+  display: flex;
+  flex-direction: row;
+}
+::ng-deep .mat-list-base .mat-list-item .mat-list-text,
+.mat-list-base .mat-list-option .mat-list-text {
+  flex-direction: row !important;
+  display: flex;
+  align-items: center;
+}
+::ng-deep .mat-list-base .mat-list-item,
+.mat-list-base .mat-list-option {
+  height: 100%;
+}
+::ng-deep .mat-list-base .mat-list-item .mat-list-item-content-reverse,
+.mat-list-base .mat-list-option .mat-list-item-content-reverse {
+  padding: 16px !important;
+}

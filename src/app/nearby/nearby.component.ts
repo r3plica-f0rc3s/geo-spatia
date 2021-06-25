@@ -27,14 +27,15 @@ export class NearbyComponent implements OnInit {
   ngOnInit(): void {
     this.mapHelperService.findCurrentLocation().then((userLocation) => {
       this.NFTsService.randomizeLocations(userLocation, 10, 0.25);
-      this.NFTs = this.NFTsService.NFTs;
+      this.NFTsService.NFTs$.subscribe((nfts) => {
+        this.mapHelperService.setNearby(nfts.map((NFT: GeoNFT) => {
+          return {
+            image: NFT.image,
+            coordinates: NFT.location,
+          };
+        }));
+      });
 
-      this.mapHelperService.setNearby(this.NFTs.map((NFT: GeoNFT) => {
-        return {
-          image: NFT.image,
-          coordinates: NFT.location,
-        };
-      }));
     })
 
   }

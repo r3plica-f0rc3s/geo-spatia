@@ -1,0 +1,46 @@
+<mat-selection-list [multiple]="false">
+  <mat-list-option *ngFor="let nft of nfts; let i = index"
+   (click)="confirmOrder(i)">
+    <div class="nft-image">
+      <svg
+        preserveAspectRatio="none"
+        viewBox="0 0 300 300"
+        [innerHTML]="nft.image"
+      ></svg>
+    </div>
+    <div class="second">
+      <div class="list-item section">
+        <span class="label">Token name:</span>
+        <div class="name">
+          <span>
+            {{ nft.name }}
+          </span>
+        </div>
+      </div>
+      <div class="list-item section">
+        <span class="label">Location</span>
+        <div class="details">
+          <span>
+            {{ nft.location }}
+          </span>
+        </div>
+      </div>
+      <div class="list-item section">
+        <span class="label">Price</span>
+        <div class="details">
+          <span>
+            {{ nft.price }}
+          </span>
+        </div>
+      </div>
+      <div class="list-item">
+        <span class="label">AVAILABLE</span>
+        <div class="details">
+          <span>
+            <button mat-raised-button color="accent">Buy</button>
+          </span>
+        </div>
+      </div>
+    </div>
+  </mat-list-option>
+</mat-selection-list>

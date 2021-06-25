@@ -19,32 +19,13 @@ export class AppComponent implements OnInit {
   public userLocation: LngLat;
   public map: Map;
   public confirmOrderOpened = false;
-  public NFTs: GeoNFT[];
   constructor(
     public uxService: UxService,
-    private NFTsService: NFTsService,
     public dialog: MatDialog,
-    private router: Router
   ) {}
   ngOnInit(): void {}
 
 
-  onUserLocated(coords): void {
-    this.userLocation = new LngLat(coords.longitude, coords.latitude);
-
-    this.NFTsService.randomizeLocations(this.userLocation, 10, 0.25);
-    this.NFTs = this.NFTsService.NFTs;
-    this.markers = this.NFTs.map((NFT: GeoNFT) => {
-      return {
-        image: NFT.image,
-        coordinates: NFT.location,
-      };
-    });
-  }
-
-  onMapLoaded($event): void {
-    this.map = $event;
-  }
   openDialog() {
     const dialogRef = this.dialog.open(DialogComponent, {
       backdropClass: 'backdropBackground',
@@ -54,17 +35,5 @@ export class AppComponent implements OnInit {
       console.log(`Dialog result: ${result}`);
     });
   }
-  confirmOrder(drawer, i: number) {
-    drawer.close();
-    this.confirmOrderOpened = true;
-    const nft = this.NFTs[i];
-    const imageMarker = {
-      image: nft.image,
-      coordinates: nft.location,
-    };
-    this.markers = [imageMarker];
-    this.router.navigate(['/confirm-order', nft.name]);
 
-
-  }
 }
