@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { LngLat, Map } from 'mapbox-gl';
 import { DialogComponent } from './dialog/dialog.component';
 import { GeolocationService } from './services/geolocation-service.service';
+import { ImageMarker } from './services/map-helper.service';
 import { GeoNFT, NFTsService } from './services/NFTs.service';
 import { UxService } from './services/ux.service';
 

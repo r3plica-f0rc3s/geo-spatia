@@ -14,11 +14,5 @@ export class StartComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {}
-  queryLocation() {
-    this.locationService.getCurrentLocation().then((coords) => {
-      this.router.navigate(['/', 'nearby'], {
-        state: coords
-      });
-    });
-  }
+
 }

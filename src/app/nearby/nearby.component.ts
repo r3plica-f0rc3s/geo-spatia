@@ -1,8 +1,9 @@
+import { MapHelperService } from './../services/map-helper.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LngLat } from 'mapbox-gl';
 import { MapService } from 'ngx-mapbox-gl';
-import { ImageMarker } from '../map-gl/map-gl.component';
+import { ImageMarker } from '../services/map-helper.service';
 import { GeoNFT, NFTsService } from '../services/NFTs.service';
 import { UxService } from '../services/ux.service';
 
@@ -15,30 +16,26 @@ export class NearbyComponent implements OnInit {
   coords;
   public markers: ImageMarker[];
   public NFTs: GeoNFT[];
-  public userLocation: LngLat;
-  constructor(private router: Router,
+  constructor(
       private NFTsService: NFTsService,
       public uxService: UxService,
-      private mapService: MapService
+      private mapHelperService: MapHelperService,
+      private router: Router
     ) {
-    const navigation = this.router.getCurrentNavigation();
-    this.coords = navigation.extras.state;
   }
 
   ngOnInit(): void {
-    if(!this.coords) {
-      this.router.navigate(['/']);
-      return;
-    }
-    this.userLocation = new LngLat(this.coords.longitude, this.coords.latitude);
+    this.mapHelperService.findCurrentLocation().then((userLocation) => {
+      this.NFTsService.randomizeLocations(userLocation, 10, 0.25);
+      this.NFTs = this.NFTsService.NFTs;
 
-    this.NFTsService.randomizeLocations(this.userLocation, 10, 0.25);
-    this.NFTs = this.NFTsService.NFTs;
-    this.markers = this.NFTs.map((NFT: GeoNFT) => {
-      return {
-        image: NFT.image,
-        coordinates: NFT.location,
-      };
-    });
+      this.mapHelperService.setNearby(this.NFTs.map((NFT: GeoNFT) => {
+        return {
+          image: NFT.image,
+          coordinates: NFT.location,
+        };
+      }));
+    })
+
   }
 }

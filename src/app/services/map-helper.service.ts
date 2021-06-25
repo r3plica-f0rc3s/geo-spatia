@@ -11,7 +11,7 @@ export enum CameraState {
 }
 export interface MapStatus {
   cameraState: CameraState;
-  bounds?: LngLatBounds;
+  markers?: ImageMarker[];
   showUser: boolean;
   userLocation?: LngLat;
 }
@@ -46,16 +46,16 @@ export class MapHelperService {
   }
 
   setNearby(imageMarkers: ImageMarker[]): void {
-    const bounds = new LngLatBounds();
-    imageMarkers.forEach((imageMarker) => {
-      bounds.extend(imageMarker.coordinates);
-    });
-    this.mapStatusSubject.next({
-      cameraState: CameraState.NEARBY,
-      showUser: true,
-      bounds: bounds,
-      userLocation: this.userLocation
-    });
+    this.locationService.getCurrentLocation().then((userLocation) => {
+
+      this.mapStatusSubject.next({
+        cameraState: CameraState.NEARBY,
+        showUser: true,
+        markers: imageMarkers,
+        userLocation: new LngLat(userLocation.longitude, userLocation.latitude)
+      });
+    })
+
   }
 
 }

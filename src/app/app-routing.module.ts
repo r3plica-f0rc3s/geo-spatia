@@ -10,12 +10,12 @@ const routes: Routes = [
     path: 'start',
   },
   {
-    component: ConfirmOrderComponent,
-    path: 'confirm-order/:name',
-  },
-  {
     component: NearbyComponent,
     path: 'nearby',
+  },
+  {
+    component: ConfirmOrderComponent,
+    path: 'confirm-order/:name',
   },
   {
     path: '',

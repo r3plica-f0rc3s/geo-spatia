@@ -1,3 +1,4 @@
+import { CameraState, MapHelperService, MapStatus } from './../services/map-helper.service';
 import {
   Component,
   Input,
@@ -17,28 +18,46 @@ import { ImageMarker } from '../services/map-helper.service';
   templateUrl: './map-gl.component.html',
   styleUrls: ['./map-gl.component.scss'],
 })
-export class MapGlComponent implements OnChanges {
+export class MapGlComponent implements OnChanges, OnInit {
   @Input()
   markers: ImageMarker[] = [];
   @Input()
   userLocation: LngLat = null;
   public bounds: LngLatBounds;
   public map: Map;
-
+  public mapStatus: MapStatus;
   @ViewChildren('markers') public markerViews: QueryList<MarkerComponent>;
   constructor(
+    private mapHelperService: MapHelperService
   ) {}
+
+  ngOnInit(): void {
+    this.mapHelperService.mapStatus$.subscribe((mapState) => {
+      this.mapStatus = mapState;
+      // apply status
+      this.setCamera();
+    });
+  }
+
+  private setCamera(): void {
+    switch (this.mapStatus.cameraState) {
+      case CameraState.NEARBY:
+        this.bounds = new LngLatBounds();
+        this.mapStatus.markers.forEach((marker) => {
+          this.bounds.extend(marker.coordinates);
+        });
+        this.bounds.extend(this.mapStatus.userLocation);
+        this.map.fitBounds(this.bounds, { padding: 50 });
+      break;
+    }
+  }
   ngOnChanges(changes: SimpleChanges): void {
 
     this.bounds = new LngLatBounds();
 
     if (changes.markers.currentValue) {
       const currentValue = changes.markers.currentValue;
-      currentValue.forEach((item) => {
-        this.bounds.extend(item.coordinates);
 
-      });
-      this.bounds.extend(this.userLocation);
       console.log(this.markers);
       this.map.fitBounds(this.bounds, { padding: 50 });
     }
