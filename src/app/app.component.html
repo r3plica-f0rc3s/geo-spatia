@@ -1,19 +1,13 @@
 <mat-drawer-container class="example-container">
   <!-- Move to separate component -->
   <app-map-gl [userLocation]="userLocation" [markers]="markers"></app-map-gl>
-  <div *ngIf="userLocation" class="sidenav-open">
-    <button (click)="drawer.toggle()" mat-fab color="primary">
-      <mat-icon>view_list</mat-icon>
-    </button>
-  </div>
 
-<app-start></app-start>
   <router-outlet></router-outlet>
 
 
 
 
-  <mat-drawer #drawer class="example-sidenav" mode="side">
+  <mat-drawer #drawer class="example-sidenav" mode="side" [opened]="uxService.sidenavOpened$ | async">
     <!-- Move to separate component -->
     <mat-toolbar color="secondary">
       <button
@@ -35,7 +29,7 @@
         </div>
       </button>
     </mat-toolbar>
-    <div *ngIf="userLocation" class="sidenav-open fab-close">
+    <div class="sidenav-open fab-close">
       <button (click)="drawer.toggle()" mat-icon-button>
         <mat-icon color="primary">close</mat-icon>
       </button>

@@ -3,9 +3,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { LngLat, Map } from 'mapbox-gl';
 import { DialogComponent } from './dialog/dialog.component';
-import { ImageMarker } from './map-gl/map-gl.component';
 import { GeolocationService } from './services/geolocation-service.service';
 import { GeoNFT, NFTsService } from './services/NFTs.service';
+import { UxService } from './services/ux.service';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
   public confirmOrderOpened = false;
   public NFTs: GeoNFT[];
   constructor(
-
+    public uxService: UxService,
     private NFTsService: NFTsService,
     public dialog: MatDialog,
     private router: Router

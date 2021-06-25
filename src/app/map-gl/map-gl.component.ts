@@ -7,13 +7,10 @@ import {
   SimpleChanges,
   ViewChildren
 } from '@angular/core';
-import { SafeHtml } from '@angular/platform-browser';
 import { LngLat, LngLatBounds, Map } from 'mapbox-gl';
 import { MarkerComponent } from 'ngx-mapbox-gl/lib/marker/marker.component';
-export interface ImageMarker {
-  image: SafeHtml;
-  coordinates: LngLat;
-}
+import { ImageMarker } from '../services/map-helper.service';
+
 
 @Component({
   selector: 'app-map-gl',
