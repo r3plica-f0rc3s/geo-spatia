@@ -1,11 +1,21 @@
-<mat-drawer-container class="example-container">
+<mat-drawer-container class="main-wrapper">
   <!-- Move to separate component -->
   <app-map-gl [userLocation]="userLocation" [markers]="markers"></app-map-gl>
 
   <router-outlet></router-outlet>
 
-  <mat-drawer #drawer class="example-sidenav" mode="side"
-   [opened]="uxService.sidenavOpened$ | async">
+  <mat-drawer
+    #drawer
+    position="end"
+    mode="side"
+    [ngClass]="{
+      'example-container': !isMobile,
+      'example-container-mobile': isMobile
+    }"
+    [opened]="
+    sidenavOpened
+    "
+  >
     <!-- Move to separate component -->
     <mat-toolbar color="secondary">
       <button
