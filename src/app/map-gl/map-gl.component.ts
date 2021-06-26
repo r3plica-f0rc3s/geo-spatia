@@ -48,7 +48,14 @@ export class MapGlComponent implements OnChanges, OnInit {
         });
         this.bounds.extend(this.mapStatus.userLocation);
         this.map.fitBounds(this.bounds, { padding: 50 });
-      break;
+        break;
+      case CameraState.SINGLE:
+        if (!this.mapStatus.markers) {
+          return;
+        }
+        this.map.setCenter(this.mapStatus.markers[0].coordinates);
+        this.map.setZoom(8);
+        break;
     }
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -65,6 +72,7 @@ export class MapGlComponent implements OnChanges, OnInit {
 
   onMapLoaded($event): void {
     this.map = $event;
+    this.setCamera();
   }
 
 }

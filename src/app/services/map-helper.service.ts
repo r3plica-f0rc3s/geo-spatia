@@ -7,7 +7,7 @@ import { GeolocationService } from './geolocation-service.service';
 export enum CameraState {
   IDLE,
   NEARBY,
-  FOLLOWING
+  SINGLE
 }
 export interface MapStatus {
   cameraState: CameraState;
@@ -47,7 +47,6 @@ export class MapHelperService {
 
   setNearby(imageMarkers: ImageMarker[]): void {
     this.locationService.getCurrentLocation().then((userLocation) => {
-
       this.mapStatusSubject.next({
         cameraState: CameraState.NEARBY,
         showUser: true,
@@ -55,7 +54,15 @@ export class MapHelperService {
         userLocation: new LngLat(userLocation.longitude, userLocation.latitude)
       });
     })
+  }
 
+  setSingleMarker(imageMarker: ImageMarker): void {
+    this.mapStatusSubject.next({
+      cameraState: CameraState.SINGLE,
+      showUser: false,
+      markers: [imageMarker],
+      userLocation: this.mapStatusSubject.getValue().userLocation
+    })
   }
 
 }
