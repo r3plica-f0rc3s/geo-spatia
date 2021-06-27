@@ -65,4 +65,11 @@ export class MapHelperService {
     })
   }
 
+  setMultipleMarkers(imageMarkers: ImageMarker[]): void {
+    this.mapStatusSubject.next({
+      ...this.mapStatusSubject.getValue(),
+      markers: imageMarkers
+    });
+  }
+
 }

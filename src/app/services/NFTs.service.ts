@@ -1,3 +1,4 @@
+import { ContractService } from './contract.service';
 import { BehaviorSubject } from 'rxjs';
 import { SVGGeneratorService } from './svggenerator.service';
 import { Injectable } from '@angular/core';
@@ -23,8 +24,10 @@ export interface GeoNFT {
 export class NFTsService {
   private NFTsSubject = new BehaviorSubject<GeoNFT[]>([]);
   public NFTs$ = this.NFTsSubject.asObservable();
-  constructor(private svgGeneratorService: SVGGeneratorService,
-    private sanitizer: DomSanitizer) {}
+  constructor(
+    private svgGeneratorService: SVGGeneratorService,
+    private sanitizer: DomSanitizer,
+    private contractService: ContractService) {}
 
   randomizeLocations(latLng: ILocation, count, range): void {
     this.NFTsSubject.next(new Array(count).fill(0).map((value) => {
@@ -44,4 +47,6 @@ export class NFTsService {
       };
     }));
   }
+
+
 }
