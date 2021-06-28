@@ -14,15 +14,15 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class StartComponent implements OnInit {
   constructor(
     private contractService: ContractService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {}
 
   ngOnInit(): void {}
   async connect() {
     try {
       await this.contractService.init();
-      const nfts = await this.contractService.getAllNFTs();
-      console.log(nfts);
+      this.router.navigate(['/', 'nearby'])
       // convert nfts to imagemarkers
     } catch (error) {
       this.snackBar.open(error, 'Dismiss', {

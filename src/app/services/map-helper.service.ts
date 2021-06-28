@@ -47,6 +47,7 @@ export class MapHelperService {
 
   setNearby(imageMarkers: ImageMarker[]): void {
     this.locationService.getCurrentLocation().then((userLocation) => {
+      console.log(imageMarkers);
       this.mapStatusSubject.next({
         cameraState: CameraState.NEARBY,
         showUser: true,
@@ -66,6 +67,7 @@ export class MapHelperService {
   }
 
   setMultipleMarkers(imageMarkers: ImageMarker[]): void {
+    console.log('new image markers', imageMarkers);
     this.mapStatusSubject.next({
       ...this.mapStatusSubject.getValue(),
       markers: imageMarkers

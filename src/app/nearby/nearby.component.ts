@@ -1,4 +1,4 @@
-import { ContractService } from './../services/contract.service';
+import { ContractService, NFT } from './../services/contract.service';
 import { MapHelperService } from './../services/map-helper.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -18,7 +18,7 @@ export class NearbyComponent implements OnInit {
   isMobile: boolean;
   coords;
   public markers: ImageMarker[];
-  public NFTs: GeoNFT[];
+  public NFTs: NFT[];
   constructor(
       private NFTsService: NFTsService,
       public uxService: UxService,
@@ -30,20 +30,44 @@ export class NearbyComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.isMobile = this.media.matchMedia('(max-width: 700px)').matches;
-    this.uxService.openSidenav();
-    this.mapHelperService.findCurrentLocation().then((userLocation) => {
-      this.NFTsService.randomizeLocations(userLocation, 10, 0.25);
-      this.NFTsService.NFTs$.subscribe((nfts) => {
-        this.mapHelperService.setNearby(nfts.map((NFT: GeoNFT) => {
-          return {
-            image: NFT.image,
-            coordinates: NFT.location,
-          };
-        }));
+    this.contractService.nfts$.subscribe((nfts) => {
+      console.log('nfts', this.NFTs);
+      if (!nfts) {
+        return;
+      }
+      this.NFTs = nfts.filter((nft) => {
+        return nft.location.length > 0;
       });
-
+      this.mapHelperService.setNearby(this.NFTs.map((nft) => {
+        return {
+          image: decodeURIComponent(nft.svg),
+          coordinates: new LngLat(Number(nft.location.split(',')[0]), Number(nft.location.split(',')[1]))
+        }
+      }))
+    }, (err) => {
+      this.router.navigate(['/', 'start']);
     })
+    this.isMobile = this.media.matchMedia('(max-width: 700px)').matches;
+    this.uxService.enableSidenav();
+    this.contractService.loadNFTs();
+    // this.mapHelperService.setMultipleMarkers(this.NFTs.map((nft) => {
+    //   return {
+    //     image: nft.svg,
+    //     coordinates: nft.location
+    //   }
+    // }))
+    // this.mapHelperService.findCurrentLocation().then((userLocation) => {
+    //   this.NFTsService.randomizeLocations(userLocation, 10, 0.25);
+    //   this.NFTsService.NFTs$.subscribe((nfts) => {
+    //     this.mapHelperService.setNearby(nfts.map((NFT: GeoNFT) => {
+    //       return {
+    //         image: NFT.image,
+    //         coordinates: NFT.location,
+    //       };
+    //     }));
+    //   });
+
+    // })
 
   }
 }

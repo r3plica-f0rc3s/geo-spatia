@@ -19,6 +19,9 @@ export class ContractService {
   errorSubject = new BehaviorSubject<string>('');
   error$ = this.errorSubject.asObservable();
 
+  nftsSubject = new BehaviorSubject<NFT[]>(null);
+  nfts$ = this.nftsSubject.asObservable();
+
   contractAddress = '0x045aECf094E86554501bF093b77d1a5Cd7e5F165';
   contract: any;
 
@@ -44,14 +47,17 @@ export class ContractService {
     }
   }
 
-  async getAllNFTs() {
-    try {
-      const result = await this.contract.methods
-        .getAllNFT()
-        .call({ from: this.selectedAddress });
-      return result;
-    } catch (error) {
-      throw new Error('Harmony.One network not connected');
+  async loadNFTs(): Promise<NFT[]> {
+    if (!this.contract) {
+      this.init();
     }
+    const result = await this.contract.methods
+      .getAllNFT()
+      .call({ from: this.selectedAddress, layer: 0 })
+      .then((nfts) => {
+        this.nftsSubject.next(nfts);
+        return nfts;
+      });
+    return result;
   }
 }
