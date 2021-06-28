@@ -1,3 +1,4 @@
+import { MapHelperService } from './../services/map-helper.service';
 import { ContractService } from './../services/contract.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -12,12 +13,15 @@ export class StartComponent implements OnInit {
   constructor(
     private locationService: GeolocationService,
     private router: Router,
-    private contractService: ContractService
+    private contractService: ContractService,
+    private mapHelperService: MapHelperService
   ) {}
 
   ngOnInit(): void {}
 
-  connect(): void {
-    this.contractService.init();
+  async connect() {
+    await this.contractService.init();
+    const nfts = await this.contractService.getAllNFTs();
+    // convert nfts to imagemarkers
   }
 }

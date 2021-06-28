@@ -19,7 +19,7 @@ export class ContractService {
   async init() {
       const wallet = (window as any).ethereum || (window as any).onewallet;
       if (!wallet) {
-          this.errorSubject.next('No supported wallet');
+          throw new Error('No supported wallet');
       }
 
       this.currentWeb3 = new Web3(wallet);
@@ -32,6 +32,6 @@ export class ContractService {
 
   async getAllNFTs() {
     const result = await this.contract.methods.getAllNFT().call({from: this.selectedAddress});
-    console.log(result);
+    return result;
   }
 }
