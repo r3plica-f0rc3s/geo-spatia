@@ -47,7 +47,9 @@ export class MapGlComponent implements OnChanges, OnInit {
           this.bounds.extend(marker.coordinates);
         });
         this.bounds.extend(this.mapStatus.userLocation);
-        this.map.fitBounds(this.bounds, { padding: 50 });
+        if (this.map) {
+          this.map.fitBounds(this.bounds, { padding: 50 });
+        }
         break;
       case CameraState.SINGLE:
         if (!this.mapStatus.markers) {
