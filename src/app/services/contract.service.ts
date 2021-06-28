@@ -40,14 +40,18 @@ export class ContractService {
         this.contractAddress
       );
     } catch (error) {
-      throw new Error('Harmony.One network not connected');
+      throw new Error(error);
     }
   }
 
-  async getAllNFTs(): Promise<NFT[]> {
-    const result = await this.contract.methods
-      .getAllNFT()
-      .call({ from: this.selectedAddress, layer: 0 });
-    return result;
+  async getAllNFTs() {
+    try {
+      const result = await this.contract.methods
+        .getAllNFT()
+        .call({ from: this.selectedAddress });
+      return result;
+    } catch (error) {
+      throw new Error('Harmony.One network not connected');
+    }
   }
 }

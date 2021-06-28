@@ -1,4 +1,5 @@
 <mat-drawer-container class="main-wrapper">
+  <mat-drawer #drawer2 mode="side" opened> test </mat-drawer>
   <!-- Move to separate component -->
   <app-map-gl [userLocation]="userLocation" [markers]="markers"></app-map-gl>
 
@@ -12,9 +13,7 @@
       'example-container': !isMobile,
       'example-container-mobile': isMobile
     }"
-    [opened]="
-    sidenavOpened
-    "
+    [opened]="sidenavOpened"
   >
     <!-- Move to separate component -->
     <mat-toolbar color="secondary">
