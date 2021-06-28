@@ -1,3 +1,4 @@
+import { ContractService } from './services/contract.service';
 import { NFTsService } from './services/NFTs.service';
 import { SVGGeneratorService } from './services/svggenerator.service';
 import { GeolocationService } from './services/geolocation-service.service';
@@ -47,7 +48,12 @@ import { NftListComponent } from './nft-list/nft-list.component';
         'pk.eyJ1IjoidGhlY3liZXJkM20wbiIsImEiOiJja2FpcnNyeXowM21tMndwamxyZjU5ajJpIn0.TjWqQxlCdOZmoVFLFJBRsA', // Optional, can also be set per map (accessToken input of mgl-map)
     }),
   ],
-  providers: [GeolocationService, MapService, SVGGeneratorService, NFTsService],
+  providers: [
+    GeolocationService, 
+    MapService, 
+    SVGGeneratorService,
+    ContractService,
+    NFTsService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
