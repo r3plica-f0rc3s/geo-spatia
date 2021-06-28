@@ -26,8 +26,12 @@ export class ContractService {
       this.selectedAddress = (window as any).ethereum.selectedAddress;
       // Ask User permission to connect to Metamask
     //   await window.ethereum.enable();
+    try {
+
       this.contract = new this.currentWeb3.eth.Contract(abi,this.contractAddress);
-      console.log(this.contract);
+    } catch (error) {
+      throw new Error('Harmony.One network not connected');
+    }
   }
 
   async getAllNFTs() {

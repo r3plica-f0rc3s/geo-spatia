@@ -18,20 +18,18 @@ export class StartComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {}
-  openSnackBar() {
-    this.snackBar.open('Unable to connect to metamask', 'Dismiss', {
-      duration: 3000,
-      verticalPosition: 'top',
-      panelClass: ['snackbar-error']
-    });
-  }
   async connect() {
     try {
       await this.contractService.init();
       const nfts = await this.contractService.getAllNFTs();
+      console.log(nfts);
       // convert nfts to imagemarkers
     } catch (error) {
-      this.openSnackBar();
+      this.snackBar.open(error, 'Dismiss', {
+        duration: 3000,
+        verticalPosition: 'top',
+        panelClass: ['snackbar-error'],
+      });
       console.error(error);
     }
   }
