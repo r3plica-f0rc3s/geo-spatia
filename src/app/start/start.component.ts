@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GeolocationService } from '../services/geolocation-service.service';
 import { UxService } from '../services/ux.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-start',
@@ -12,18 +13,26 @@ import { UxService } from '../services/ux.service';
 })
 export class StartComponent implements OnInit {
   constructor(
-    private locationService: GeolocationService,
-    private router: Router,
     private contractService: ContractService,
-    private mapHelperService: MapHelperService,
-    private uxService: UxService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {}
-
+  openSnackBar() {
+    this.snackBar.open('Unable to connect to metamask', 'Dismiss', {
+      duration: 3000,
+      verticalPosition: 'top',
+      panelClass: ['snackbar-error']
+    });
+  }
   async connect() {
-    await this.contractService.init();
-    const nfts = await this.contractService.getAllNFTs();
-    // convert nfts to imagemarkers
+    try {
+      await this.contractService.init();
+      const nfts = await this.contractService.getAllNFTs();
+      // convert nfts to imagemarkers
+    } catch (error) {
+      this.openSnackBar();
+      console.error(error);
+    }
   }
 }
