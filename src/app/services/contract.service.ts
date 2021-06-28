@@ -53,7 +53,7 @@ export class ContractService {
     }
     const result = await this.contract.methods
       .getAllNFT()
-      .call({ from: this.selectedAddress, layer: 0 })
+      .call({ from: this.selectedAddress })
       .then((nfts) => {
         this.nftsSubject.next(nfts);
         return nfts;
