@@ -6,6 +6,7 @@ import { MapService } from 'ngx-mapbox-gl';
 import { ImageMarker } from '../services/map-helper.service';
 import { GeoNFT, NFTsService } from '../services/NFTs.service';
 import { UxService } from '../services/ux.service';
+import { MediaMatcher } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-nearby',
@@ -13,6 +14,7 @@ import { UxService } from '../services/ux.service';
   styleUrls: ['./nearby.component.scss'],
 })
 export class NearbyComponent implements OnInit {
+  isMobile: boolean;
   coords;
   public markers: ImageMarker[];
   public NFTs: GeoNFT[];
@@ -20,11 +22,14 @@ export class NearbyComponent implements OnInit {
       private NFTsService: NFTsService,
       public uxService: UxService,
       private mapHelperService: MapHelperService,
-      private router: Router
+      private router: Router,
+      private media: MediaMatcher
     ) {
   }
 
   ngOnInit(): void {
+    this.isMobile = this.media.matchMedia('(max-width: 700px)').matches;
+    this.uxService.openSidenav();
     this.mapHelperService.findCurrentLocation().then((userLocation) => {
       this.NFTsService.randomizeLocations(userLocation, 10, 0.25);
       this.NFTsService.NFTs$.subscribe((nfts) => {

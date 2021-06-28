@@ -3,6 +3,7 @@ import { ContractService } from './../services/contract.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GeolocationService } from '../services/geolocation-service.service';
+import { UxService } from '../services/ux.service';
 
 @Component({
   selector: 'app-start',
@@ -14,7 +15,8 @@ export class StartComponent implements OnInit {
     private locationService: GeolocationService,
     private router: Router,
     private contractService: ContractService,
-    private mapHelperService: MapHelperService
+    private mapHelperService: MapHelperService,
+    private uxService: UxService,
   ) {}
 
   ngOnInit(): void {}
