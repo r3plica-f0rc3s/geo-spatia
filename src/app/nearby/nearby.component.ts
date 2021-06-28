@@ -1,3 +1,4 @@
+import { DomSanitizer } from '@angular/platform-browser';
 import { ContractService, NFT } from './../services/contract.service';
 import { MapHelperService } from './../services/map-helper.service';
 import { Component, OnInit } from '@angular/core';
@@ -25,7 +26,8 @@ export class NearbyComponent implements OnInit {
       private mapHelperService: MapHelperService,
       private router: Router,
       private media: MediaMatcher,
-      private contractService: ContractService
+      private contractService: ContractService,
+      private domSanitizer: DomSanitizer
     ) {
   }
 
@@ -39,8 +41,9 @@ export class NearbyComponent implements OnInit {
         return nft.location.length > 0;
       });
       this.mapHelperService.setNearby(this.NFTs.map((nft) => {
+        console.log(decodeURIComponent(nft.svg));
         return {
-          image: decodeURIComponent(nft.svg),
+          image: this.domSanitizer.bypassSecurityTrustHtml(decodeURIComponent(nft.svg)),
           coordinates: new LngLat(Number(nft.location.split(',')[0]), Number(nft.location.split(',')[1]))
         }
       }))
