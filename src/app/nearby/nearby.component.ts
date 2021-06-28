@@ -1,14 +1,11 @@
-import { DomSanitizer } from '@angular/platform-browser';
-import { ContractService, NFT } from './../services/contract.service';
-import { MapHelperService } from './../services/map-helper.service';
+import { MediaMatcher } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LngLat } from 'mapbox-gl';
-import { MapService } from 'ngx-mapbox-gl';
 import { ImageMarker } from '../services/map-helper.service';
-import { GeoNFT, NFTsService } from '../services/NFTs.service';
+import { GeoNFT } from '../services/NFTs.service';
 import { UxService } from '../services/ux.service';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { ContractService } from './../services/contract.service';
+import { MapHelperService } from './../services/map-helper.service';
 
 @Component({
   selector: 'app-nearby',
@@ -19,32 +16,26 @@ export class NearbyComponent implements OnInit {
   isMobile: boolean;
   coords;
   public markers: ImageMarker[];
-  public NFTs: NFT[];
+  public NFTs: GeoNFT[];
   constructor(
-      private NFTsService: NFTsService,
       public uxService: UxService,
       private mapHelperService: MapHelperService,
       private router: Router,
       private media: MediaMatcher,
       private contractService: ContractService,
-      private domSanitizer: DomSanitizer
     ) {
   }
 
   ngOnInit(): void {
     this.contractService.nfts$.subscribe((nfts) => {
-      console.log('nfts', this.NFTs);
       if (!nfts) {
         return;
       }
-      this.NFTs = nfts.filter((nft) => {
-        return nft.location.length > 0;
-      });
+      this.NFTs = nfts;
       this.mapHelperService.setNearby(this.NFTs.map((nft) => {
-        console.log(decodeURIComponent(nft.svg));
         return {
-          image: this.domSanitizer.bypassSecurityTrustHtml(decodeURIComponent(nft.svg)),
-          coordinates: new LngLat(Number(nft.location.split(',')[0]), Number(nft.location.split(',')[1]))
+          image: nft.image,
+          coordinates: nft.location
         }
       }))
     }, (err) => {

@@ -1,3 +1,4 @@
+import { ContractService, NFT } from './../services/contract.service';
 import { GeoNFT } from './../services/NFTs.service';
 import { UxService } from './../services/ux.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -14,13 +15,13 @@ export class NftListComponent implements OnInit, OnDestroy {
   nfts: GeoNFT[] = [];
   subscriptions = [];
   constructor(
-    private nftsService: NFTsService,
+    private contractService: ContractService,
     private uxService: UxService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
-    this.subscriptions.push(this.nftsService.NFTs$
+    this.subscriptions.push(this.contractService.nfts$
       .subscribe((nfts) => {
         this.nfts = nfts;
       }));

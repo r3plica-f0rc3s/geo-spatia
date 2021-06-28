@@ -24,9 +24,12 @@
   *ngFor="let marker of mapStatus.markers"
   [lngLat]="marker.coordinates"
 >
-  <div class="marker" 
-  [innerHTML]="marker.image" height="24" width="24">
-    
-  </div>
+<div class="marker" height="24" width="24">
+  <svg
+    preserveAspectRatio="none"
+    viewBox="0 0 300 300"
+    [innerHTML]="marker.image"
+  ></svg>
+</div>
 </mgl-marker>
 </mgl-map>
