@@ -1,4 +1,4 @@
-<div class="sidenav-open">
+<div class="sidenav-open" *ngIf="isMobile">
   <button (click)="uxService.openSidenav()" mat-fab color="primary">
     <mat-icon>view_list</mat-icon>
   </button>
