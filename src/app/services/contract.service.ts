@@ -17,25 +17,30 @@ export class ContractService {
 
   selectedAddress: any;
   async init() {
-      const wallet = (window as any).ethereum || (window as any).onewallet;
-      if (!wallet) {
-          throw new Error('No supported wallet');
-      }
+    const wallet = (window as any).ethereum || (window as any).onewallet;
+    if (!wallet) {
+      throw new Error('No supported wallet');
+    }
 
-      this.currentWeb3 = new Web3(wallet);
-      this.selectedAddress = (window as any).ethereum.selectedAddress;
-      // Ask User permission to connect to Metamask
+    // Ask User permission to connect to Metamask
     //   await window.ethereum.enable();
     try {
+      this.currentWeb3 = new Web3(wallet);
+      this.selectedAddress = (window as any).ethereum.selectedAddress;
 
-      this.contract = new this.currentWeb3.eth.Contract(abi,this.contractAddress);
+      this.contract = new this.currentWeb3.eth.Contract(
+        abi,
+        this.contractAddress
+      );
     } catch (error) {
       throw new Error('Harmony.One network not connected');
     }
   }
 
   async getAllNFTs() {
-    const result = await this.contract.methods.getAllNFT().call({from: this.selectedAddress});
+    const result = await this.contract.methods
+      .getAllNFT()
+      .call({ from: this.selectedAddress });
     return result;
   }
 }
