@@ -47,6 +47,7 @@ export class MapHelperService {
 
   setNearby(imageMarkers: ImageMarker[]): void {
     this.locationService.getCurrentLocation().then((userLocation) => {
+      console.log(imageMarkers);
       this.mapStatusSubject.next({
         cameraState: CameraState.NEARBY,
         showUser: true,

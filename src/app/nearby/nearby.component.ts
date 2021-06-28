@@ -40,7 +40,7 @@ export class NearbyComponent implements OnInit {
       });
       this.mapHelperService.setNearby(this.NFTs.map((nft) => {
         return {
-          image: nft.svg.replace('/', ''),
+          image: decodeURIComponent(nft.svg),
           coordinates: new LngLat(Number(nft.location.split(',')[0]), Number(nft.location.split(',')[1]))
         }
       }))
