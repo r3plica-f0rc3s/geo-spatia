@@ -1,12 +1,15 @@
 <mat-selection-list [multiple]="false">
-  <mat-list-option *ngFor="let nft of nfts; let i = index"
-   (click)="confirmOrder(i)">
+  <mat-list-option
+    *ngFor="let nft of nfts; let i = index"
+    (click)="confirmOrder(i)"
+  >
     <div class="nft-image">
-      <svg
+      <div
+        class="nft-svg"
         preserveAspectRatio="none"
         viewBox="0 0 300 300"
         [innerHTML]="nft.image"
-      ></svg>
+      ></div>
     </div>
     <div class="second">
       <div class="list-item section">

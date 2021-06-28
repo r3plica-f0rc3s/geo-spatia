@@ -1,3 +1,13 @@
+<button
+  *ngIf="isMobile"
+  class="profile-panel"
+  disableRipple
+  mat-fab
+  color="secondary"
+  (click)="uxService.openLeftSidenav()"
+>
+  <mat-icon>person</mat-icon>
+</button>
 <div class="sidenav-open" *ngIf="isMobile">
   <button (click)="uxService.openSidenav()" mat-fab color="primary">
     <mat-icon>view_list</mat-icon>

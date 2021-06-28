@@ -18,7 +18,8 @@ export class AppComponent implements OnInit {
   public userLocation: LngLat;
   public map: Map;
   public confirmOrderOpened = false;
-  sidenavOpened: boolean;
+  rightSidenavOpened: boolean;
+  leftSidenavOpened: boolean;
   constructor(
     public uxService: UxService,
     public dialog: MatDialog,
@@ -31,15 +32,23 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.isMobile = this.media.matchMedia('(max-width: 700px)').matches;
     this.uxService.sidenavOpened$.subscribe((sideNavOpened) => {
-      this.sidenavOpened = (
-        this.isMobile
-          ? sideNavOpened === SidenavState.ACTIVE
-            ? true
-            : false
-          : sideNavOpened === SidenavState.HIDDEN || sideNavOpened === SidenavState.ACTIVE
+      this.rightSidenavOpened = this.isMobile
+        ? sideNavOpened.rightSidenavState === SidenavState.ACTIVE
           ? true
           : false
-      );
+        : sideNavOpened.rightSidenavState === SidenavState.HIDDEN ||
+          sideNavOpened.rightSidenavState === SidenavState.ACTIVE
+        ? true
+        : false;
+
+      this.leftSidenavOpened = this.isMobile
+        ? sideNavOpened.leftSidenavState === SidenavState.ACTIVE
+          ? true
+          : false
+        : sideNavOpened.leftSidenavState === SidenavState.HIDDEN ||
+          sideNavOpened.leftSidenavState === SidenavState.ACTIVE
+        ? true
+        : false;
     });
   }
 

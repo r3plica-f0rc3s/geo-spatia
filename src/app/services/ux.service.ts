@@ -6,26 +6,70 @@ export enum SidenavState {
   HIDDEN,
   ACTIVE,
 }
+
+export interface SidenavsState {
+  leftSidenavState: SidenavState;
+  rightSidenavState: SidenavState;
+}
 @Injectable({
   providedIn: 'root',
 })
 export class UxService {
-  private sidenavOpenedSubject = new BehaviorSubject<SidenavState>(SidenavState.DISABLED);
+  private sidenavOpenedSubject = new BehaviorSubject<SidenavsState>({
+    leftSidenavState: SidenavState.DISABLED,
+    rightSidenavState: SidenavState.DISABLED,
+  });
   sidenavOpened$ = this.sidenavOpenedSubject.asObservable();
 
   openSidenav() {
-    this.sidenavOpenedSubject.next(SidenavState.ACTIVE);
+    this.sidenavOpenedSubject.next({
+      rightSidenavState: SidenavState.ACTIVE,
+      leftSidenavState: this.sidenavOpenedSubject.getValue().leftSidenavState,
+    });
+  }
+
+  openLeftSidenav() {
+    this.sidenavOpenedSubject.next({
+      rightSidenavState: this.sidenavOpenedSubject.getValue().rightSidenavState,
+      leftSidenavState: SidenavState.ACTIVE,
+    });
   }
 
   closeSidenav() {
-    this.sidenavOpenedSubject.next(SidenavState.HIDDEN);
+    this.sidenavOpenedSubject.next({
+      rightSidenavState: SidenavState.HIDDEN,
+      leftSidenavState: this.sidenavOpenedSubject.getValue().leftSidenavState,
+    });
   }
-
+  closeLeftSidenav() {
+    this.sidenavOpenedSubject.next({
+      rightSidenavState: this.sidenavOpenedSubject.getValue().rightSidenavState,
+      leftSidenavState: SidenavState.HIDDEN,
+    });
+  }
   enableSidenav() {
-    this.sidenavOpenedSubject.next(SidenavState.HIDDEN);
+    this.sidenavOpenedSubject.next({
+      rightSidenavState: SidenavState.HIDDEN,
+      leftSidenavState: this.sidenavOpenedSubject.getValue().leftSidenavState,
+    });
+  }
+  enableLeftSidenav() {
+    this.sidenavOpenedSubject.next({
+      rightSidenavState: this.sidenavOpenedSubject.getValue().rightSidenavState,
+      leftSidenavState: SidenavState.HIDDEN,
+    });
   }
 
   disableSidenav() {
-    this.sidenavOpenedSubject.next(SidenavState.DISABLED);
+    this.sidenavOpenedSubject.next({
+      rightSidenavState: SidenavState.DISABLED,
+      leftSidenavState: this.sidenavOpenedSubject.getValue().leftSidenavState,
+    });
+  }
+  disableLeftSidenav() {
+    this.sidenavOpenedSubject.next({
+      rightSidenavState: this.sidenavOpenedSubject.getValue().rightSidenavState,
+      leftSidenavState: SidenavState.DISABLED,
+    });
   }
 }
