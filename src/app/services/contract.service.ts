@@ -4,6 +4,13 @@ const Web3 = require('web3');
 import abi from './abi/ABI.json';
 
 // declare let window: any;
+export interface NFT {
+  location: string;
+  name: string;
+  price: string;
+  status: string;
+  svg: string;
+}
 
 @Injectable()
 export class ContractService {
@@ -12,7 +19,7 @@ export class ContractService {
   errorSubject = new BehaviorSubject<string>('');
   error$ = this.errorSubject.asObservable();
 
-  contractAddress = '0x844B9f34Ef221c5c29b406BDd068f4fAB71be211';
+  contractAddress = '0x045aECf094E86554501bF093b77d1a5Cd7e5F165';
   contract: any;
 
   selectedAddress: any;
@@ -37,10 +44,10 @@ export class ContractService {
     }
   }
 
-  async getAllNFTs() {
+  async getAllNFTs(): Promise<NFT[]> {
     const result = await this.contract.methods
       .getAllNFT()
-      .call({ from: this.selectedAddress });
+      .call({ from: this.selectedAddress, layer: 0 });
     return result;
   }
 }

@@ -1,3 +1,4 @@
+import { ContractService } from './../services/contract.service';
 import { MapHelperService } from './../services/map-helper.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -23,7 +24,8 @@ export class NearbyComponent implements OnInit {
       public uxService: UxService,
       private mapHelperService: MapHelperService,
       private router: Router,
-      private media: MediaMatcher
+      private media: MediaMatcher,
+      private contractService: ContractService
     ) {
   }
 

@@ -53,9 +53,4 @@ export class NFTsService {
     );
   }
 
-  loadNFTs() {
-    this.contractService.getAllNFTs().then((nfts) => {
-      this.NFTsSubject.next(nfts);
-    });
-  }
 }
