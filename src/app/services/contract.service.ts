@@ -22,38 +22,45 @@ export interface GeoNFT {
   price: number;
   status: SoldStatus;
 }
+interface WalletInfo {
+  address: string;
+  balance: string;
+}
 
 @Injectable()
 export class ContractService {
-  currentWeb3: any;
+  contractAddress = '0x045aECf094E86554501bF093b77d1a5Cd7e5F165';
 
-  errorSubject = new BehaviorSubject<string>('');
+  private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
+  walletInfo$ = this.walletInfoSubject.asObservable();
+
+  private errorSubject = new BehaviorSubject<string>('');
   error$ = this.errorSubject.asObservable();
 
-  nftsSubject = new BehaviorSubject<GeoNFT[]>(null);
+  private nftsSubject = new BehaviorSubject<GeoNFT[]>(null);
   nfts$ = this.nftsSubject.asObservable();
 
-  contractAddress = '0x045aECf094E86554501bF093b77d1a5Cd7e5F165';
   contract: any;
+  currentWeb3: any;
+  wallet: any;
 
-  selectedAddress: any;
   constructor(private domSanitizer: DomSanitizer) {}
   async init() {
-    const wallet = (window as any).ethereum || (window as any).onewallet;
-    if (!wallet) {
+    this.wallet = (window as any).ethereum || (window as any).onewallet;
+    if (!this.wallet) {
       throw new Error('No supported wallet');
     }
 
     // Ask User permission to connect to Metamask
     //   await window.ethereum.enable();
     try {
-      this.currentWeb3 = new Web3(wallet);
-      this.selectedAddress = (window as any).ethereum.selectedAddress;
+      this.currentWeb3 = new Web3(this.wallet);
 
       this.contract = new this.currentWeb3.eth.Contract(
         abi,
         this.contractAddress
       );
+      await this.loadWalletInfo()
     } catch (error) {
       throw new Error(error);
     }
@@ -65,7 +72,7 @@ export class ContractService {
     }
     const result = await this.contract.methods
       .getAllNFT()
-      .call({ from: this.selectedAddress })
+      .call({ from: this.wallet.selectedAddress })
       .then((nfts: NFT[]) => {
         const geoNFTs: GeoNFT[] = nfts
           .filter((nft) => {
@@ -89,5 +96,13 @@ export class ContractService {
         return geoNFTs;
       });
     return result;
+  }
+
+  async loadWalletInfo(): Promise<void> {
+    const balance = await this.currentWeb3.eth.getBalance(this.wallet.selectedAddress);
+    this.walletInfoSubject.next({
+      address: this.wallet.selectedAddress,
+      balance
+    });
   }
 }
