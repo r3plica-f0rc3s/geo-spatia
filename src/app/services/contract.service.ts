@@ -43,9 +43,13 @@ export class ContractService {
   contract: any;
   currentWeb3: any;
   wallet: any;
+  selectedAddress: any;
 
-  constructor(private domSanitizer: DomSanitizer) {}
+  initializing = false;
+
+  constructor(private domSanitizer: DomSanitizer) { }
   async init() {
+    this.initializing = true;
     this.wallet = (window as any).ethereum || (window as any).onewallet;
     if (!this.wallet) {
       throw new Error('No supported wallet');
@@ -54,55 +58,69 @@ export class ContractService {
     // Ask User permission to connect to Metamask
     //   await window.ethereum.enable();
     try {
+      if (!this.wallet.selectedAddress) {
+        await this.wallet.enable(); // <<< ask for permission
+      }
       this.currentWeb3 = new Web3(this.wallet);
-
       this.contract = new this.currentWeb3.eth.Contract(
         abi,
         this.contractAddress
       );
-      await this.loadWalletInfo()
+
+      await this.loadWalletInfo();
+      this.initializing = false;
+      // await this.loadNFTs();
     } catch (error) {
+      this.initializing = false;
       throw new Error(error);
     }
   }
 
   async loadNFTs(): Promise<GeoNFT[]> {
-    if (!this.contract) {
-      this.init();
-    }
-    const result = await this.contract.methods
-      .getAllNFT()
-      .call({ from: this.wallet.selectedAddress })
-      .then((nfts: NFT[]) => {
-        const geoNFTs: GeoNFT[] = nfts
-          .filter((nft) => {
-            return nft.location.length > 0;
-          })
-          .map((nft: NFT) => {
-            return {
-              name: nft.name,
-              location: new LngLat(
-                Number(nft.location.split(',')[0]),
-                Number(nft.location.split(',')[1])
-              ),
-              image: this.domSanitizer.bypassSecurityTrustHtml(
-                decodeURIComponent(nft.svg)
-              ),
-              price: Number(nft.price),
-              status: SoldStatus[nft.status],
-            };
-          });
-        this.nftsSubject.next(geoNFTs);
-        return geoNFTs;
-      });
-    return result;
+    return new Promise((resolve, reject) => {
+      // TODO: I need to add timeout because of some limits
+      setTimeout(() => {
+        this.contract.methods
+        .getAllNFT()
+        .call({ from: this.wallet.selectedAddress })
+        .then((nfts: NFT[]) => {
+          const geoNFTs: GeoNFT[] = nfts
+            .filter((nft) => {
+              return nft.location.length > 0;
+            })
+            .map((nft: NFT) => {
+              return {
+                name: nft.name,
+                location: new LngLat(
+                  Number(nft.location.split(',')[0]),
+                  Number(nft.location.split(',')[1])
+                ),
+                image: this.domSanitizer.bypassSecurityTrustHtml(
+                  decodeURIComponent(nft.svg)
+                ),
+                price: Number(nft.price),
+                status: SoldStatus[nft.status],
+              };
+            });
+          this.nftsSubject.next(geoNFTs);
+          resolve(geoNFTs);
+          return geoNFTs;
+        })
+      }, 6000);
+    });
   }
 
   async loadWalletInfo(): Promise<void> {
-    const balance = await this.currentWeb3.eth.getBalance(this.wallet.selectedAddress);
-    this.walletInfoSubject.next({
-      address: this.wallet.selectedAddress,
-      balance
-    });
+    return new Promise((resolve, reject) => {
+      const address = this.wallet.selectedAddress;
+        this.currentWeb3.eth.getBalance(this.wallet.selectedAddress)
+        .then((balance) => {
+          this.walletInfoSubject.next({
+            address,
+            balance
+          });
+          resolve();
+        });
+    })
   }
 }

@@ -8,59 +8,7 @@
       'example-container-mobile-left': isMobile
     }"
   >
-    <mat-toolbar color="secondary">
-      <button
-        (click)="openDialog()"
-        class="wallet-button-wrapper"
-        mat-raised-button
-        color="primary"
-        aria-label="Example icon-button with menu icon"
-      >
-        <button
-          class="mini-fab"
-          disableRipple
-          mat-mini-fab
-          color="secondary"
-          (click)="uxService.openLeftSidenav()"
-        >
-          <mat-icon>person</mat-icon>
-        </button>
-        <div class="wallet-button">
-          <div class="start">
-            6Tgdf6fDHDbh7GhBF7YGVGGHVGVgghjtfrfg77YFGBui78TFd4R4FE
-          </div>
-          <div class="end">dE2g</div>
-        </div>
-      </button>
-      <div class="sidenav-open fab-close" *ngIf="isMobile">
-        <button (click)="uxService.closeLeftSidenav()" mat-icon-button>
-          <mat-icon color="primary">close</mat-icon>
-        </button>
-      </div>
-    </mat-toolbar>
-
-    <div class="info-wrapper">
-      <button class="big-avatar" mat-fab color="primary">
-        <mat-icon>person</mat-icon>
-      </button>
-      <div>
-        <span>
-          ~ 0.00 $
-        </span>
-      </div>
-      <div class="info-inner">
-        <span class="amount"> 0 </span>
-
-        <span> ONE </span>
-
-      </div>
-      <div class="address">
-        <span>
-          987654678uihgfd6456879uoijhbvghfgyui
-        </span>
-
-      </div>
-    </div>
+    <app-wallet></app-wallet>
   </mat-drawer>
 
   <!-- Move to separate component -->

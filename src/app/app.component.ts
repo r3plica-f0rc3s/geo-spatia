@@ -1,3 +1,4 @@
+import { ContractService } from './services/contract.service';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { LngLat, Map } from 'mapbox-gl';
@@ -5,6 +6,7 @@ import { DialogComponent } from './dialog/dialog.component';
 import { ImageMarker } from './services/map-helper.service';
 import { SidenavState, UxService } from './services/ux.service';
 import { MediaMatcher } from '@angular/cdk/layout';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -20,10 +22,13 @@ export class AppComponent implements OnInit {
   public confirmOrderOpened = false;
   rightSidenavOpened: boolean;
   leftSidenavOpened: boolean;
+  loading: false;
   constructor(
     public uxService: UxService,
     public dialog: MatDialog,
-    private media: MediaMatcher
+    private media: MediaMatcher,
+    private contractService: ContractService,
+    private router: Router
   ) {
     // this.mobileQueryListener = () => changeDetectorRef.detectChanges();
     // this.isMobile.addListener(this.mobileQueryListener);
@@ -50,6 +55,9 @@ export class AppComponent implements OnInit {
         ? true
         : false;
     });
+    this.contractService.init().then(() => {
+      this.router.navigate(['/', 'nearby'])
+    })
   }
 
   openDialog() {

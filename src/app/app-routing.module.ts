@@ -18,7 +18,7 @@ const routes: Routes = [
     path: 'confirm-order/:name',
   },
   {
-    path: '',
+    path: '**',
     redirectTo: 'start',
     pathMatch: 'full',
   },

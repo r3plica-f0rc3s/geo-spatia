@@ -1,3 +1,5 @@
+import { ShortAddressPipe } from './pipes/short-address.pipe';
+import { DeviceDetectorService } from './services/device-detector.service';
 import { ContractService } from './services/contract.service';
 import { NFTsService } from './services/NFTs.service';
 import { SVGGeneratorService } from './services/svggenerator.service';
@@ -22,6 +24,7 @@ import { ConfirmOrderComponent } from './confirm-order/confirm-order.component';
 import { StartComponent } from './start/start.component';
 import { NearbyComponent } from './nearby/nearby.component';
 import { NftListComponent } from './nft-list/nft-list.component';
+import { WalletComponent } from './wallet/wallet.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,6 +34,8 @@ import { NftListComponent } from './nft-list/nft-list.component';
     StartComponent,
     NearbyComponent,
     NftListComponent,
+    WalletComponent,
+    ShortAddressPipe,
   ],
   imports: [
     BrowserModule,
@@ -49,11 +54,13 @@ import { NftListComponent } from './nft-list/nft-list.component';
     }),
   ],
   providers: [
-    GeolocationService, 
-    MapService, 
+    GeolocationService,
+    MapService,
     SVGGeneratorService,
     ContractService,
-    NFTsService],
+    NFTsService,
+    DeviceDetectorService
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
