@@ -25,8 +25,9 @@ import { StartComponent } from './start/start.component';
 import { NearbyComponent } from './nearby/nearby.component';
 import { NftListComponent } from './nft-list/nft-list.component';
 import { WalletComponent } from './wallet/wallet.component';
+import { CourtainComponent } from './courtain/courtain.component';
 @NgModule({
-  declarations: [
+  declarations: [	
     AppComponent,
     DialogComponent,
     MapGlComponent,
@@ -36,7 +37,8 @@ import { WalletComponent } from './wallet/wallet.component';
     NftListComponent,
     WalletComponent,
     ShortAddressPipe,
-  ],
+      CourtainComponent
+   ],
   imports: [
     BrowserModule,
     MatSidenavModule,

@@ -56,7 +56,7 @@ export class AppComponent implements OnInit {
         : false;
     });
     this.contractService.init().then(() => {
-      this.router.navigate(['/', 'nearby'])
+      // this.router.navigate(['/', 'nearby'])
     })
   }
 

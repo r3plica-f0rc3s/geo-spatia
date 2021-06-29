@@ -1,3 +1,4 @@
+import { CourtainComponent } from './courtain/courtain.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ConfirmOrderComponent } from './confirm-order/confirm-order.component';
@@ -5,6 +6,10 @@ import { NearbyComponent } from './nearby/nearby.component';
 import { StartComponent } from './start/start.component';
 
 const routes: Routes = [
+  {
+    component: CourtainComponent,
+    path: 'courtain'
+  },
   {
     component: StartComponent,
     path: 'start',
