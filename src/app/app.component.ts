@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
   public confirmOrderOpened = false;
   rightSidenavOpened: boolean;
   leftSidenavOpened: boolean;
-  loading: false;
+  loading = false;
   constructor(
     public uxService: UxService,
     public dialog: MatDialog,
@@ -84,10 +84,14 @@ export class AppComponent implements OnInit {
 
   async connectToMetamask() {
     try {
+      this.loading = true;
       await this.contractService.init();
       await this.router.navigate(['/', 'nearby']);
       await this.contractService.loadNFTs();
       this.curtain = false;
+      setTimeout(() => {
+        this.loading = false;
+      },2000);
       console.log('curtain: ', this.curtain);
 
       // convert nfts to imagemarkers

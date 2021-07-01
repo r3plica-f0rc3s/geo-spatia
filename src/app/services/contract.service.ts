@@ -29,7 +29,7 @@ interface WalletInfo {
 
 @Injectable()
 export class ContractService {
-  contractAddress = '0x045aECf094E86554501bF093b77d1a5Cd7e5F165';
+  contractAddress = '0x844B9f34Ef221c5c29b406BDd068f4fAB71be211';
 
   private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
   walletInfo$ = this.walletInfoSubject.asObservable();
@@ -47,7 +47,7 @@ export class ContractService {
 
   initializing = false;
 
-  constructor(private domSanitizer: DomSanitizer) { }
+  constructor(private domSanitizer: DomSanitizer) {}
   async init() {
     this.initializing = true;
     this.wallet = (window as any).ethereum || (window as any).onewallet;
@@ -68,6 +68,7 @@ export class ContractService {
       );
 
       await this.loadWalletInfo();
+      await this.loadNFTs();
       this.initializing = false;
       // await this.loadNFTs();
     } catch (error) {
@@ -81,46 +82,72 @@ export class ContractService {
       // TODO: I need to add timeout because of some limits
       setTimeout(() => {
         this.contract.methods
-        .getAllNFT()
-        .call({ from: this.wallet.selectedAddress })
-        .then((nfts: NFT[]) => {
-          const geoNFTs: GeoNFT[] = nfts
-            .filter((nft) => {
-              return nft.location.length > 0;
-            })
-            .map((nft: NFT) => {
-              return {
-                name: nft.name,
-                location: new LngLat(
-                  Number(nft.location.split(',')[0]),
-                  Number(nft.location.split(',')[1])
-                ),
-                image: this.domSanitizer.bypassSecurityTrustHtml(
-                  decodeURIComponent(nft.svg)
-                ),
-                price: Number(nft.price),
-                status: SoldStatus[nft.status],
-              };
-            });
-          this.nftsSubject.next(geoNFTs);
-          resolve(geoNFTs);
-          return geoNFTs;
-        })
+          .getAllNFT()
+          .call({ from: this.wallet.selectedAddress })
+          .then((nfts: NFT[]) => {
+            const geoNFTs: GeoNFT[] = nfts
+              .filter((nft) => {
+                return nft.location.length > 0;
+              })
+              .map((nft: NFT) => {
+                return {
+                  name: nft.name,
+                  location: new LngLat(
+                    Number(nft.location.split(',')[0]),
+                    Number(nft.location.split(',')[1])
+                  ),
+                  image: this.domSanitizer.bypassSecurityTrustHtml(
+                    decodeURIComponent(nft.svg)
+                  ),
+                  price: Number(nft.price),
+                  status: SoldStatus[nft.status],
+                };
+              });
+            this.nftsSubject.next(geoNFTs);
+            resolve(geoNFTs);
+            return geoNFTs;
+          });
       }, 6000);
     });
   }
 
   async loadWalletInfo(): Promise<void> {
     return new Promise((resolve, reject) => {
-      const address = this.wallet.selectedAddress;
-        this.currentWeb3.eth.getBalance(this.wallet.selectedAddress)
-        .then((balance) => {
-          this.walletInfoSubject.next({
-            address,
-            balance
-          });
-          resolve();
+      setTimeout(() => {
+
+        const address = this.wallet.selectedAddress;
+        this.currentWeb3.eth
+          .getBalance(this.wallet.selectedAddress)
+          .then((balance) => {
+            this.walletInfoSubject.next({
+              address,
+              balance,
+            });
+            resolve();
         });
-    })
+      }, 6000);
+    });
+  }
+
+  async buyNFT(tokenId: string, amount: number): Promise<void> {
+    const result = await this.contract.methods
+      .Buy(tokenId)
+      .call({ from: this.wallet.selectedAddress, value: amount });
+
+    result
+      .on('transactionHash', (hash) => {
+        console.log(
+          'Transaction sent successfully. Check console for Transaction hash'
+        );
+        console.log('Transaction Hash is ', hash);
+      })
+      .once('confirmation', (confirmationNumber, receipt) => {
+        if (receipt.status) {
+          console.log('Transaction processed successfully');
+        } else {
+          console.log('Transaction failed');
+        }
+        console.log(receipt);
+      });
   }
 }

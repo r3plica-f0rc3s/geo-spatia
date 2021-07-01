@@ -44,7 +44,6 @@ export class NearbyComponent implements OnInit {
     this.isMobile = this.media.matchMedia('(max-width: 700px)').matches;
     this.uxService.enableSidenav();
     this.uxService.enableLeftSidenav();
-    this.contractService.loadNFTs();
     // this.mapHelperService.setMultipleMarkers(this.NFTs.map((nft) => {
     //   return {
     //     image: nft.svg,

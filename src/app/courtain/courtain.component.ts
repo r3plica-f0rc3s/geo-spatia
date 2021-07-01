@@ -1,10 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { timer } from 'rxjs';
-import { animate, style, transition, trigger } from '@angular/animations';
-import { ContractService } from '../services/contract.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
-
 @Component({
   selector: 'app-courtain',
   templateUrl: './courtain.component.html',
@@ -15,14 +10,11 @@ export class CourtainComponent implements OnInit {
   @Output()
   connectToMetamask = new EventEmitter();
   constructor(
-    private contractService: ContractService,
-
-    private router: Router
   ) {}
 
   ngOnInit() {}
 
-  async connect() {
+  connect() {
     this.connectToMetamask.next();
   }
 }
