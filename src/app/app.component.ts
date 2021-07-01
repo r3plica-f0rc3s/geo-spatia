@@ -67,9 +67,9 @@ export class AppComponent implements OnInit {
         ? true
         : false;
     });
-    this.contractService.init().then(() => {
-      // this.router.navigate(['/', 'nearby'])
-    });
+    // this.contractService.init().then(() => {
+    //   // this.router.navigate(['/', 'nearby'])
+    // });
   }
 
   openDialog() {
@@ -86,6 +86,7 @@ export class AppComponent implements OnInit {
     try {
       await this.contractService.init();
       await this.router.navigate(['/', 'nearby']);
+      await this.contractService.loadNFTs();
       this.curtain = false;
       console.log('curtain: ', this.curtain);
 
