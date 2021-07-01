@@ -7,12 +7,23 @@ import { ImageMarker } from './services/map-helper.service';
 import { SidenavState, UxService } from './services/ux.service';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { Router } from '@angular/router';
+import { animate, style, transition, trigger } from '@angular/animations';
+import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
+  animations: [
+    trigger('slideOut', [
+      transition(':leave', [
+        style({ height: '100%' }),
+        animate('1000ms ease-out', style({ height: '0px' })),
+      ]),
+    ]),
+  ],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
+  curtain = true;
   public SidenavState = SidenavState;
   isMobile: boolean;
   title = 'geo-spatia';
@@ -28,7 +39,8 @@ export class AppComponent implements OnInit {
     public dialog: MatDialog,
     private media: MediaMatcher,
     private contractService: ContractService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {
     // this.mobileQueryListener = () => changeDetectorRef.detectChanges();
     // this.isMobile.addListener(this.mobileQueryListener);
@@ -57,7 +69,7 @@ export class AppComponent implements OnInit {
     });
     this.contractService.init().then(() => {
       // this.router.navigate(['/', 'nearby'])
-    })
+    });
   }
 
   openDialog() {
@@ -68,5 +80,27 @@ export class AppComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       console.log(`Dialog result: ${result}`);
     });
+  }
+
+  async connectToMetamask() {
+    try {
+      await this.contractService.init();
+      this.curtain = false;
+     await this.router.navigate(['/', 'nearby', {
+       data: {
+
+       }
+     }]);
+      console.log('curtain: ', this.curtain);
+
+      // convert nfts to imagemarkers
+    } catch (error) {
+      this.snackBar.open(error, 'Dismiss', {
+        duration: 3000,
+        verticalPosition: 'top',
+        panelClass: ['snackbar-error'],
+      });
+      console.error(error);
+    }
   }
 }

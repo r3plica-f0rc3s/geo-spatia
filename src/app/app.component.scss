@@ -1,4 +1,6 @@
-
+:host {
+  position: relative;
+}
 .example-container {
   width: 18%;
   height: 100%;
@@ -46,3 +48,11 @@
   font-weight: 600;
 }
 
+.curtain {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: 99999;
+}

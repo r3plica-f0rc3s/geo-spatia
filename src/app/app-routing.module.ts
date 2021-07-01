@@ -7,10 +7,6 @@ import { StartComponent } from './start/start.component';
 
 const routes: Routes = [
   {
-    component: CourtainComponent,
-    path: 'courtain'
-  },
-  {
     component: StartComponent,
     path: 'start',
   },
@@ -24,7 +20,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'start',
+    redirectTo: '',
     pathMatch: 'full',
   },
 ];

@@ -12,28 +12,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./start.component.scss'],
 })
 export class StartComponent implements OnInit {
-  @Output()
-  changeSlide = new EventEmitter();
+
   constructor(
-    private contractService: ContractService,
-    private snackBar: MatSnackBar,
-    private router: Router
+
   ) {}
 
   ngOnInit(): void {}
-  async connect() {
-    try {
-      await this.contractService.init();
-      this.router.navigate(['/', 'nearby'])
-      this.changeSlide.next();
-      // convert nfts to imagemarkers
-    } catch (error) {
-      this.snackBar.open(error, 'Dismiss', {
-        duration: 3000,
-        verticalPosition: 'top',
-        panelClass: ['snackbar-error'],
-      });
-      console.error(error);
-    }
-  }
+
 }

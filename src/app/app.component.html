@@ -36,3 +36,7 @@
     <app-nft-list></app-nft-list>
   </mat-drawer>
 </mat-drawer-container>
+<div class="curtain" [@slideInOut]="!curtain" >
+  <app-courtain (connectToMetamask)="connectToMetamask()"></app-courtain>
+</div>
+

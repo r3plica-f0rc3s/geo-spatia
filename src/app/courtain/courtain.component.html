@@ -1,9 +1,18 @@
-<div [@slideInOut] (changeSlide)="slideUp(slideInOut)" class="container">
+<div class="container">
   <div class="title">
-    <span> NFT </span>
+    <span> GEONFT </span>
   </div>
   <div class="logo-image"></div>
   <div class="metamask-button">
-    <app-start></app-start>
+    <div class="location-button">
+      <button
+        (click)="connect()"
+        mat-raised-button
+        color="primary"
+      >
+        <span> Connect to Metamask </span>
+      </button>
+    </div>
+
   </div>
 </div>
