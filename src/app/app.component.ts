@@ -13,8 +13,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   animations: [
     trigger('slideOut', [
       transition(':leave', [
-        style({ height: '100%' }),
-        animate('1000ms ease-out', style({ height: '0px' })),
+        style({ transform: 'translateY(0%)' }),
+        animate('0.5s ease-in-out', style({ transform: 'translateY(-100%)' }))
       ]),
     ]),
   ],
@@ -85,12 +85,8 @@ export class AppComponent implements OnInit {
   async connectToMetamask() {
     try {
       await this.contractService.init();
+      await this.router.navigate(['/', 'nearby']);
       this.curtain = false;
-     await this.router.navigate(['/', 'nearby', {
-       data: {
-
-       }
-     }]);
       console.log('curtain: ', this.curtain);
 
       // convert nfts to imagemarkers

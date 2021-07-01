@@ -36,7 +36,7 @@
     <app-nft-list></app-nft-list>
   </mat-drawer>
 </mat-drawer-container>
-<div class="curtain" [@slideInOut]="!curtain" >
+<div class="curtain" [@slideOut] *ngIf="curtain">
   <app-courtain (connectToMetamask)="connectToMetamask()"></app-courtain>
 </div>
 
