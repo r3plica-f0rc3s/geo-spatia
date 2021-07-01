@@ -37,6 +37,6 @@
   </mat-drawer>
 </mat-drawer-container>
 <div class="curtain" [@slideOut] *ngIf="curtain">
-  <app-courtain (connectToMetamask)="connectToMetamask()"></app-courtain>
+  <app-courtain (connectToMetamask)="connectToMetamask()" [loading]="loading"></app-courtain>
 </div>
 

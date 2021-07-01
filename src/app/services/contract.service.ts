@@ -87,7 +87,7 @@ export class ContractService {
           .then((nfts: NFT[]) => {
             const geoNFTs: GeoNFT[] = nfts
               .filter((nft) => {
-                return nft.location.length > 0;
+                return nft.location.length > 0 && nft.location !== 'coordinates';
               })
               .map((nft: NFT) => {
                 return {

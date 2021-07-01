@@ -14,7 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     trigger('slideOut', [
       transition(':leave', [
         style({ transform: 'translateY(0%)' }),
-        animate('0.5s ease-in-out', style({ transform: 'translateY(-100%)' }))
+        animate('0.5s cubic-bezier(0.32,0,1,1)', style({ transform: 'translateY(-100%)' }))
       ]),
     ]),
   ],
@@ -96,6 +96,7 @@ export class AppComponent implements OnInit {
 
       // convert nfts to imagemarkers
     } catch (error) {
+      console.log('error happened');
       this.snackBar.open(error, 'Dismiss', {
         duration: 3000,
         verticalPosition: 'top',

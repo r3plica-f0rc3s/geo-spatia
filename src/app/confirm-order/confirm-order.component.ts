@@ -1,3 +1,4 @@
+import { ContractService } from './../services/contract.service';
 import { MapHelperService } from './../services/map-helper.service';
 import { Component, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,7 +14,8 @@ export class ConfirmOrderComponent implements OnInit {
     private NFTsService: NFTsService,
     private activatedRoute: ActivatedRoute,
     private mapHelperService: MapHelperService,
-    private router: Router
+    private router: Router,
+    private contractService: ContractService
   ) { }
   ngOnInit(): void {
     this.activatedRoute.params.pipe(
@@ -28,6 +30,12 @@ export class ConfirmOrderComponent implements OnInit {
         coordinates: this.nft.location
       });
     });
+  }
+
+  buyNFT(): void {
+    this.contractService.buyNFT(this.nft.name, 1).then(() => {
+      // display buyed modal
+    })
   }
 }
 

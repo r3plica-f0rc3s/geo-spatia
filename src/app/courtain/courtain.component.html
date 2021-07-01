@@ -2,17 +2,18 @@
   <div class="title">
     <span>GeoNFT</span>
   </div>
-  <div class="logo-image"></div>
   <div class="metamask-button">
     <div class="location-button">
       <button
+        [disabled]="loading"
         (click)="connect()"
         mat-raised-button
         color="primary"
+        [@disableButton]="loading ? false : true"
       >
-        <span> Connect to Metamask </span>
+        <span *ngIf="!loading"> Connect to Metamask </span>
+        <mat-icon><mat-spinner diameter="20"> </mat-spinner></mat-icon>
       </button>
     </div>
-
   </div>
 </div>

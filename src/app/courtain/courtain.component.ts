@@ -1,16 +1,30 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { timer } from 'rxjs';
 @Component({
   selector: 'app-courtain',
   templateUrl: './courtain.component.html',
   styleUrls: ['./courtain.component.scss'],
+  animations: [
+    trigger('disableButton', [
+      state('true', style({ width: '*' })),
+      state('false', style({ width: '20px' })),
+      transition('false <=> true', animate('500ms cubic-bezier(0.32,0,1,1)')),
+    ]),
+  ],
 })
 export class CourtainComponent implements OnInit {
-  slideOut = timer(0, 5000);
   @Output()
   connectToMetamask = new EventEmitter();
-  constructor(
-  ) {}
+  @Input()
+  loading = false;
+  constructor() {}
 
   ngOnInit() {}
 
