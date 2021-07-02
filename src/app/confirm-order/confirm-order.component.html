@@ -1,20 +1,30 @@
-<div class="close-wrapper">
-  <button mat-icon-button [routerLink]="['/', 'nearby']">
-    <mat-icon color="primary">close</mat-icon>
-  </button>
+<div class="top-wrapper">
+  <div class="top-label">
+    <span>
+      Buy NFT
+    </span>
+  </div>
+  <div class="close-wrapper">
+    <button mat-icon-button [routerLink]="['/', 'nearby']">
+      <mat-icon color="primary">close</mat-icon>
+    </button>
+  </div>
 </div>
 
+
 <div class="nft-name">
-  <div class="nft-image">
-    <svg
-      preserveAspectRatio="none"
-      viewBox="0 0 300 300"
-      [innerHTML]="nft.image"
-    ></svg>
-  </div>
+  <div
+    class="nft-image"
+    preserveAspectRatio="none"
+    viewBox="0 0 300 300"
+    [innerHTML]="nft.image"
+  ></div>
+
   <div class="description">
-    <span class="mat-h1">{{ nft.name }}</span>
-    <span class="mat-h3">{{ nft.price }}</span>
+    <span class="nft-name">{{ nft.name }}</span>
+    <div class="price">
+      <span class="mat-h3">{{ nft.price }} ONE</span>
+    </div>
   </div>
 </div>
 <div class="buy-button">
