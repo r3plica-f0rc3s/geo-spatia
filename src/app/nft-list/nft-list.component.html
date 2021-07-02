@@ -1,3 +1,8 @@
+<div class="top-label">
+  <span>
+    Visible NFTs
+  </span>
+</div>
 <mat-selection-list [multiple]="false">
   <mat-list-option
     *ngFor="let nft of nfts; let i = index"
@@ -40,7 +45,7 @@
         <span class="label">AVAILABLE</span>
         <div class="details">
           <span>
-            <button mat-raised-button color="accent">Buy</button>
+            <button disableRipple mat-raised-button color="accent">Buy</button>
           </span>
         </div>
       </div>

@@ -1,35 +1,36 @@
 <mgl-map
-[style]="'mapbox://styles/mapbox/streets-v9'"
-[zoom]="[0]"
-[center]="[-74.5, 40]"
-(load)="onMapLoaded($event)"
+  [style]="'mapbox://styles/mapbox/streets-v9'"
+  [zoom]="[0]"
+  [center]="[-74.5, 40]"
+  (load)="onMapLoaded($event)"
 >
-<mgl-marker
-  *ngIf="mapStatus.showUser"
-  [lngLat]="[mapStatus.userLocation.lng, mapStatus.userLocation.lat]"
-  #markers
->
-  <svg height="100" width="100">
-    <circle
-      cx="50"
-      cy="50"
-      r="10"
-      stroke="white"
-      stroke-width="2"
-      fill="#4E8EF7"
-    />
-  </svg>
-</mgl-marker>
-<mgl-marker
-  *ngFor="let marker of mapStatus.markers"
-  [lngLat]="marker.coordinates"
->
-<div class="marker" height="24" width="24">
-  <div
-    preserveAspectRatio="none"
-    viewBox="0 0 300 300"
-    [innerHTML]="marker.image"
-  ></div>
-</div>
-</mgl-marker>
+  <mgl-marker
+    *ngIf="mapStatus.showUser"
+    [lngLat]="[mapStatus.userLocation.lng, mapStatus.userLocation.lat]"
+    #markers
+  >
+    <svg height="100" width="100">
+      <circle
+        cx="50"
+        cy="50"
+        r="10"
+        stroke="white"
+        stroke-width="2"
+        fill="#4E8EF7"
+      />
+    </svg>
+  </mgl-marker>
+  <mgl-marker
+    *ngFor="let marker of mapStatus.markers"
+    [lngLat]="marker.coordinates"
+  >
+    <div class="marker" height="24" width="24">
+      <div
+        class="svg-icon"
+        preserveAspectRatio="none"
+        viewBox="0 0 300 300"
+        [innerHTML]="marker.image"
+      ></div>
+    </div>
+  </mgl-marker>
 </mgl-map>

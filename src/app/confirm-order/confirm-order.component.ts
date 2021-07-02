@@ -25,10 +25,10 @@ export class ConfirmOrderComponent implements OnInit {
       if (!this.nft) {
         this.router.navigate(['/', 'nearby'])
       }
-      this.mapHelperService.setSingleMarker({
-        image: this.nft.image,
-        coordinates: this.nft.location
-      });
+      // this.mapHelperService.setSingleMarker({
+      //   image: this.nft.image,
+      //   coordinates: this.nft.location
+      // });
     });
   }
 
