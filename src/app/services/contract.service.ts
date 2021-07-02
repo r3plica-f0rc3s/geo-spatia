@@ -66,7 +66,8 @@ export class ContractService {
         abi,
         this.contractAddress
       );
-
+      this.selectedAddress = this.wallet.selectedAddress;
+      console.log('selected address', this.selectedAddress);
       await this.loadWalletInfo();
       await this.loadNFTs();
       this.initializing = false;
@@ -80,7 +81,6 @@ export class ContractService {
   async loadNFTs(): Promise<GeoNFT[]> {
     return new Promise((resolve, reject) => {
       // TODO: I need to add timeout because of some limits
-      setTimeout(() => {
         this.contract.methods
           .getAllNFT()
           .call({ from: this.wallet.selectedAddress })
@@ -112,17 +112,15 @@ export class ContractService {
             resolve(geoNFTs);
             return geoNFTs;
           });
-      }, 6000);
     });
   }
 
   async loadWalletInfo(): Promise<void> {
     return new Promise((resolve, reject) => {
-      setTimeout(() => {
 
         const address = this.wallet.selectedAddress;
         this.currentWeb3.eth
-          .getBalance(this.wallet.selectedAddress)
+          .getBalance(this.selectedAddress)
           .then((balance) => {
             this.walletInfoSubject.next({
               address,
@@ -130,7 +128,6 @@ export class ContractService {
             });
             resolve();
         });
-      }, 6000);
     });
   }
 
