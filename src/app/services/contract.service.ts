@@ -29,7 +29,7 @@ interface WalletInfo {
 
 @Injectable()
 export class ContractService {
-  contractAddress = '0x844B9f34Ef221c5c29b406BDd068f4fAB71be211';
+  contractAddress = '0xCD81296d7088C0aCC243Adf72D1031cB5E5877cf';
 
   private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
   walletInfo$ = this.walletInfoSubject.asObservable();
@@ -84,12 +84,17 @@ export class ContractService {
         this.contract.methods
           .getAllNFT()
           .call({ from: this.wallet.selectedAddress })
+          .then((nfts) => {
+            console.log('nfts', nfts);
+            return nfts;
+          })
           .then((nfts: NFT[]) => {
             const geoNFTs: GeoNFT[] = nfts
               .filter((nft) => {
-                return nft.location.length > 0 && nft.location !== 'coordinates';
+                return nft.location.length > 0;
               })
               .map((nft: NFT) => {
+                console.log('mapping nft', nft);
                 return {
                   name: nft.name,
                   location: new LngLat(
