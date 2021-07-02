@@ -26,6 +26,7 @@ import { NFTsService } from './services/NFTs.service';
 import { SVGGeneratorService } from './services/svggenerator.service';
 import { StartComponent } from './start/start.component';
 import { WalletComponent } from './wallet/wallet.component';
+import { NftBoughtComponent } from './nft-bought/nft-bought.component';
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import { WalletComponent } from './wallet/wallet.component';
     WalletComponent,
     ShortAddressPipe,
     CourtainComponent,
+    NftBoughtComponent,
   ],
   imports: [
     BrowserModule,

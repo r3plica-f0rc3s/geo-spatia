@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ConfirmOrderComponent } from './confirm-order/confirm-order.component';
 import { NearbyComponent } from './nearby/nearby.component';
 import { StartComponent } from './start/start.component';
+import { NftBoughtComponent } from './nft-bought/nft-bought.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,10 @@ const routes: Routes = [
   {
     component: ConfirmOrderComponent,
     path: 'confirm-order/:name',
+  },
+  {
+    component: NftBoughtComponent,
+    path: 'nft-bought',
   },
   {
     path: '**',

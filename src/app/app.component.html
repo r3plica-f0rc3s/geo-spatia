@@ -13,8 +13,10 @@
 
   <!-- Move to separate component -->
   <app-map-gl [userLocation]="userLocation" [markers]="markers"></app-map-gl>
+<div [@slideOut] *ngIf="confirmOrder" >
+  <router-outlet (buyNft)="buyNft()"></router-outlet>
+</div>
 
-  <router-outlet></router-outlet>
 
   <mat-drawer
     #drawer

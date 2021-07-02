@@ -24,6 +24,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class AppComponent implements OnInit {
   curtain = true;
+  confirmOrder = true;
   public SidenavState = SidenavState;
   isMobile: boolean;
   title = 'geo-spatia';
@@ -104,5 +105,9 @@ export class AppComponent implements OnInit {
       });
       console.error(error);
     }
+  }
+  async buyNft() {
+    this.router.navigate(['/', 'nft-bought']);
+
   }
 }
