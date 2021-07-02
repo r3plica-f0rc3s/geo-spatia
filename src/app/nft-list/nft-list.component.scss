@@ -89,3 +89,10 @@ mat-list-option {
     color: rgb(221, 221, 221);
   }
 }
+.no-results {
+  display: flex;
+  place-content: center;
+  align-items: center;
+  align-content: center;
+  height: 100%;
+}

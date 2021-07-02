@@ -1,3 +1,4 @@
+import { PriceConverterService } from './services/price-converter.service';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -27,6 +28,7 @@ import { SVGGeneratorService } from './services/svggenerator.service';
 import { StartComponent } from './start/start.component';
 import { WalletComponent } from './wallet/wallet.component';
 import { NftBoughtComponent } from './nft-bought/nft-bought.component';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -45,6 +47,7 @@ import { NftBoughtComponent } from './nft-bought/nft-bought.component';
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     MatSidenavModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -67,6 +70,7 @@ import { NftBoughtComponent } from './nft-bought/nft-bought.component';
     ContractService,
     NFTsService,
     DeviceDetectorService,
+    PriceConverterService
   ],
   bootstrap: [AppComponent],
 })

@@ -32,7 +32,7 @@ export class NearbyComponent implements OnInit {
         return;
       }
       this.NFTs = nfts;
-      this.mapHelperService.setNearby(this.NFTs.map((nft) => {
+      this.mapHelperService.setMultipleMarkers(this.NFTs.map((nft) => {
         return {
           image: nft.image,
           coordinates: nft.location

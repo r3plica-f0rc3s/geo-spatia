@@ -22,14 +22,14 @@ export interface GeoNFT {
   price: number;
   status: SoldStatus;
 }
-interface WalletInfo {
+export interface WalletInfo {
   address: string;
   balance: string;
 }
 
 @Injectable()
 export class ContractService {
-  contractAddress = '0xCD81296d7088C0aCC243Adf72D1031cB5E5877cf';
+  contractAddress = '0x844B9f34Ef221c5c29b406BDd068f4fAB71be211';
 
   private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
   walletInfo$ = this.walletInfoSubject.asObservable();
@@ -91,7 +91,7 @@ export class ContractService {
           .then((nfts: NFT[]) => {
             const geoNFTs: GeoNFT[] = nfts
               .filter((nft) => {
-                return nft.location.length > 0;
+                return nft.location.length > 0 && nft.location !== 'coordinates';
               })
               .map((nft: NFT) => {
                 console.log('mapping nft', nft);
@@ -117,14 +117,14 @@ export class ContractService {
 
   async loadWalletInfo(): Promise<void> {
     return new Promise((resolve, reject) => {
-
         const address = this.wallet.selectedAddress;
         this.currentWeb3.eth
           .getBalance(this.selectedAddress)
           .then((balance) => {
+            const displayBalance = this.currentWeb3.utils.fromWei(balance, 'ether');
             this.walletInfoSubject.next({
               address,
-              balance,
+              balance: displayBalance,
             });
             resolve();
         });

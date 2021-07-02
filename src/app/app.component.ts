@@ -1,4 +1,4 @@
-import { ContractService } from './services/contract.service';
+import { ContractService, GeoNFT } from './services/contract.service';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { LngLat, Map } from 'mapbox-gl';
@@ -14,7 +14,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     trigger('slideOut', [
       transition(':leave', [
         style({ transform: 'translateY(0%)' }),
-        animate('0.5s cubic-bezier(0.32,0,1,1)', style({ transform: 'translateY(-100%)' }))
+        animate(
+          '0.5s cubic-bezier(0.32,0,1,1)',
+          style({ transform: 'translateY(-100%)' })
+        ),
       ]),
     ]),
   ],
@@ -35,6 +38,9 @@ export class AppComponent implements OnInit {
   rightSidenavOpened: boolean;
   leftSidenavOpened: boolean;
   loading = false;
+  subscriptions = [];
+  nfts: GeoNFT[] = [];
+
   constructor(
     public uxService: UxService,
     public dialog: MatDialog,
@@ -48,6 +54,16 @@ export class AppComponent implements OnInit {
     // console.log("mobileSidenav: ", this.isMobile, "mobilequerylistener: ", this.mobileQueryListener);
   }
   ngOnInit(): void {
+    const wasStarted = window.localStorage.getItem('wasStarted');
+    if (wasStarted) {
+      this.connectToMetamask();
+    }
+    this.subscriptions.push(
+      this.contractService.nfts$.subscribe((nfts) => {
+        this.nfts = nfts;
+      })
+    );
+
     this.isMobile = this.media.matchMedia('(max-width: 700px)').matches;
     this.uxService.sidenavOpened$.subscribe((sideNavOpened) => {
       this.rightSidenavOpened = this.isMobile
@@ -68,6 +84,12 @@ export class AppComponent implements OnInit {
         ? true
         : false;
     });
+    this.subscriptions.push(
+      this.contractService.nfts$.subscribe((nfts) => {
+        this.nfts = nfts;
+      })
+    );
+
     // this.contractService.init().then(() => {
     //   // this.router.navigate(['/', 'nearby'])
     // });
@@ -84,6 +106,7 @@ export class AppComponent implements OnInit {
   }
 
   async connectToMetamask() {
+    window.localStorage.setItem('wasStarted', 'true');
     try {
       this.loading = true;
       await this.contractService.init();
@@ -92,7 +115,7 @@ export class AppComponent implements OnInit {
       this.curtain = false;
       setTimeout(() => {
         this.loading = false;
-      },2000);
+      }, 2000);
       console.log('curtain: ', this.curtain);
 
       // convert nfts to imagemarkers
@@ -108,6 +131,5 @@ export class AppComponent implements OnInit {
   }
   async buyNft() {
     this.router.navigate(['/', 'nft-bought']);
-
   }
 }

@@ -34,18 +34,18 @@
   </button>
   <div>
     <span>
-      ~ 0.00 $
+      ~ {{ convertedBalance }} $
     </span>
   </div>
   <div class="info-inner">
-    <span class="amount"> {{(contractService.walletInfo$ | async)?.balance}} </span>
+    <span class="amount"> {{ walletInfo.balance }} </span>
 
     <span> ONE </span>
 
   </div>
   <div class="address">
     <span>
-      {{ (contractService.walletInfo$ | async)?.address }}
+      {{ walletInfo.address }}
     </span>
 
   </div>

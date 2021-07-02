@@ -1,7 +1,10 @@
-import { ContractService } from './../services/contract.service';
+import { filter, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { PriceConverterService } from './../services/price-converter.service';
+import { ContractService, WalletInfo } from './../services/contract.service';
 import { DeviceDetectorService } from './../services/device-detector.service';
 import { UxService } from './../services/ux.service';
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-wallet',
@@ -10,13 +13,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WalletComponent implements OnInit {
   isMobile = !this.deviceDetectorService.isDesktop();
+  balance: number;
+  convertedBalance: string;
+  walletInfo: WalletInfo;
   constructor(
     public uxService: UxService,
     private deviceDetectorService: DeviceDetectorService,
-    public contractService: ContractService
+    public contractService: ContractService,
+    public priceConverter: PriceConverterService,
     ) { }
 
   ngOnInit(): void {
+    this.contractService.walletInfo$.pipe(
+      filter(x => !!x),
+      tap(walletInfo => this.walletInfo = walletInfo),
+      switchMap(walletInfo => this.priceConverter.convertOneToUSDT(Number(walletInfo.balance)))
+    ).subscribe((convertedBalance: number) => {
+      this.convertedBalance = convertedBalance.toFixed(2);
+    });
   }
 
 }

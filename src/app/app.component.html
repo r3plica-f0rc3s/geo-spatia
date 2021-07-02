@@ -35,7 +35,7 @@
         <mat-icon color="primary">close</mat-icon>
       </button>
     </div>
-    <app-nft-list></app-nft-list>
+    <app-nft-list [nfts]="nfts"></app-nft-list>
   </mat-drawer>
 </mat-drawer-container>
 <div class="curtain" [@slideOut] *ngIf="curtain">

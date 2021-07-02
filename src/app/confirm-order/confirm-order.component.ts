@@ -50,7 +50,7 @@ export class ConfirmOrderComponent implements OnInit {
 
   buyNFT(): void {
     this.contractService.buyNFT(this.nft.name, 1).then(() => {
-
+      this.router.navigate(['/', 'bought']);
     })
     this.buyNft.next();
     this.router.navigate(['nft-bought']);

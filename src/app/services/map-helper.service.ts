@@ -69,7 +69,8 @@ export class MapHelperService {
   setMultipleMarkers(imageMarkers: ImageMarker[]): void {
     console.log('new image markers', imageMarkers);
     this.mapStatusSubject.next({
-      ...this.mapStatusSubject.getValue(),
+      showUser: false,
+      cameraState: CameraState.IDLE,
       markers: imageMarkers
     });
   }
