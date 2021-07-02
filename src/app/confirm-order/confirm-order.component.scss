@@ -1,8 +1,6 @@
 :host {
   position: absolute;
   bottom: 0;
-  width: 100%;
-  left: 0;
   height: 40%;
   background-color: #212121;
   opacity: 0.9;
@@ -11,41 +9,70 @@
   display: flex;
   flex-direction: column;
   place-content: space-between;
-  padding-bottom: 24px;
+  padding-bottom: 32px;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media only screen and (max-width: 600px) {
+  :host {
+    width: 100%;
+  }
+}
+@media only screen and (min-width: 601px) {
+  :host {
+    width: 60%;
+  }
 }
 .close-wrapper {
-  width: 100%;
   display: flex;
   align-items: center;
   place-content: flex-end;
-  button {
-    margin-right: 16px;
-    margin-top: 16px;
+  padding-right: 32px;
+  padding-top: 32px;
+}
+.top-wrapper {
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  place-content: space-between;
+}
+.top-label {
+  padding-left: 32px;
+  padding-top: 32px;
+  span {
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: 1px;
   }
 }
 .nft-name {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  padding: 16px;
+  padding: 32px;
+  height: 100%;
 }
 .nft-image {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
+  svg {
+    width: 100% !important;
+    height: 100% !important;
+  }
   display: flex;
-  margin-right: 16px !important;
   overflow: hidden;
 }
 .description {
   display: flex;
   flex-direction: column;
+  width: calc(100% - 110px);
 }
 .mat-h1 {
   margin-bottom: 8px;
 }
 .buy-button {
-  padding: 16px;
+  padding: 32px;
   display: flex;
   align-items: center;
   place-content: center;
@@ -72,4 +99,18 @@
   display: flex;
   align-items: center;
   place-content: center;
+}
+.price {
+  display: flex;
+  place-content: flex-end;
+  align-items: center;
+  width: 100%;
+  flex-direction: row;
+}
+.nft-name {
+  font-size: 32px;
+}
+
+.mat-h3 {
+  font-size: 24px;
 }
