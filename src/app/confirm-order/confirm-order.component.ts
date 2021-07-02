@@ -19,7 +19,7 @@ export class ConfirmOrderComponent implements OnInit {
   ) { }
   ngOnInit(): void {
     this.activatedRoute.params.pipe(
-      withLatestFrom(this.NFTsService.NFTs$)
+      withLatestFrom(this.contractService.nfts$)
     ).subscribe(([param, nfts]) => {
       this.nft = nfts.find((x) => x.name === param.name);
       if (!this.nft) {
