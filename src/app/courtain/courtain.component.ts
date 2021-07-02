@@ -6,7 +6,7 @@ import {
   trigger,
 } from '@angular/animations';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { timer } from 'rxjs';
+
 @Component({
   selector: 'app-courtain',
   templateUrl: './courtain.component.html',

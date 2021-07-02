@@ -98,8 +98,8 @@ export class ContractService {
                 return {
                   name: nft.name,
                   location: new LngLat(
-                    Number(nft.location.split(',')[0]),
-                    Number(nft.location.split(',')[1])
+                    Number(nft.location.split(',')[1]),
+                    Number(nft.location.split(',')[0])
                   ),
                   image: this.domSanitizer.bypassSecurityTrustHtml(
                     decodeURIComponent(nft.svg)
