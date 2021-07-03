@@ -7,7 +7,21 @@
   height: 100%;
   background-color: #424242;
 }
-
+.metamask-logo {
+  background: url("../../assets/MetaMask-logo.svg") center no-repeat;
+  width: 24px;
+  height: 24px;
+  background-size: contain;
+  display: flex;
+  margin-right: 5px;
+}
+.inner-button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  place-content: center;
+  height: 100%;
+}
 .container {
   display: flex;
   align-items: center;

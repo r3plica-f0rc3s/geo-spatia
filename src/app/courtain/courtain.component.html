@@ -11,7 +11,11 @@
         color="primary"
         [@disableButton]="loading ? false : true"
       >
-        <span *ngIf="!loading"> Connect to Metamask </span>
+      <div *ngIf="!loading" class="inner-button">
+        <div class="metamask-logo"></div>
+        <span> Connect to Metamask </span>
+      </div>
+
         <mat-icon><mat-spinner diameter="20"> </mat-spinner></mat-icon>
       </button>
     </div>
