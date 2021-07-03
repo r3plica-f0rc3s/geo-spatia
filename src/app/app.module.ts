@@ -14,7 +14,7 @@ import { MapService, NgxMapboxGLModule } from 'ngx-mapbox-gl';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfirmOrderComponent } from './confirm-order/confirm-order.component';
-import { CourtainComponent } from './courtain/courtain.component';
+import { CurtainComponent } from './curtain/curtain.component';
 import { DialogComponent } from './dialog/dialog.component';
 import { MapGlComponent } from './map-gl/map-gl.component';
 import { NearbyComponent } from './nearby/nearby.component';
@@ -42,7 +42,7 @@ import { HttpClientModule } from '@angular/common/http';
     NftListComponent,
     WalletComponent,
     ShortAddressPipe,
-    CourtainComponent,
+    CurtainComponent,
     NftBoughtComponent,
   ],
   imports: [

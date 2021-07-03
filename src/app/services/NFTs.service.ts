@@ -18,6 +18,7 @@ export interface GeoNFT {
   image: SafeHtml;
   price: number;
   status: SoldStatus;
+  id: number;
 }
 
 @Injectable()
@@ -30,27 +31,27 @@ export class NFTsService {
     private contractService: ContractService
   ) {}
 
-  randomizeLocations(latLng: ILocation, count, range): void {
-    this.NFTsSubject.next(
-      new Array(count).fill(0).map((value) => {
-        return {
-          location: new LngLat(
-            Math.random() * (latLng.lng + range - (latLng.lng - range)) +
-              (latLng.lng - range),
-            Math.random() * (latLng.lat + range - (latLng.lat - range)) +
-              (latLng.lat - range)
-          ),
-          image: this.sanitizer.bypassSecurityTrustHtml(
-            this.svgGeneratorService.generateAvatar(
-              Math.random().toString(36).substring(7)
-            )
-          ),
-          name: Math.random().toString(36).substring(7),
-          price: Math.random() * (200 + 100 - (200 - 100)),
-          status: SoldStatus.AVAILABLE,
-        };
-      })
-    );
-  }
+  // randomizeLocations(latLng: ILocation, count, range): void {
+  //   this.NFTsSubject.next(
+  //     new Array(count).fill(0).map((value) => {
+  //       return {
+  //         location: new LngLat(
+  //           Math.random() * (latLng.lng + range - (latLng.lng - range)) +
+  //             (latLng.lng - range),
+  //           Math.random() * (latLng.lat + range - (latLng.lat - range)) +
+  //             (latLng.lat - range)
+  //         ),
+  //         image: this.sanitizer.bypassSecurityTrustHtml(
+  //           this.svgGeneratorService.generateAvatar(
+  //             Math.random().toString(36).substring(7)
+  //           )
+  //         ),
+  //         name: Math.random().toString(36).substring(7),
+  //         price: Math.random() * (200 + 100 - (200 - 100)),
+  //         status: SoldStatus.AVAILABLE,
+  //       };
+  //     })
+  //   );
+  // }
 
 }

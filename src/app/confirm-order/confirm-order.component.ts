@@ -1,8 +1,7 @@
-import { ContractService } from './../services/contract.service';
+import { ContractService, GeoNFT } from './../services/contract.service';
 import { MapHelperService } from './../services/map-helper.service';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GeoNFT, NFTsService } from '../services/NFTs.service';
 import { switchMap, withLatestFrom } from 'rxjs/operators';
 import {
   animate,
@@ -27,7 +26,6 @@ export class ConfirmOrderComponent implements OnInit {
   buyNft = new EventEmitter();
   public nft: GeoNFT;
   constructor(
-    private NFTsService: NFTsService,
     private activatedRoute: ActivatedRoute,
     private mapHelperService: MapHelperService,
     private router: Router,
@@ -49,7 +47,7 @@ export class ConfirmOrderComponent implements OnInit {
   }
 
   buyNFT(): void {
-    this.contractService.buyNFT(this.nft.name, 1).then(() => {
+    this.contractService.buyNFT(this.nft.id, this.nft.price).then(() => {
       this.router.navigate(['/', 'bought']);
     })
     this.buyNft.next();

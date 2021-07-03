@@ -52,7 +52,10 @@ export class MapGlComponent implements OnChanges, OnInit {
         }
         break;
       case CameraState.IDLE:
+      if (this.map) {
         this.map.setZoom(1);
+        
+      }
         break;
       case CameraState.SINGLE:
         if (!this.mapStatus.markers) {

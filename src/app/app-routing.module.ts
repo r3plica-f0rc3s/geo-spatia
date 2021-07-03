@@ -1,4 +1,4 @@
-import { CourtainComponent } from './courtain/courtain.component';
+import { CurtainComponent } from './curtain/curtain.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ConfirmOrderComponent } from './confirm-order/confirm-order.component';

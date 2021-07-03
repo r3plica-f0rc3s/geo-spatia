@@ -21,6 +21,7 @@ export interface GeoNFT {
   image: SafeHtml;
   price: number;
   status: SoldStatus;
+  id: number;
 }
 export interface WalletInfo {
   address: string;
@@ -29,7 +30,7 @@ export interface WalletInfo {
 
 @Injectable()
 export class ContractService {
-  contractAddress = '0x844B9f34Ef221c5c29b406BDd068f4fAB71be211';
+  contractAddress = '0x42900Bd63Cf85be003195253dC2aeb96f4F1A897';
 
   private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
   walletInfo$ = this.walletInfoSubject.asObservable();
@@ -84,16 +85,12 @@ export class ContractService {
         this.contract.methods
           .getAllNFT()
           .call({ from: this.wallet.selectedAddress })
-          .then((nfts) => {
-            console.log('nfts', nfts);
-            return nfts;
-          })
           .then((nfts: NFT[]) => {
             const geoNFTs: GeoNFT[] = nfts
               .filter((nft) => {
                 return nft.location.length > 0 && nft.location !== 'coordinates';
               })
-              .map((nft: NFT) => {
+              .map((nft: NFT, index: number) => {
                 console.log('mapping nft', nft);
                 return {
                   name: nft.name,
@@ -106,6 +103,7 @@ export class ContractService {
                   ),
                   price: Number(nft.price),
                   status: SoldStatus[nft.status],
+                  id: index + 1
                 };
               });
             this.nftsSubject.next(geoNFTs);
@@ -131,11 +129,10 @@ export class ContractService {
     });
   }
 
-  async buyNFT(tokenId: string, amount: number): Promise<void> {
+  async buyNFT(tokenId: number, amount: number): Promise<void> {
     const result = await this.contract.methods
       .Buy(tokenId)
-      .call({ from: this.wallet.selectedAddress, value: amount });
-
+      .send({ from: this.selectedAddress, value: amount });
     result
       .on('transactionHash', (hash) => {
         console.log(

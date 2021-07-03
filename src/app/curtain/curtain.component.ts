@@ -8,9 +8,9 @@ import {
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-courtain',
-  templateUrl: './courtain.component.html',
-  styleUrls: ['./courtain.component.scss'],
+  selector: 'app-curtain',
+  templateUrl: './curtain.component.html',
+  styleUrls: ['./curtain.component.scss'],
   animations: [
     trigger('disableButton', [
       state('true', style({ width: '*' })),
@@ -19,7 +19,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
     ]),
   ],
 })
-export class CourtainComponent implements OnInit {
+export class CurtainComponent implements OnInit {
   @Output()
   connectToMetamask = new EventEmitter();
   @Input()

@@ -21,7 +21,7 @@ export class WalletComponent implements OnInit {
     private deviceDetectorService: DeviceDetectorService,
     public contractService: ContractService,
     public priceConverter: PriceConverterService,
-    ) { }
+  ) { }
 
   ngOnInit(): void {
     this.contractService.walletInfo$.pipe(

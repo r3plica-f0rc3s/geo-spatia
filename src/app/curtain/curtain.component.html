@@ -16,7 +16,7 @@
         <span> Connect to Metamask </span>
       </div>
 
-        <mat-icon><mat-spinner diameter="20"> </mat-spinner></mat-icon>
+        <mat-icon *ngIf="loading"><mat-spinner diameter="20"> </mat-spinner></mat-icon>
       </button>
     </div>
   </div>

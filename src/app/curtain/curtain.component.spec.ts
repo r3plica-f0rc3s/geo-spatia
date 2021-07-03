@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { CourtainComponent } from './courtain.component';
+import { CurtainComponent } from './curtain.component';
 
-describe('CourtainComponent', () => {
-  let component: CourtainComponent;
-  let fixture: ComponentFixture<CourtainComponent>;
+describe('CurtainComponent', () => {
+  let component: CurtainComponent;
+  let fixture: ComponentFixture<CurtainComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CourtainComponent ]
+      declarations: [ CurtainComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CourtainComponent);
+    fixture = TestBed.createComponent(CurtainComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
