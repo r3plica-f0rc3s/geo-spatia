@@ -1,1 +1,20 @@
-<p>nft-bought works!</p>
+<div class="container">
+    <div class="close-wrapper">
+        <button mat-icon-button [routerLink]="['/', 'nearby']">
+          <mat-icon color="primary">close</mat-icon>
+        </button>
+      </div>
+    <div class="label">
+        <span *ngIf="success">Success!</span>
+        <span *ngIf="!success">Something went wrong :(</span>
+    </div>
+    <div>
+        <button
+            mat-raised-button
+            color="primary"
+        >
+            See details
+        </button>
+    </div>
+
+</div>

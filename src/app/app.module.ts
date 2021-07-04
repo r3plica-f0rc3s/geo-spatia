@@ -23,7 +23,6 @@ import { ShortAddressPipe } from './pipes/short-address.pipe';
 import { ContractService } from './services/contract.service';
 import { DeviceDetectorService } from './services/device-detector.service';
 import { GeolocationService } from './services/geolocation-service.service';
-import { NFTsService } from './services/NFTs.service';
 import { SVGGeneratorService } from './services/svggenerator.service';
 import { StartComponent } from './start/start.component';
 import { WalletComponent } from './wallet/wallet.component';
@@ -68,7 +67,6 @@ import { HttpClientModule } from '@angular/common/http';
     MapService,
     SVGGeneratorService,
     ContractService,
-    NFTsService,
     DeviceDetectorService,
     PriceConverterService
   ],

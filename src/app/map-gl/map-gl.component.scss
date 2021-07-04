@@ -11,7 +11,9 @@ mgl-map {
   display: none;
 }
 .svg-icon {
+  border-radius: 50%;
+  border: 1px solid black;
   svg {
-    
+
   };
 }

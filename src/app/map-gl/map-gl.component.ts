@@ -29,7 +29,7 @@ export class MapGlComponent implements OnChanges, OnInit {
   @ViewChildren('markers') public markerViews: QueryList<MarkerComponent>;
   constructor(
     private mapHelperService: MapHelperService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.mapHelperService.mapStatus$.subscribe((mapState) => {
@@ -52,10 +52,16 @@ export class MapGlComponent implements OnChanges, OnInit {
         }
         break;
       case CameraState.IDLE:
-      if (this.map) {
-        this.map.setZoom(1);
-        
-      }
+        if (this.map && this.mapStatus.markers) {
+          this.map.setZoom(1);
+          this.bounds = new LngLatBounds();
+          this.mapStatus.markers.forEach((marker) => {
+            this.bounds.extend(marker.coordinates);
+          });
+          if (this.map) {
+            this.map.fitBounds(this.bounds, { zoom: 1 });
+          }
+        }
         break;
       case CameraState.SINGLE:
         if (!this.mapStatus.markers) {

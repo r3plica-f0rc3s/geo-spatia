@@ -25,3 +25,20 @@
     width: 60%;
   }
 }
+.close-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  place-content: flex-end;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  align-items: space-between;
+}
+.label {
+  display: flex;
+  flex-direction: row;
+}

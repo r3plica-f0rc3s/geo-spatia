@@ -19,6 +19,7 @@ import {
   ],
 })
 export class NftBoughtComponent implements OnInit {
+  success = true;
   constructor() {}
 
   ngOnInit(): void {}

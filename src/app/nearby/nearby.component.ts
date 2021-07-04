@@ -2,9 +2,8 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ImageMarker } from '../services/map-helper.service';
-import { GeoNFT } from '../services/NFTs.service';
 import { UxService } from '../services/ux.service';
-import { ContractService } from './../services/contract.service';
+import { ContractService, GeoNFT } from './../services/contract.service';
 import { MapHelperService } from './../services/map-helper.service';
 
 @Component({

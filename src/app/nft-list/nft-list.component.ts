@@ -1,5 +1,4 @@
-import { ContractService, NFT } from './../services/contract.service';
-import { GeoNFT } from './../services/NFTs.service';
+import { ContractService, GeoNFT, NFT } from './../services/contract.service';
 import { UxService } from './../services/ux.service';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';

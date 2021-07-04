@@ -27,7 +27,6 @@ export class ConfirmOrderComponent implements OnInit {
   public nft: GeoNFT;
   constructor(
     private activatedRoute: ActivatedRoute,
-    private mapHelperService: MapHelperService,
     private router: Router,
     private contractService: ContractService
   ) { }

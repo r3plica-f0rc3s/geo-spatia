@@ -51,28 +51,28 @@
 }
 .nft-name {
   display: flex;
-  flex-direction: row;
   padding: 32px;
   height: 100%;
 }
 .nft-image {
-  svg {
-    width: 100% !important;
-    height: 100% !important;
-  }
+  width: 70px;
   display: flex;
   overflow: hidden;
+  border: 1px solid white;
+  border-radius: 50%;
 }
 .description {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  place-content: space-between;
+  align-items: center;
   width: calc(100% - 110px);
 }
 .mat-h1 {
   margin-bottom: 8px;
 }
 .buy-button {
-  padding: 32px;
+  padding: 0px 32px 0px 32px;
   display: flex;
   align-items: center;
   place-content: center;
@@ -102,15 +102,29 @@
 }
 .price {
   display: flex;
-  place-content: flex-end;
   align-items: center;
-  width: 100%;
-  flex-direction: row;
 }
 .nft-name {
-  font-size: 32px;
+  align-items: center;
+  display: flex;
+  span {
+    font-size: 32px;
+  }
+
 }
 
 .mat-h3 {
   font-size: 24px;
+  margin: 0 0 !important;
+}
+.divider-wrapper {
+  display: flex;
+  padding: 32px 32px 0px 32px;
+}
+.divider {
+  height: 1px;
+  width: 100%;
+  background-color: white;
+  opacity: 0.2;
+
 }

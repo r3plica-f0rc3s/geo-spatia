@@ -111,7 +111,7 @@ export class AppComponent implements OnInit {
       this.loading = true;
       await this.contractService.init();
       await this.router.navigate(['/', 'nearby']);
-      await this.contractService.loadNFTs();
+//       await this.contractService.loadNFTs();
       this.curtain = false;
       setTimeout(() => {
         this.loading = false;
@@ -132,4 +132,5 @@ export class AppComponent implements OnInit {
   async buyNft() {
     this.router.navigate(['/', 'nft-bought']);
   }
+
 }

@@ -1,5 +1,5 @@
 <mgl-map
-  [style]="'mapbox://styles/mapbox/streets-v9'"
+  [style]="'mapbox://styles/randymarsh2137/ckqnwzq4d14x718quh7ukm7t8'"
   [zoom]="[0]"
   [center]="[-74.5, 40]"
   (load)="onMapLoaded($event)"
@@ -24,13 +24,12 @@
     *ngFor="let marker of mapStatus.markers"
     [lngLat]="marker.coordinates"
   >
-    <div class="marker" height="24" width="24">
+    <!-- <div class="marker" style="height: 24px; width: 24px"> -->
       <div
         class="svg-icon"
-        preserveAspectRatio="none"
-        viewBox="0 0 300 300"
+        style="height: 24px; width: 24px"
         [innerHTML]="marker.image"
       ></div>
-    </div>
+    <!-- </div> -->
   </mgl-marker>
 </mgl-map>
