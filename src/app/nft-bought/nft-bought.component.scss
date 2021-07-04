@@ -31,6 +31,9 @@
   flex-direction: row;
   align-items: center;
   place-content: flex-end;
+  button {
+    margin: 16px;
+  }
 }
 .container {
   display: flex;
@@ -41,4 +44,42 @@
 .label {
   display: flex;
   flex-direction: row;
+  align-items: center;
+  place-content: center;
+  span {
+    font-size: 20px;
+    line-height: 30px;
+    font-weight: bold;
+  }
+}
+.bottom-icon {
+  display: flex;
+  align-items: center;
+  place-content: center;
+
+}
+.success-icon {
+  display: flex;
+  align-items: center;
+  place-content: center;
+  font-size: 80px;
+  width: 110px;
+  height: 110px;
+  color: green;
+}
+.error-icon {
+  display: flex;
+  align-items: center;
+  place-content: center;
+  font-size: 80px;
+  width: 110px;
+  height: 110px;
+  color: red;
+}
+.inner-wrapper{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  place-content: center;
+  height: 100%;
 }

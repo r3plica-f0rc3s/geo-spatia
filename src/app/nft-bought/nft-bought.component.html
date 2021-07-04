@@ -4,17 +4,18 @@
           <mat-icon color="primary">close</mat-icon>
         </button>
       </div>
-    <div class="label">
+    <div class="inner-wrapper">
+      <div class="bottom-icon">
+        <mat-icon class="success-icon" *ngIf="success">check_circle</mat-icon>
+        <mat-icon *ngIf="!success" class="error-icon">error</mat-icon>
+      </div>
+      <div class="label">
         <span *ngIf="success">Success!</span>
         <span *ngIf="!success">Something went wrong :(</span>
-    </div>
-    <div>
-        <button
-            mat-raised-button
-            color="primary"
-        >
-            See details
-        </button>
+      </div>
+
+
+
     </div>
 
 </div>
