@@ -1,4 +1,4 @@
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, ReplaySubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 const Web3 = require('web3');
 import abi from './abi/ABI.json';
@@ -36,7 +36,7 @@ export interface WalletInfo {
 
 @Injectable()
 export class ContractService {
-  contractAddress = '0x42900Bd63Cf85be003195253dC2aeb96f4F1A897';
+  contractAddress = '0x293B65602FA0FFe7dB53185a454B5C75510ff6FA';
 
   private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
   walletInfo$ = this.walletInfoSubject.asObservable();
@@ -47,6 +47,10 @@ export class ContractService {
   private nftsSubject = new BehaviorSubject<GeoNFT[]>(null);
   nfts$ = this.nftsSubject.asObservable();
 
+  private ownedNFTsSubject = new BehaviorSubject<GeoNFT[]>(null);
+  ownedNFTs$ = this.ownedNFTsSubject.asObservable();
+
+  private transactionsSubject = new BehaviorSubject<GeoNFT[]>(null);
   contract: any;
   currentWeb3: any;
   wallet: any;
@@ -73,32 +77,39 @@ export class ContractService {
         abi,
         this.contractAddress
       );
+
       this.selectedAddress = this.wallet.selectedAddress;
       console.log('selected address', this.selectedAddress);
       await this.loadWalletInfo();
       await this.loadNFTs(1);
+      await this.loadOwnedNFTs();
       this.initializing = false;
-      // await this.loadNFTs();
     } catch (error) {
       this.initializing = false;
+      this.errorSubject.next(error);
       throw new Error(error);
     }
+  }
+
+  setEvents(): void {
+
   }
 
   async loadNFTs(layer = 0): Promise<GeoNFT[]> {
     return new Promise((resolve, reject) => {
       // TODO: I need to add timeout because of some limits
+
         this.contract.methods
           .getAllNFT()
-          .call({ from: this.selectedAddress, layer: 1 })
+          .call({ from: this.selectedAddress })
           .then((nfts: NFT[]) => {
             const geoNFTs: GeoNFT[] = nfts
               .filter((nft) => {
                 return nft.location.length > 0;
               })
-              .filter((nft) => {
-                return Number(nft.layer) === layer;
-              })
+              // .filter((nft) => {
+              //   return Number(nft.layer) === layer;
+              // })
               .map((nft: NFT, index: number) => {
                 console.log('mapping nft', nft);
                 return {
@@ -141,6 +152,7 @@ export class ContractService {
   }
 
   async buyNFT(tokenId: number, amount: number): Promise<void> {
+    // TODO: make it observable
     const result = await this.contract.methods
       .Buy(tokenId)
       .send({ from: this.selectedAddress, value: amount });
@@ -159,5 +171,24 @@ export class ContractService {
         }
         console.log(receipt);
       });
+  }
+
+  loadOwnedNFTs(): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      this.contract.methods.getUserOwnedNFT().call({
+        from: this.selectedAddress
+      }).then((result) => {
+        console.log('owned nfts', []);
+        this.ownedNFTsSubject.next(result);
+        resolve();
+      }).catch((err) => {
+        this.ownedNFTsSubject.error(err);
+        reject(err);
+      });
+    })
+  }
+
+  weiToOne(balance): string {
+    return this.currentWeb3.utils.fromWei(balance, 'ether');
   }
 }

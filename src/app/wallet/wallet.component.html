@@ -3,7 +3,7 @@
     class="wallet-button-wrapper"
     mat-raised-button
     color="primary"
-    aria-label="Example icon-button with menu icon"
+    aria-label="wallet address"
   >
     <button
       class="mini-fab"
@@ -27,26 +27,36 @@
     </button>
   </div>
 </mat-toolbar>
+<mat-tab-group mat-stretch-tabs>
 
-<div class="info-wrapper">
-  <button class="big-avatar" mat-fab color="primary">
-    <mat-icon>person</mat-icon>
-  </button>
-  <div>
-    <span>
-      ~ {{ convertedBalance }} $
-    </span>
-  </div>
-  <div class="info-inner">
-    <span class="amount"> {{ walletInfo?.balance.substring(0,12) }} </span>
+  <mat-tab label="Wallet">
+    <div class="info-wrapper">
+      <button class="big-avatar" mat-fab color="primary">
+        <mat-icon>person</mat-icon>
+      </button>
+      <div>
+        <span>
+          ~ {{ convertedBalance }} $
+        </span>
+      </div>
+      <div class="info-inner">
+        <span class="amount"> {{ walletInfo?.balance.substring(0,12) }} </span>
 
-    <span> ONE </span>
+        <span> ONE </span>
 
-  </div>
-  <div class="address">
-    <span>
-      {{ walletInfo?.address }}
-    </span>
+      </div>
+      <div class="address">
+        <span>
+          {{ walletInfo?.address }}
+        </span>
 
-  </div>
-</div>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Your NFTs">
+  <app-nft-list [nfts]="ownedNFTs$ | async"></app-nft-list>
+  </mat-tab>
+</mat-tab-group>
+
+
+

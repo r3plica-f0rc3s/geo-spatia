@@ -1,10 +1,9 @@
-import { filter, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { PriceConverterService } from './../services/price-converter.service';
+import { Component, OnInit } from '@angular/core';
+import { filter, switchMap, tap } from 'rxjs/operators';
 import { ContractService, WalletInfo } from './../services/contract.service';
 import { DeviceDetectorService } from './../services/device-detector.service';
+import { PriceConverterService } from './../services/price-converter.service';
 import { UxService } from './../services/ux.service';
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-wallet',
@@ -16,6 +15,7 @@ export class WalletComponent implements OnInit {
   balance: number;
   convertedBalance: string;
   walletInfo: WalletInfo;
+  ownedNFTs$ = this.contractService.ownedNFTs$.pipe(tap(console.log));
   constructor(
     public uxService: UxService,
     private deviceDetectorService: DeviceDetectorService,
@@ -31,6 +31,7 @@ export class WalletComponent implements OnInit {
     ).subscribe((convertedBalance: number) => {
       this.convertedBalance = convertedBalance.toFixed(2);
     });
+
   }
 
 }

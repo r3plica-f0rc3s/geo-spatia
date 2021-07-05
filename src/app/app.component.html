@@ -13,9 +13,9 @@
 
   <!-- Move to separate component -->
   <app-map-gl [userLocation]="userLocation" [markers]="markers"></app-map-gl>
-<div [@slideOut] *ngIf="confirmOrder" >
-  <router-outlet (buyNft)="buyNft()"></router-outlet>
-</div>
+  <div [@routeAnimations]="prepareRoute(outlet)">
+    <router-outlet #outlet="outlet"></router-outlet>
+  </div>
 
 
   <mat-drawer

@@ -6,7 +6,7 @@ import { DialogComponent } from './dialog/dialog.component';
 import { ImageMarker } from './services/map-helper.service';
 import { SidenavState, UxService } from './services/ux.service';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
@@ -105,14 +105,19 @@ export class AppComponent implements OnInit {
     });
   }
 
+  prepareRoute(outlet: RouterOutlet) {
+    return outlet && outlet.activatedRouteData && outlet.activatedRouteData.animation;
+  }
+
   async connectToMetamask() {
     window.localStorage.setItem('wasStarted', 'true');
     try {
       this.loading = true;
       await this.contractService.init();
+      this.curtain = false;
       await this.router.navigate(['/', 'nearby']);
 //       await this.contractService.loadNFTs();
-      this.curtain = false;
+      // this.curtain = false;
       setTimeout(() => {
         this.loading = false;
       }, 2000);

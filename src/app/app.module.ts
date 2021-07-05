@@ -28,7 +28,8 @@ import { StartComponent } from './start/start.component';
 import { WalletComponent } from './wallet/wallet.component';
 import { NftBoughtComponent } from './nft-bought/nft-bought.component';
 import { HttpClientModule } from '@angular/common/http';
-
+import { WeiToOnePipe } from './pipes/wei-to-one.pipe';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { HttpClientModule } from '@angular/common/http';
     ShortAddressPipe,
     CurtainComponent,
     NftBoughtComponent,
+    WeiToOnePipe,
   ],
   imports: [
     BrowserModule,
@@ -51,6 +53,7 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     BrowserAnimationsModule,
     MatButtonModule,
+    MatTabsModule,
     MatIconModule,
     MatToolbarModule,
     MatDialogModule,
