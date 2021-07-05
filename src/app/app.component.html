@@ -13,8 +13,8 @@
 
   <!-- Move to separate component -->
   <app-map-gl [userLocation]="userLocation" [markers]="markers"></app-map-gl>
-  <div [@routeAnimations]="prepareRoute(outlet)">
-    <router-outlet #outlet="outlet"></router-outlet>
+  <div [@slideUpIn]="outletRef.isActivated ? outletRef.activatedRoute : ''">
+    <router-outlet #outletRef="outlet"></router-outlet>
   </div>
 
 

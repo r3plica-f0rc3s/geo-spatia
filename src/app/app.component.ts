@@ -1,14 +1,14 @@
-import { ContractService, GeoNFT } from './services/contract.service';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { animate, query, style, transition, trigger } from '@angular/animations';
+import { MediaMatcher } from '@angular/cdk/layout';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { LngLat, Map } from 'mapbox-gl';
 import { DialogComponent } from './dialog/dialog.component';
+import { ContractService, GeoNFT } from './services/contract.service';
 import { ImageMarker } from './services/map-helper.service';
 import { SidenavState, UxService } from './services/ux.service';
-import { MediaMatcher } from '@angular/cdk/layout';
-import { Router, RouterOutlet } from '@angular/router';
-import { animate, style, transition, trigger } from '@angular/animations';
-import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   animations: [
     trigger('slideOut', [
@@ -19,6 +19,32 @@ import { MatSnackBar } from '@angular/material/snack-bar';
           style({ transform: 'translateY(-100%)' })
         ),
       ]),
+    ]),
+    trigger('slideUpIn', [
+      transition('* => *', [
+        query(':enter', [style({ transform: 'translateY(100%)', opacity: 0 })], {
+          optional: true
+        }),
+        query(
+          ':leave',
+          [
+            style({ transform: 'translateY(0%)', opacity: 1 }),
+            animate('200ms', style({ transform: 'translateY(100%)', opacity: 0 }))
+          ],
+          { optional: true }
+        ),
+        query(
+          ':enter',
+          [
+            style({ transform: 'transitionY(100%)', opacity: 0 }),
+            animate(
+              '200ms cubic-bezier(0.32,0,1,1)',
+              style({ transform: 'translateY(0%)', opacity: 1 })
+            )
+          ],
+          { optional: true }
+        )
+      ])
     ]),
   ],
   selector: 'app-root',
@@ -105,10 +131,6 @@ export class AppComponent implements OnInit {
     });
   }
 
-  prepareRoute(outlet: RouterOutlet) {
-    return outlet && outlet.activatedRouteData && outlet.activatedRouteData.animation;
-  }
-
   async connectToMetamask() {
     window.localStorage.setItem('wasStarted', 'true');
     try {
@@ -116,8 +138,6 @@ export class AppComponent implements OnInit {
       await this.contractService.init();
       this.curtain = false;
       await this.router.navigate(['/', 'nearby']);
-//       await this.contractService.loadNFTs();
-      // this.curtain = false;
       setTimeout(() => {
         this.loading = false;
       }, 2000);
