@@ -33,7 +33,7 @@
               "./node_modules/@mapbox/mapbox-gl-geocoder/lib/mapbox-gl-geocoder.css",
               "src/styles.scss"
             ],
-            "scripts": ["./node_modules/vanta/dist/vanta.globe.min.js"],
+            "scripts": ["./node_modules/vanta/dist/vanta.globe.min.js"]
           },
           "configurations": {
             "production": {

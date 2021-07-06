@@ -5,11 +5,8 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 
-
-
-declare var VANTA;
 
 @Component({
   selector: 'app-curtain',
@@ -23,25 +20,37 @@ declare var VANTA;
     ]),
   ],
 })
-export class CurtainComponent implements OnInit {
+export class CurtainComponent implements AfterViewInit {
   @Output()
   connectToMetamask = new EventEmitter();
   @Input()
   loading = false;
-  constructor() {}
+  preparingGraphics = true;
+  @ViewChild('container') someInput: ElementRef;
+  constructor() { }
+  ngAfterViewInit(): void {
+    import('three').then((three) => {
+      console.log('three loaded');
+      import('vanta').then((vanta) => {
+        console.log('vanta');
+        vanta.VANTA.GLOBE({
+          el: "#container",
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          minHeight: 200.00,
+          minWidth: 200.00,
+          scale: 1.00,
+          scaleMobile: 1.00,
+          color: 0x7f3bb1
+        });
+      })
+    })
+  }
 
   ngOnInit() {
-    VANTA.GLOBE({
-      el: "#your-element-selector",
-  mouseControls: true,
-  touchControls: true,
-  gyroControls: false,
-  minHeight: 200.00,
-  minWidth: 200.00,
-  scale: 1.00,
-  scaleMobile: 1.00,
-  color: 0x7f3bb1
- })
+    // import 3d graphics
+
   }
 
   connect() {
