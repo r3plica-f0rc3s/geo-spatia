@@ -26,15 +26,16 @@ export class CurtainComponent implements AfterViewInit {
   @Input()
   loading = false;
   preparingGraphics = true;
-  @ViewChild('container') someInput: ElementRef;
+  @ViewChild('container') vantaElement: ElementRef;
   constructor() { }
   ngAfterViewInit(): void {
     import('three').then((three) => {
       console.log('three loaded');
-      import('vanta').then((vanta) => {
-        console.log('vanta');
-        vanta.VANTA.GLOBE({
-          el: "#container",
+      this.preparingGraphics = false;
+      (window as any).THREE = three;
+      import('node_modules/vanta/src/vanta.globe').then((vanta) => {
+        vanta.default({
+          el: this.vantaElement.nativeElement,
           mouseControls: true,
           touchControls: true,
           gyroControls: false,
@@ -42,7 +43,8 @@ export class CurtainComponent implements AfterViewInit {
           minWidth: 200.00,
           scale: 1.00,
           scaleMobile: 1.00,
-          color: 0x7f3bb1
+          color: 0x7f3bb1,
+          THREE: three
         });
       })
     })

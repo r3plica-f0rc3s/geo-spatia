@@ -7,25 +7,27 @@
   </div>
 </ng-template>
 
-
-<div class="title">
-  <span>GeoNFT</span>
-</div>
-<div class="metamask-button">
-  <div class="location-button">
-    <button
-      [disabled]="loading"
-      (click)="connect()"
-      mat-raised-button
-      color="primary"
-      [@disableButton]="loading ? false : true"
-    >
-    <div *ngIf="!loading" class="inner-button">
-      <div class="metamask-logo"></div>
-      <span> Connect to Metamask </span>
-    </div>
-
-      <mat-icon *ngIf="loading"><mat-spinner diameter="20"> </mat-spinner></mat-icon>
-    </button>
+<div class="content">
+  <div class="title">
+    <span>GeoNFT</span>
   </div>
+  <div class="metamask-button">
+    <div class="location-button">
+      <button
+        [disabled]="loading"
+        (click)="connect()"
+        mat-raised-button
+        color="primary"
+        [@disableButton]="loading ? false : true"
+      >
+      <div *ngIf="!loading" class="inner-button">
+        <div class="metamask-logo"></div>
+        <span> Connect to Metamask </span>
+      </div>
+
+        <mat-icon *ngIf="loading"><mat-spinner diameter="20"> </mat-spinner></mat-icon>
+      </button>
+    </div>
+  </div>
+
 </div>
