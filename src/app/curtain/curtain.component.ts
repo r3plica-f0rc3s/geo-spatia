@@ -7,6 +7,10 @@ import {
 } from '@angular/animations';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
+
+
+declare var VANTA;
+
 @Component({
   selector: 'app-curtain',
   templateUrl: './curtain.component.html',
@@ -26,7 +30,19 @@ export class CurtainComponent implements OnInit {
   loading = false;
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    VANTA.GLOBE({
+      el: "#your-element-selector",
+  mouseControls: true,
+  touchControls: true,
+  gyroControls: false,
+  minHeight: 200.00,
+  minWidth: 200.00,
+  scale: 1.00,
+  scaleMobile: 1.00,
+  color: 0x7f3bb1
+ })
+  }
 
   connect() {
     this.connectToMetamask.next();

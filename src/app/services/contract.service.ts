@@ -18,6 +18,12 @@ export interface NFT {
   status: string;
   svg: string;
   layer: string;
+  index: number;
+}
+
+export interface NewNFTEvent {
+  Info: NFT;
+  tokenId: string;
 }
 
 export interface GeoNFT {
@@ -58,7 +64,7 @@ export class ContractService {
 
   initializing = false;
 
-  constructor(private domSanitizer: DomSanitizer) {}
+  constructor(private domSanitizer: DomSanitizer) { }
   async init() {
     this.initializing = true;
     this.wallet = (window as any).ethereum || (window as any).onewallet;
@@ -83,6 +89,7 @@ export class ContractService {
       await this.loadWalletInfo();
       await this.loadNFTs(1);
       await this.loadOwnedNFTs();
+      this.setEvents();
       this.initializing = false;
     } catch (error) {
       this.initializing = false;
@@ -92,61 +99,80 @@ export class ContractService {
   }
 
   setEvents(): void {
+    this.wallet.on('networkChanged', function (networkId) {
+      // Time to reload your interface with the new networkId
+      console.log("New network ID:", networkId);
+      if (networkId != "0x6357d2e0") {
+        console.error("You are not connected to harmony testnet s0");
+        this.errorSubject.next('You are not connected to harmony testnet s0');
+      }
+    });
+    this.contract.events.NFTCreation({})
+      .on('data', (nft: NewNFTEvent) => {
+        const geoNft = this.mapNftToGeoNFT(nft.Info, Number(nft.tokenId));
+        // TODO: invoke emits
+        const nfts = this.nftsSubject.getValue();
 
+        this.nftsSubject.next(
+          nfts.concat([geoNft])
+        );
+      });
   }
 
   async loadNFTs(layer = 0): Promise<GeoNFT[]> {
     return new Promise((resolve, reject) => {
       // TODO: I need to add timeout because of some limits
 
-        this.contract.methods
-          .getAllNFT()
-          .call({ from: this.selectedAddress })
-          .then((nfts: NFT[]) => {
-            const geoNFTs: GeoNFT[] = nfts
-              .filter((nft) => {
-                return nft.location.length > 0;
-              })
-              // .filter((nft) => {
-              //   return Number(nft.layer) === layer;
-              // })
-              .map((nft: NFT, index: number) => {
-                console.log('mapping nft', nft);
-                return {
-                  name: nft.name,
-                  layer: Number(nft.layer),
-                  location: new LngLat(
-                    Number(nft.location.split(',')[1]),
-                    Number(nft.location.split(',')[0])
-                  ),
-                  image: this.domSanitizer.bypassSecurityTrustHtml(
-                    // '<svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><mask id="mask__beam" maskUnits="userSpaceOnUse" x="0" y="0" width="36" height="36"><rect width="36" height="36" rx="72" fill="white"></rect></mask><g mask="url(#mask__beam)"><rect width="36" height="36" fill="#f85931"></rect><rect x="0" y="0" width="36" height="36" transform="translate(-5 9) rotate(209 18 18) scale(1.2)" fill="#009989" rx="36"></rect><g transform="translate(-1 4.5) rotate(-9 18 18)"><path d="M13,21 a1,0.75 0 0,0 10,0" fill="white"></path><rect x="10" y="14" width="1.5" height="2" rx="1" stroke="none" fill="white"></rect><rect x="24" y="14" width="1.5" height="2" rx="1" stroke="none" fill="white"></rect></g></g></svg>'
-                    decodeURIComponent(nft.svg)
-                  ),
-                  price: Number(nft.price),
-                  status: nft.status === "1" ? SoldStatus.SOLD : SoldStatus.AVAILABLE,
-                  id: index + 1
-                };
-              });
-            this.nftsSubject.next(geoNFTs);
-            resolve(geoNFTs);
-            return geoNFTs;
-          });
+      this.contract.methods
+        .getAllNFT()
+        .call({ from: this.selectedAddress })
+        .then((nfts: NFT[]) => {
+          const geoNFTs: GeoNFT[] = nfts
+            .filter((nft) => {
+              return nft.location.length > 0;
+            })
+            // .filter((nft) => {
+            //   return Number(nft.layer) === layer;
+            // })
+            .map((nft, index) => this.mapNftToGeoNFT(nft, index));
+          this.nftsSubject.next(geoNFTs);
+          resolve(geoNFTs);
+          return geoNFTs;
+        });
     });
+  }
+
+  mapNftToGeoNFT(nft: NFT, index: number): GeoNFT {
+    console.log('mapping nft', nft);
+    return {
+      name: nft.name,
+      layer: Number(nft.layer),
+      location: new LngLat(
+        Number(nft.location.split(',')[1]),
+        Number(nft.location.split(',')[0])
+      ),
+      image: this.domSanitizer.bypassSecurityTrustHtml(
+        // '<svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><mask id="mask__beam" maskUnits="userSpaceOnUse" x="0" y="0" width="36" height="36"><rect width="36" height="36" rx="72" fill="white"></rect></mask><g mask="url(#mask__beam)"><rect width="36" height="36" fill="#f85931"></rect><rect x="0" y="0" width="36" height="36" transform="translate(-5 9) rotate(209 18 18) scale(1.2)" fill="#009989" rx="36"></rect><g transform="translate(-1 4.5) rotate(-9 18 18)"><path d="M13,21 a1,0.75 0 0,0 10,0" fill="white"></path><rect x="10" y="14" width="1.5" height="2" rx="1" stroke="none" fill="white"></rect><rect x="24" y="14" width="1.5" height="2" rx="1" stroke="none" fill="white"></rect></g></g></svg>'
+        decodeURIComponent(nft.svg)
+      ),
+      price: Number(nft.price),
+      status: nft.status === "1" ? SoldStatus.SOLD : SoldStatus.AVAILABLE,
+      id: index + 1
+    };
   }
 
   async loadWalletInfo(): Promise<void> {
     return new Promise((resolve, reject) => {
-        const address = this.wallet.selectedAddress;
-        this.currentWeb3.eth
-          .getBalance(this.selectedAddress)
-          .then((balance) => {
-            const displayBalance = this.currentWeb3.utils.fromWei(balance, 'ether');
-            this.walletInfoSubject.next({
-              address,
-              balance: displayBalance,
-            });
-            resolve();
+      const address = this.wallet.selectedAddress;
+      this.currentWeb3.eth
+        .getBalance(this.selectedAddress)
+        .then((balance) => {
+          const displayBalance = this.currentWeb3.utils.fromWei(balance, 'ether');
+          this.walletInfoSubject.next({
+            address,
+            balance: displayBalance,
+          });
+          resolve();
         });
     });
   }
