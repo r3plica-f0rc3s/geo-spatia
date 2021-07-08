@@ -17,7 +17,6 @@ import { ConfirmOrderComponent } from './confirm-order/confirm-order.component';
 import { CurtainComponent } from './curtain/curtain.component';
 import { DialogComponent } from './dialog/dialog.component';
 import { MapGlComponent } from './map-gl/map-gl.component';
-import { AllNFTsComponent } from './all-nfts/all-nfts.component';
 import { NftListComponent } from './nft-list/nft-list.component';
 import { ShortAddressPipe } from './pipes/short-address.pipe';
 import { ContractService } from './services/contract.service';
@@ -30,6 +29,7 @@ import { NftBoughtComponent } from './nft-bought/nft-bought.component';
 import { HttpClientModule } from '@angular/common/http';
 import { WeiToOnePipe } from './pipes/wei-to-one.pipe';
 import { MatTabsModule } from '@angular/material/tabs';
+import { AllNFTsComponent } from './all-nfts/all-nfts.component';
 
 @NgModule({
   declarations: [

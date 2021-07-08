@@ -36,7 +36,7 @@ export class ConfirmOrderComponent implements OnInit {
     ).subscribe(([param, nfts]) => {
       this.nft = nfts.find((x) => x.name === param.name);
       if (!this.nft) {
-        this.router.navigate(['/', 'nearby'])
+        this.router.navigate(['/', 'all-nfts'])
       }
       // this.mapHelperService.setSingleMarker({
       //   image: this.nft.image,

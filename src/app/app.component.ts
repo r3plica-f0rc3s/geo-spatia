@@ -117,7 +117,7 @@ export class AppComponent implements OnInit {
     );
 
     // this.contractService.init().then(() => {
-    //   // this.router.navigate(['/', 'nearby'])
+    //   // this.router.navigate(['/', 'all-nfts'])
     // });
   }
 
@@ -137,7 +137,7 @@ export class AppComponent implements OnInit {
       this.loading = true;
       await this.contractService.init();
       this.curtain = false;
-      await this.router.navigate(['/', 'nearby']);
+      await this.router.navigate(['/', 'all-nfts']);
       setTimeout(() => {
         this.loading = false;
       }, 2000);
