@@ -92,7 +92,7 @@ export class MapGlComponent implements OnChanges, OnInit {
   }
 
   markerClicked(marker: ImageMarker) {
-    this.router.navigate(['confirm-order', marker.id])
+    this.router.navigate(['confirm-order', marker.id]);
   }
 
 }

@@ -191,7 +191,12 @@ export class ContractService {
       })
       .once('confirmation', (confirmationNumber, receipt) => {
         if (receipt.status) {
-          console.log('Transaction processed successfully');
+          console.log('Transaction processed successfully', receipt);
+          // find this nft in loaded nfts
+          const buyedNft = this.ownedNFTsSubject.getValue().find(x => x.id === tokenId);
+          this.ownedNFTsSubject.next(
+            this.ownedNFTsSubject.getValue().concat(buyedNft)
+          );
         } else {
           console.log('Transaction failed');
         }
