@@ -3,15 +3,14 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ImageMarker } from '../services/map-helper.service';
 import { UxService } from '../services/ux.service';
-import { ContractService, GeoNFT } from './../services/contract.service';
-import { MapHelperService } from './../services/map-helper.service';
+import { ContractService, GeoNFT } from '../services/contract.service';
+import { MapHelperService } from '../services/map-helper.service';
 
 @Component({
-  selector: 'app-nearby',
-  templateUrl: './nearby.component.html',
-  styleUrls: ['./nearby.component.scss'],
+  templateUrl: './all-nfts.component.html',
+  styleUrls: ['./all-nfts.component.scss'],
 })
-export class NearbyComponent implements OnInit {
+export class AllNFTsComponent implements OnInit {
   isMobile: boolean;
   coords;
   public markers: ImageMarker[];
@@ -34,7 +33,8 @@ export class NearbyComponent implements OnInit {
       this.mapHelperService.setMultipleMarkers(this.NFTs.map((nft) => {
         return {
           image: nft.image,
-          coordinates: nft.location
+          coordinates: nft.location,
+          id: nft.id
         }
       }))
     }, (err) => {

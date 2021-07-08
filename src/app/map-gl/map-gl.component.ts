@@ -11,6 +11,7 @@ import {
 import { LngLat, LngLatBounds, Map } from 'mapbox-gl';
 import { MarkerComponent } from 'ngx-mapbox-gl/lib/marker/marker.component';
 import { ImageMarker } from '../services/map-helper.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -28,7 +29,8 @@ export class MapGlComponent implements OnChanges, OnInit {
   public mapStatus: MapStatus;
   @ViewChildren('markers') public markerViews: QueryList<MarkerComponent>;
   constructor(
-    private mapHelperService: MapHelperService
+    private mapHelperService: MapHelperService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -87,6 +89,10 @@ export class MapGlComponent implements OnChanges, OnInit {
   onMapLoaded($event): void {
     this.map = $event;
     this.setCamera();
+  }
+
+  markerClicked(marker: ImageMarker) {
+    this.router.navigate(['confirm-order', marker.id])
   }
 
 }

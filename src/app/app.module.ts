@@ -17,7 +17,7 @@ import { ConfirmOrderComponent } from './confirm-order/confirm-order.component';
 import { CurtainComponent } from './curtain/curtain.component';
 import { DialogComponent } from './dialog/dialog.component';
 import { MapGlComponent } from './map-gl/map-gl.component';
-import { NearbyComponent } from './nearby/nearby.component';
+import { AllNFTsComponent } from './all-nfts/all-nfts.component';
 import { NftListComponent } from './nft-list/nft-list.component';
 import { ShortAddressPipe } from './pipes/short-address.pipe';
 import { ContractService } from './services/contract.service';
@@ -38,7 +38,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     MapGlComponent,
     ConfirmOrderComponent,
     StartComponent,
-    NearbyComponent,
+    AllNFTsComponent,
     NftListComponent,
     WalletComponent,
     ShortAddressPipe,

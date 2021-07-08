@@ -23,6 +23,7 @@
   <mgl-marker
     *ngFor="let marker of mapStatus.markers"
     [lngLat]="marker.coordinates"
+    (click)="markerClicked(marker)"
   >
     <!-- <div class="marker" style="height: 24px; width: 24px"> -->
       <div

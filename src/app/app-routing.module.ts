@@ -2,7 +2,7 @@ import { CurtainComponent } from './curtain/curtain.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ConfirmOrderComponent } from './confirm-order/confirm-order.component';
-import { NearbyComponent } from './nearby/nearby.component';
+import { AllNFTsComponent } from './all-nfts/all-nfts.component';
 import { StartComponent } from './start/start.component';
 import { NftBoughtComponent } from './nft-bought/nft-bought.component';
 
@@ -12,7 +12,7 @@ const routes: Routes = [
     path: 'start',
   },
   {
-    component: NearbyComponent,
+    component: AllNFTsComponent,
     path: 'nearby',
   },
   {

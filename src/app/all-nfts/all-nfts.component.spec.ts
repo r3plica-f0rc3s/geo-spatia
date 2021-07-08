@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NearbyComponent } from './nearby.component';
+import { AllNFTsComponent } from './all-nfts.component';
 
 describe('NearbyComponent', () => {
-  let component: NearbyComponent;
-  let fixture: ComponentFixture<NearbyComponent>;
+  let component: AllNFTsComponent;
+  let fixture: ComponentFixture<AllNFTsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NearbyComponent ]
+      declarations: [ AllNFTsComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NearbyComponent);
+    fixture = TestBed.createComponent(AllNFTsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

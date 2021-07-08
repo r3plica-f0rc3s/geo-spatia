@@ -19,6 +19,7 @@ export interface MapStatus {
 export interface ImageMarker {
   image: SafeHtml;
   coordinates: LngLat;
+  id: any;
 }
 
 @Injectable({
