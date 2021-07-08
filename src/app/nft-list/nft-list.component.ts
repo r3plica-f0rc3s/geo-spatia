@@ -1,6 +1,6 @@
 import { ContractService, GeoNFT, NFT } from './../services/contract.service';
 import { UxService } from './../services/ux.service';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
@@ -15,10 +15,12 @@ export class NftListComponent implements OnInit, OnDestroy {
   subscriptions = [];
   constructor(
     private uxService: UxService,
-    private router: Router
+    private router: Router,
+    public contractService: ContractService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   confirmOrder(i: number) {
     this.uxService.closeSidenav();

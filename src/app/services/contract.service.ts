@@ -1,4 +1,4 @@
-import { BehaviorSubject, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, forkJoin, Observable, ReplaySubject, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 const Web3 = require('web3');
 import abi from './abi/ABI.json';
@@ -6,19 +6,16 @@ import { LngLat } from 'mapbox-gl';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 export enum SoldStatus {
-  OWNED,
   SOLD,
   AVAILABLE,
 }
 // declare let window: any;
 export interface NFT {
-  location: string;
   name: string;
-  price: string;
+  location: string;
   status: string;
-  svg: string;
-  layer: string;
-  index: number;
+  price: number;
+  layer: number;
 }
 
 export interface NewNFTEvent {
@@ -29,7 +26,7 @@ export interface NewNFTEvent {
 export interface GeoNFT {
   name: string;
   location: LngLat;
-  image: SafeHtml;
+  image?: SafeHtml;
   price: number;
   status: SoldStatus;
   id: number;
@@ -42,7 +39,7 @@ export interface WalletInfo {
 
 @Injectable()
 export class ContractService {
-  contractAddress = '0x293B65602FA0FFe7dB53185a454B5C75510ff6FA';
+  contractAddress = '0x06D99B413BAE1209ae6B98514CF8149d0e65B807';
 
   private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
   walletInfo$ = this.walletInfoSubject.asObservable();
@@ -124,22 +121,42 @@ export class ContractService {
       // TODO: I need to add timeout because of some limits
 
       this.contract.methods
-        .getAllNFT()
+        .getAllNFT(100, 1)
         .call({ from: this.selectedAddress })
+        .then(nftsArr => nftsArr[0])
         .then((nfts: NFT[]) => {
           const geoNFTs: GeoNFT[] = nfts
             .filter((nft) => {
               return nft.location.length > 0;
             })
-            // .filter((nft) => {
-            //   return Number(nft.layer) === layer;
-            // })
             .map((nft, index) => this.mapNftToGeoNFT(nft, index));
+          // load nfts
+          const observables = geoNFTs.map((nft) => {
+            return this.getSvg$(nft.id);
+          });
+          forkJoin(observables).subscribe((svgs: string[]) => {
+            svgs.forEach((svg, index) => {
+              geoNFTs[index].image = svg;
+            });
+          })
           this.nftsSubject.next(geoNFTs);
           resolve(geoNFTs);
           return geoNFTs;
         });
     });
+  }
+
+  getSvg$(tokenId: number): Observable<SafeHtml> {
+    const svgSub = new Subject();
+    const svg$ = svgSub.asObservable();
+    this.contract.methods
+      .GetTokenSVG(tokenId).call({ from: this.selectedAddress })
+      .then((svg: string) => {
+        console.log(svg);
+        svgSub.next(this.domSanitizer.bypassSecurityTrustHtml(decodeURIComponent(svg)));
+        svgSub.complete();
+      })
+    return svg$;
   }
 
   mapNftToGeoNFT(nft: NFT, index: number): GeoNFT {
@@ -151,12 +168,12 @@ export class ContractService {
         Number(nft.location.split(',')[1]),
         Number(nft.location.split(',')[0])
       ),
-      image: this.domSanitizer.bypassSecurityTrustHtml(
-        // '<svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><mask id="mask__beam" maskUnits="userSpaceOnUse" x="0" y="0" width="36" height="36"><rect width="36" height="36" rx="72" fill="white"></rect></mask><g mask="url(#mask__beam)"><rect width="36" height="36" fill="#f85931"></rect><rect x="0" y="0" width="36" height="36" transform="translate(-5 9) rotate(209 18 18) scale(1.2)" fill="#009989" rx="36"></rect><g transform="translate(-1 4.5) rotate(-9 18 18)"><path d="M13,21 a1,0.75 0 0,0 10,0" fill="white"></path><rect x="10" y="14" width="1.5" height="2" rx="1" stroke="none" fill="white"></rect><rect x="24" y="14" width="1.5" height="2" rx="1" stroke="none" fill="white"></rect></g></g></svg>'
-        decodeURIComponent(nft.svg)
-      ),
+      // image: this.domSanitizer.bypassSecurityTrustHtml(
+      //   // '<svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><mask id="mask__beam" maskUnits="userSpaceOnUse" x="0" y="0" width="36" height="36"><rect width="36" height="36" rx="72" fill="white"></rect></mask><g mask="url(#mask__beam)"><rect width="36" height="36" fill="#f85931"></rect><rect x="0" y="0" width="36" height="36" transform="translate(-5 9) rotate(209 18 18) scale(1.2)" fill="#009989" rx="36"></rect><g transform="translate(-1 4.5) rotate(-9 18 18)"><path d="M13,21 a1,0.75 0 0,0 10,0" fill="white"></path><rect x="10" y="14" width="1.5" height="2" rx="1" stroke="none" fill="white"></rect><rect x="24" y="14" width="1.5" height="2" rx="1" stroke="none" fill="white"></rect></g></g></svg>'
+      //   decodeURIComponent(nft.svg)
+      // ),
       price: Number(nft.price),
-      status: nft.status === "1" ? SoldStatus.SOLD : SoldStatus.AVAILABLE,
+      status: nft.status === "0" ? SoldStatus.SOLD : SoldStatus.AVAILABLE,
       id: index + 1
     };
   }
@@ -179,6 +196,8 @@ export class ContractService {
 
   async buyNFT(tokenId: number, amount: number): Promise<void> {
     // TODO: make it observable
+    const transactionSubject = new Subject()
+    const transaction$ = this.transactionsSubject.asObservable();
     const result = await this.contract.methods
       .Buy(tokenId)
       .send({ from: this.selectedAddress, value: amount });
@@ -187,6 +206,7 @@ export class ContractService {
         console.log(
           'Transaction sent successfully. Check console for Transaction hash'
         );
+        transactionSubject.next(hash);
         console.log('Transaction Hash is ', hash);
       })
       .once('confirmation', (confirmationNumber, receipt) => {

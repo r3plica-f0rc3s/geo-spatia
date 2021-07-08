@@ -28,7 +28,7 @@ export class ConfirmOrderComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private contractService: ContractService
+    public contractService: ContractService
   ) { }
   ngOnInit(): void {
     this.activatedRoute.params.pipe(
