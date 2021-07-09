@@ -138,10 +138,10 @@ export class ContractService {
             svgs.forEach((svg, index) => {
               geoNFTs[index].image = svg;
             });
+            this.nftsSubject.next(geoNFTs);
+            resolve(geoNFTs);
           })
-          this.nftsSubject.next(geoNFTs);
-          resolve(geoNFTs);
-          return geoNFTs;
+          
         });
     });
   }
@@ -152,7 +152,6 @@ export class ContractService {
     this.contract.methods
       .GetTokenSVG(tokenId).call({ from: this.selectedAddress })
       .then((svg: string) => {
-        console.log(svg);
         svgSub.next(this.domSanitizer.bypassSecurityTrustHtml(decodeURIComponent(svg)));
         svgSub.complete();
       })
