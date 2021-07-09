@@ -16,12 +16,12 @@ export class AllNFTsComponent implements OnInit {
   public markers: ImageMarker[];
   public NFTs: GeoNFT[];
   constructor(
-      public uxService: UxService,
-      private mapHelperService: MapHelperService,
-      private router: Router,
-      private media: MediaMatcher,
-      private contractService: ContractService,
-    ) {
+    public uxService: UxService,
+    private mapHelperService: MapHelperService,
+    private router: Router,
+    private media: MediaMatcher,
+    private contractService: ContractService,
+  ) {
   }
 
   ngOnInit(): void {
@@ -33,12 +33,13 @@ export class AllNFTsComponent implements OnInit {
       this.mapHelperService.setMultipleMarkers(
         this.NFTs.map((nft) => {
           console.log('image', nft.image)
-        return {
-          image: nft.image,
-          coordinates: nft.location,
-          id: nft.id
-        }
-      }))
+          return {
+            image: nft.image,
+            coordinates: nft.location,
+            id: nft.id,
+            layer: nft.layer
+          }
+        }))
     }, (err) => {
       this.router.navigate(['/', 'start']);
     })

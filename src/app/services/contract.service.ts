@@ -141,7 +141,7 @@ export class ContractService {
             this.nftsSubject.next(geoNFTs);
             resolve(geoNFTs);
           })
-          
+
         });
     });
   }

@@ -20,6 +20,7 @@ export interface ImageMarker {
   image: SafeHtml;
   coordinates: LngLat;
   id: any;
+  layer: number;
 }
 
 @Injectable({

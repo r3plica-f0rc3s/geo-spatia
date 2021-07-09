@@ -1,5 +1,6 @@
 import { CameraState, MapHelperService, MapStatus } from './../services/map-helper.service';
 import {
+  AfterViewInit,
   Component,
   Input,
   OnChanges,
@@ -8,10 +9,12 @@ import {
   SimpleChanges,
   ViewChildren
 } from '@angular/core';
-import { LngLat, LngLatBounds, Map } from 'mapbox-gl';
+import { LngLat, LngLatBounds, Map, MapMouseEvent } from 'mapbox-gl';
 import { MarkerComponent } from 'ngx-mapbox-gl/lib/marker/marker.component';
 import { ImageMarker } from '../services/map-helper.service';
 import { Router } from '@angular/router';
+import { fromEvent, timer } from 'rxjs';
+import { debounce, debounceTime, map, tap } from 'rxjs/operators';
 
 
 @Component({
@@ -19,7 +22,7 @@ import { Router } from '@angular/router';
   templateUrl: './map-gl.component.html',
   styleUrls: ['./map-gl.component.scss'],
 })
-export class MapGlComponent implements OnChanges, OnInit {
+export class MapGlComponent implements OnChanges {
   @Input()
   markers: ImageMarker[] = [];
   @Input()
@@ -27,18 +30,26 @@ export class MapGlComponent implements OnChanges, OnInit {
   public bounds: LngLatBounds;
   public map: Map;
   public mapStatus: MapStatus;
+  level = 1;
   @ViewChildren('markers') public markerViews: QueryList<MarkerComponent>;
   constructor(
     private mapHelperService: MapHelperService,
     private router: Router
   ) { }
 
-  ngOnInit(): void {
-    this.mapHelperService.mapStatus$.subscribe((mapState) => {
-      this.mapStatus = mapState;
-      // apply status
-      this.setCamera();
-    });
+  private setEvents() {
+    const source = fromEvent(this.map, 'zoom');
+    source.pipe(
+      debounce(() => timer(500)))
+      .subscribe(() => {
+        if (this.mapStatus.markers) {
+          this.markers = this.mapStatus.markers.filter((marker) => {
+            return Math.max(Math.floor(this.map.getZoom()), 1) === marker.layer;
+          });
+          console.log('markers', this.mapStatus.markers);
+        }
+
+      })
   }
 
   private setCamera(): void {
@@ -74,6 +85,7 @@ export class MapGlComponent implements OnChanges, OnInit {
         break;
     }
   }
+
   ngOnChanges(changes: SimpleChanges): void {
 
     this.bounds = new LngLatBounds();
@@ -88,7 +100,13 @@ export class MapGlComponent implements OnChanges, OnInit {
 
   onMapLoaded($event): void {
     this.map = $event;
-    this.setCamera();
+    this.mapHelperService.mapStatus$.subscribe((mapState) => {
+      this.mapStatus = mapState;
+      // apply status
+      this.markers = mapState.markers;
+      this.setCamera();
+      this.setEvents();
+    });
   }
 
   markerClicked(marker: ImageMarker) {

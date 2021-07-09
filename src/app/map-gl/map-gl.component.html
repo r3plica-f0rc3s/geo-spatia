@@ -5,8 +5,8 @@
   (load)="onMapLoaded($event)"
 >
   <mgl-marker
-    *ngIf="mapStatus.showUser"
-    [lngLat]="[mapStatus.userLocation.lng, mapStatus.userLocation.lat]"
+    *ngIf="mapStatus?.showUser"
+    [lngLat]="[mapStatus?.userLocation.lng, mapStatus?.userLocation.lat]"
     #markers
   >
     <svg height="100" width="100">
@@ -21,7 +21,7 @@
     </svg>
   </mgl-marker>
   <mgl-marker
-    *ngFor="let marker of mapStatus.markers"
+    *ngFor="let marker of markers"
     [lngLat]="marker.coordinates"
     (click)="markerClicked(marker)"
   >
@@ -29,7 +29,7 @@
       <div
         class="svg-icon"
         style="height: 24px; width: 24px"
-        [innerHTML]="marker.image"
+        [innerHTML]="marker?.image"
       ></div>
     <!-- </div> -->
   </mgl-marker>
