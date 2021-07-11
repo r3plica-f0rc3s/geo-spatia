@@ -12,6 +12,7 @@ import { MarkerComponent } from 'ngx-mapbox-gl/lib/marker/marker.component';
 import { fromEvent, timer } from 'rxjs';
 import { debounce } from 'rxjs/operators';
 import { ImageMarker } from '../services/map-helper.service';
+import { NftUxState } from '../ux-components/nft-marker/nft-marker.component';
 import {
   CameraState,
   MapHelperService,
@@ -32,6 +33,7 @@ export class MapGlComponent implements OnChanges {
   public map: Map;
   public mapStatus: MapStatus;
   level = 1;
+  NftUxState = NftUxState;
   @ViewChildren('markers') public markerViews: QueryList<MarkerComponent>;
   constructor(
     private mapHelperService: MapHelperService,

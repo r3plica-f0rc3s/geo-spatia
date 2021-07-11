@@ -23,7 +23,7 @@ export class ConfirmOrderComponent implements OnInit, OnDestroy {
       this.activatedRoute.params.pipe(
         withLatestFrom(this.contractService.nfts$)
       ).subscribe(([param, nfts]) => {
-        this.nft = nfts.find((x) => x.id == param.id);
+        this.nft = nfts.find((x) => Number(x.id) === Number(param.id));
         if (!this.nft) {
           this.router.navigate(['/', 'all-nfts']);
           return;
@@ -33,7 +33,7 @@ export class ConfirmOrderComponent implements OnInit, OnDestroy {
           id: this.nft.id,
           image: this.nft.image,
           layer: this.nft.layer
-        })
+        });
       })
     );
 
@@ -47,9 +47,11 @@ export class ConfirmOrderComponent implements OnInit, OnDestroy {
       this.contractService.transactions$.subscribe((transactionEvent: TransactionResultEvent) => {
         if (transactionEvent && transactionEvent.success !== undefined) {
           this.router.navigate(['/', 'transaction-result'], { state: transactionEvent});
+        } else if (transactionEvent && transactionEvent.success) {
+
         }
       })
-    )
+    );
 
   }
 

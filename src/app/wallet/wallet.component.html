@@ -21,42 +21,38 @@
       <div class="end">dE2g</div>
     </div>
   </button>
-  <div class="sidenav-open fab-close" *ngIf="isMobile">
-    <button (click)="uxService.closeLeftSidenav()" mat-icon-button>
-      <mat-icon color="primary">close</mat-icon>
-    </button>
+  <div class="logo-nft">
+    <span> GeoNFT </span>
+    <div class="sidenav-open fab-close" *ngIf="isMobile">
+      <button (click)="uxService.closeLeftSidenav()" mat-icon-button>
+        <mat-icon color="primary">close</mat-icon>
+      </button>
+    </div>
   </div>
+
 </mat-toolbar>
 <mat-tab-group mat-stretch-tabs>
-
   <mat-tab label="Wallet">
     <div class="info-wrapper">
       <button class="big-avatar" mat-fab color="primary">
         <mat-icon>person</mat-icon>
       </button>
       <div>
-        <span>
-          ~ {{ convertedBalance }} $
-        </span>
+        <span> ~ {{ convertedBalance }} $ </span>
       </div>
       <div class="info-inner">
-        <span class="amount"> {{ walletInfo?.balance.substring(0,12) }} </span>
+        <span class="amount"> {{ walletInfo?.balance.substring(0, 12) }} </span>
 
         <span> ONE </span>
-
       </div>
       <div class="address">
         <span>
           {{ walletInfo?.address }}
         </span>
-
       </div>
     </div>
   </mat-tab>
   <mat-tab label="Your NFTs">
-  <app-nft-list [nfts]="ownedNFTs$ | async"></app-nft-list>
+    <app-nft-list [nfts]="ownedNFTs$ | async"></app-nft-list>
   </mat-tab>
 </mat-tab-group>
-
-
-

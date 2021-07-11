@@ -81,9 +81,9 @@ export class AppComponent implements OnInit {
   }
   ngOnInit(): void {
     const wasStarted = window.localStorage.getItem('wasStarted');
-    // if (wasStarted) {
-    //   this.connectToMetamask();
-    // }
+    if (wasStarted) {
+      this.connectToMetamask();
+    }
     this.subscriptions.push(
       this.contractService.nfts$.subscribe((nfts) => {
         this.nfts = nfts;

@@ -20,18 +20,16 @@
       />
     </svg>
   </mgl-marker>
-  <mgl-marker
-    *ngFor="let marker of markers"
-    [lngLat]="marker.coordinates"
-
-  >
+  <mgl-marker *ngFor="let marker of markers" [lngLat]="marker.coordinates">
     <!-- <div class="marker" style="height: 24px; width: 24px"> -->
-      <div
+    <app-nft-marker [state]="NftUxState.AVAILABLE" [image]="marker?.image">
+      <!-- <div
         (click)="markerClicked(marker)"
         class="svg-icon"
         style="height: 24px; width: 24px"
         [innerHTML]="marker?.image"
-      ></div>
+      ></div> -->
+    </app-nft-marker>
     <!-- </div> -->
   </mgl-marker>
 </mgl-map>

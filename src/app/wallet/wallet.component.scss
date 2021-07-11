@@ -22,10 +22,21 @@
     line-height: 30px;
   }
 }
+::ng-deep .mat-toolbar-row, .mat-toolbar-single-row {
+  place-content: space-between;
+}
 .sidenav-open {
   position: absolute;
   top: 8px;
   right: 16px;
+}
+.logo-nft {
+  span {
+    letter-spacing: 1px;
+    color: #62c1a9;
+    font-size: 24px;
+    font-family: "Krona One";
+  }
 }
 .info-wrapper {
   display: flex;
@@ -41,7 +52,6 @@
   width: 100%;
   margin-top: 16px;
   span {
-
   }
 }
 .info-inner {
