@@ -13,20 +13,10 @@
   </div>
   <div class="metamask-button">
     <div class="location-button">
-      <button
-        [disabled]="loading"
-        (click)="connect()"
-        mat-raised-button
-        color="primary"
-        [@disableButton]="loading ? false : true"
-      >
-      <div *ngIf="!loading" class="inner-button">
+      <app-loading-button (click)="connect()" [loading]="loading">
         <div class="metamask-logo"></div>
-        <span> Connect to Metamask </span>
-      </div>
-
-        <mat-icon *ngIf="loading"><mat-spinner diameter="20"> </mat-spinner></mat-icon>
-      </button>
+        <span>Connect to MetaMask</span>
+      </app-loading-button>
     </div>
   </div>
 

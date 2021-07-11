@@ -1,0 +1,22 @@
+<div
+    class="button-container"
+    [@disableButton]="!loading"
+>
+    <button
+        [disabled]="loading"
+        mat-raised-button
+        color="primary"
+    >
+        <div
+            *ngIf="!loading"
+            class="inner-button"
+        >
+            <ng-content></ng-content>
+
+        </div>
+
+        <mat-icon *ngIf="loading">
+            <mat-spinner diameter="20"></mat-spinner>
+        </mat-icon>
+    </button>
+</div>

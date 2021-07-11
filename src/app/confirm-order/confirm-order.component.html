@@ -16,12 +16,10 @@
 
 
 <div class="nft-name" *ngIf="nft">
-  <div
-    class="nft-image"
-    preserveAspectRatio="none"
+  <button mat-fab
     viewBox="0 0 300 300"
     [innerHTML]="nft.image"
-  ></div>
+  ></button>
 
   <div class="description">
     <div class="nft-name">
@@ -33,8 +31,8 @@
   </div>
 </div>
 <div class="buy-button">
-  <button (click)="buyNFT()" mat-raised-button color="primary">
+  <app-loading-button (click)="buyNFT()" [loading]="buying">
     <mat-icon>shopping_basket</mat-icon>
-    <span> Buy </span>
-  </button>
+    <span class="button-label"> Buy </span>
+  </app-loading-button>
 </div>

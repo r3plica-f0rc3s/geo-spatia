@@ -4,19 +4,19 @@
     (click)="confirmOrder(i)"
   >
     <div class="nft-image">
-      <div
+      <button mat-fab
         class="nft-svg"
         preserveAspectRatio="none"
         viewBox="0 0 300 300"
-        [innerHTML]="nft.image"
-      ></div>
+        [innerHTML]="nft?.image"
+      ></button>
     </div>
     <div class="second">
       <div class="list-item section">
         <span class="label">Token name:</span>
         <div class="name">
           <span>
-            {{ nft.name }}
+            {{ nft?.name }}
           </span>
         </div>
       </div>
@@ -24,7 +24,7 @@
         <span class="label">Location</span>
         <div class="details">
           <span>
-            {{ nft.location }}
+            {{ nft?.location }}
           </span>
         </div>
       </div>
@@ -32,15 +32,15 @@
         <span class="label">Price</span>
         <div class="details">
           <span>
-            {{ nft.price | weiToOne }} ONE
+            {{ nft?.price | weiToOne }} ONE
           </span>
         </div>
       </div>
       <div class="list-item">
-        <span class="label">{{nft.status === 1 ? 'AVAILABLE' : 'SOLD'}}</span>
+        <span class="label">{{nft?.status === 1 ? 'AVAILABLE' : 'SOLD'}}</span>
         <div class="details">
           <span>
-            <button *ngIf="nft.status === 1" disableRipple mat-raised-button color="accent">Buy</button>
+            <button *ngIf="nft?.status === 1" disableRipple mat-raised-button color="accent">Buy</button>
           </span>
         </div>
       </div>

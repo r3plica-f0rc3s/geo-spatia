@@ -25,11 +25,12 @@ import { GeolocationService } from './services/geolocation-service.service';
 import { SVGGeneratorService } from './services/svggenerator.service';
 import { StartComponent } from './start/start.component';
 import { WalletComponent } from './wallet/wallet.component';
-import { NftBoughtComponent } from './nft-bought/nft-bought.component';
+import { TransactionResultComponent } from './transaction-result/transaction-result.component';
 import { HttpClientModule } from '@angular/common/http';
 import { WeiToOnePipe } from './pipes/wei-to-one.pipe';
 import { MatTabsModule } from '@angular/material/tabs';
 import { AllNFTsComponent } from './all-nfts/all-nfts.component';
+import { LoadingButtonComponent } from './ux-components/loading-button/loading-button.component';
 
 @NgModule({
   declarations: [
@@ -43,8 +44,9 @@ import { AllNFTsComponent } from './all-nfts/all-nfts.component';
     WalletComponent,
     ShortAddressPipe,
     CurtainComponent,
-    NftBoughtComponent,
+    TransactionResultComponent,
     WeiToOnePipe,
+    LoadingButtonComponent,
   ],
   imports: [
     BrowserModule,

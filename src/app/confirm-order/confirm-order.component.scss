@@ -128,3 +128,12 @@
   opacity: 0.2;
 
 }
+.location-button {
+  width: 100%;
+}
+
+::ng-deep app-loading-button {
+  mat-icon {
+    margin-right: 10px;
+  }
+}

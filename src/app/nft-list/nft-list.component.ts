@@ -24,7 +24,7 @@ export class NftListComponent implements OnInit, OnDestroy {
 
   confirmOrder(i: number) {
     this.uxService.closeSidenav();
-    this.router.navigate(['confirm-order', this.nfts[i].name]);
+    this.router.navigate(['confirm-order', this.nfts[i].id]);
   }
 
   ngOnDestroy(): void {

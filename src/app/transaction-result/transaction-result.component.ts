@@ -6,10 +6,11 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
+import { ActivatedRoute, Params } from '@angular/router';
 @Component({
-  selector: 'app-nft-bought',
-  templateUrl: './nft-bought.component.html',
-  styleUrls: ['./nft-bought.component.scss'],
+  selector: 'app-transaction-result',
+  templateUrl: './transaction-result.component.html',
+  styleUrls: ['./transaction-result.component.scss'],
   animations: [
     trigger('disableButton', [
       state('true', style({ width: '*' })),
@@ -18,9 +19,12 @@ import {
     ]),
   ],
 })
-export class NftBoughtComponent implements OnInit {
+export class TransactionResultComponent implements OnInit {
   success = true;
-  constructor() {}
+  constructor(
+    private activatedRoute: ActivatedRoute
+    ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 }

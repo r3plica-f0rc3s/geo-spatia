@@ -1,58 +1,62 @@
-import { ContractService, GeoNFT } from './../services/contract.service';
-import { MapHelperService } from './../services/map-helper.service';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap, withLatestFrom } from 'rxjs/operators';
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
+import { Subscription } from 'rxjs';
+import { withLatestFrom } from 'rxjs/operators';
+import { ContractService, GeoNFT, TransactionResultEvent } from './../services/contract.service';
+import { MapHelperService } from './../services/map-helper.service';
 @Component({
   templateUrl: './confirm-order.component.html',
   styleUrls: ['./confirm-order.component.scss'],
-  animations: [
-    trigger('disableButton', [
-      state('true', style({ width: '*' })),
-      state('false', style({ width: '20px' })),
-      transition('false <=> true', animate('500ms cubic-bezier(0.32,0,1,1)')),
-    ]),
-  ],
 })
-export class ConfirmOrderComponent implements OnInit {
-  @Output()
-  buyNft = new EventEmitter();
+export class ConfirmOrderComponent implements OnInit, OnDestroy {
   public nft: GeoNFT;
+  subscriptions: Subscription[] = [];
+  buying = false;
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    public contractService: ContractService
+    public contractService: ContractService,
+    private mapHelperService: MapHelperService
   ) { }
   ngOnInit(): void {
-    this.activatedRoute.params.pipe(
-      withLatestFrom(this.contractService.nfts$)
-    ).subscribe(([param, nfts]) => {
-      this.nft = nfts.find((x) => x.name === param.name);
-      if (!this.nft) {
-        this.router.navigate(['/', 'all-nfts'])
-      }
-      // this.mapHelperService.setSingleMarker({
-      //   image: this.nft.image,
-      //   coordinates: this.nft.location
-      // });
-    });
+    this.subscriptions.push(
+      this.activatedRoute.params.pipe(
+        withLatestFrom(this.contractService.nfts$)
+      ).subscribe(([param, nfts]) => {
+        this.nft = nfts.find((x) => x.id == param.id);
+        if (!this.nft) {
+          this.router.navigate(['/', 'all-nfts']);
+          return;
+        }
+        this.mapHelperService.setSingleMarker({
+          coordinates: this.nft.location,
+          id: this.nft.id,
+          image: this.nft.image,
+          layer: this.nft.layer
+        })
+      })
+    );
+
+
   }
 
   buyNFT(): void {
-    this.contractService.buyNFT(this.nft.id, this.nft.price).then(() => {
-      this.router.navigate(['/', 'bought']);
-    })
-    this.buyNft.next();
-    this.router.navigate(['nft-bought']);
+    this.contractService.buyNFT(this.nft.id, this.nft.price);
+    this.buying = true;
+    this.subscriptions.push(
+      this.contractService.transactions$.subscribe((transactionEvent: TransactionResultEvent) => {
+        if (transactionEvent && transactionEvent.success !== undefined) {
+          this.router.navigate(['/', 'transaction-result'], { state: transactionEvent});
+        }
+      })
+    )
 
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
+  }
 }
 

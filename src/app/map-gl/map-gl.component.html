@@ -23,10 +23,11 @@
   <mgl-marker
     *ngFor="let marker of markers"
     [lngLat]="marker.coordinates"
-    (click)="markerClicked(marker)"
+
   >
     <!-- <div class="marker" style="height: 24px; width: 24px"> -->
       <div
+        (click)="markerClicked(marker)"
         class="svg-icon"
         style="height: 24px; width: 24px"
         [innerHTML]="marker?.image"

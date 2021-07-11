@@ -37,9 +37,20 @@ export interface WalletInfo {
   balance: string;
 }
 
+export interface TransactionStartedEvent {
+  txid: string;
+}
+
+export interface TransactionResultEvent {
+  success: boolean;
+  fee: number;
+  confirmationNumber: number;
+}
+
+export type TransactionEventUnion = TransactionResultEvent | TransactionStartedEvent;
 @Injectable()
 export class ContractService {
-  contractAddress = '0x06D99B413BAE1209ae6B98514CF8149d0e65B807';
+  contractAddress = '0x277333e8187d6d5C3f9d994E564662583EE88E4D';
 
   private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
   walletInfo$ = this.walletInfoSubject.asObservable();
@@ -53,7 +64,9 @@ export class ContractService {
   private ownedNFTsSubject = new BehaviorSubject<GeoNFT[]>(null);
   ownedNFTs$ = this.ownedNFTsSubject.asObservable();
 
-  private transactionsSubject = new BehaviorSubject<GeoNFT[]>(null);
+  private transactionsSubject = new BehaviorSubject<TransactionEventUnion>(null);
+  transactions$ = this.transactionsSubject.asObservable();
+
   contract: any;
   currentWeb3: any;
   wallet: any;
@@ -193,19 +206,20 @@ export class ContractService {
     });
   }
 
-  async buyNFT(tokenId: number, amount: number): Promise<void> {
+  buyNFT(tokenId: number, amount: number): void {
     // TODO: make it observable
-    const transactionSubject = new Subject()
-    const transaction$ = this.transactionsSubject.asObservable();
-    const result = await this.contract.methods
+    const result = this.contract.methods
       .Buy(tokenId)
       .send({ from: this.selectedAddress, value: amount });
+      console.log(result);
     result
-      .on('transactionHash', (hash) => {
+      .on('transactionHash', (hash: string) => {
         console.log(
           'Transaction sent successfully. Check console for Transaction hash'
         );
-        transactionSubject.next(hash);
+        this.transactionsSubject.next({
+          txid: hash
+        });
         console.log('Transaction Hash is ', hash);
       })
       .once('confirmation', (confirmationNumber, receipt) => {
@@ -216,8 +230,19 @@ export class ContractService {
           this.ownedNFTsSubject.next(
             this.ownedNFTsSubject.getValue().concat(buyedNft)
           );
+          this.transactionsSubject.next({
+            fee: receipt.fee,
+            success: true,
+            txid: receipt.id,
+            confirmationNumber: confirmationNumber
+          })
         } else {
-          console.log('Transaction failed');
+          this.transactionsSubject.next({
+            fee: receipt.fee,
+            success: true,
+            txid: receipt.id,
+            confirmationNumber: confirmationNumber
+          });
         }
         console.log(receipt);
       });
