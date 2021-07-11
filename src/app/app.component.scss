@@ -56,3 +56,9 @@
   left: 0;
   z-index: 1;
 }
+
+.toolbar-label {
+  display: flex;
+  place-items: center;
+  height: 100%;
+}
