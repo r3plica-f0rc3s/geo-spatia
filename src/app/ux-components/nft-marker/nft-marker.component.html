@@ -1,6 +1,11 @@
-<div
+<div 
+[ngStyle]="{'height': focused ? '64px' : '32px', 'width': focused ? '64px' : '32px'}"
+[ngClass]="nft.owner ? 'owned' : (nft.ownerAddress ? 'ownedByOther' : 'available')" class="circle">
+  <div
   class="svg-icon"
-  [ngClass]="{'bounce': state === NftUxState.AVAILABLE }"
-  style="height: 24px; width: 24px"
-  [innerHTML]="image"
+  [ngStyle]="{'height': focused ? '48px' : '24px', 'width': focused ? '48px' : '24px'}"
+  [ngClass]="{'bounce': nft.status === SoldStatus.AVAILABLE && !focused, 'rotate': focused && !nft.owner}"
+  [innerHTML]="nft.image"
 ></div>
+</div>
+

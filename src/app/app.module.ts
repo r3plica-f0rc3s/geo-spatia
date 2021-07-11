@@ -32,6 +32,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { AllNFTsComponent } from './all-nfts/all-nfts.component';
 import { LoadingButtonComponent } from './ux-components/loading-button/loading-button.component';
 import { NftMarkerComponent } from './ux-components/nft-marker/nft-marker.component';
+import { SellComponent } from './sell/sell.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { NftMarkerComponent } from './ux-components/nft-marker/nft-marker.compon
     WeiToOnePipe,
     LoadingButtonComponent,
     NftMarkerComponent,
+    SellComponent,
   ],
   imports: [
     BrowserModule,

@@ -33,16 +33,11 @@ export class AllNFTsComponent implements OnInit {
       this.mapHelperService.setMultipleMarkers(
         this.NFTs.map((nft) => {
           console.log('image', nft.image)
-          return {
-            image: nft.image,
-            coordinates: nft.location,
-            id: nft.id,
-            layer: nft.layer
-          }
+          return nft;
         }))
     }, (err) => {
       this.router.navigate(['/', 'start']);
-    })
+    });
     this.isMobile = this.media.matchMedia('(max-width: 700px)').matches;
     this.uxService.enableSidenav();
     this.uxService.enableLeftSidenav();

@@ -28,12 +28,7 @@ export class ConfirmOrderComponent implements OnInit, OnDestroy {
           this.router.navigate(['/', 'all-nfts']);
           return;
         }
-        this.mapHelperService.setSingleMarker({
-          coordinates: this.nft.location,
-          id: this.nft.id,
-          image: this.nft.image,
-          layer: this.nft.layer
-        });
+        this.mapHelperService.setSingleMarker(this.nft);
       })
     );
 

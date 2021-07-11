@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';
 import { LngLat, LngLatBounds } from 'mapbox-gl';
 import { BehaviorSubject } from 'rxjs';
+import { GeoNFT } from './contract.service';
 import { GeolocationService } from './geolocation-service.service';
 
 export enum CameraState {
@@ -11,7 +12,7 @@ export enum CameraState {
 }
 export interface MapStatus {
   cameraState: CameraState;
-  markers?: ImageMarker[];
+  markers?: GeoNFT[];
   showUser: boolean;
   userLocation?: LngLat;
 }
@@ -37,17 +38,17 @@ export class MapHelperService {
 
   findCurrentLocation(): Promise<LngLat> {
     return this.locationService.getCurrentLocation().then((coords) => {
-      const lngLat = new LngLat(coords.longitude, coords.latitude)
+      const lngLat = new LngLat(coords.longitude, coords.latitude);
       this.mapStatusSubject.next({
         cameraState: this.mapStatusSubject.getValue().cameraState,
         showUser: true,
         userLocation: lngLat
       });
       return lngLat;
-    })
+    });
   }
 
-  setNearby(imageMarkers: ImageMarker[]): void {
+  setNearby(imageMarkers: GeoNFT[]): void {
     this.locationService.getCurrentLocation().then((userLocation) => {
       console.log(imageMarkers);
       this.mapStatusSubject.next({
@@ -56,19 +57,19 @@ export class MapHelperService {
         markers: imageMarkers,
         userLocation: new LngLat(userLocation.longitude, userLocation.latitude)
       });
-    })
+    });
   }
 
-  setSingleMarker(imageMarker: ImageMarker): void {
+  setSingleMarker(imageMarker: GeoNFT): void {
     this.mapStatusSubject.next({
       cameraState: CameraState.SINGLE,
       showUser: false,
       markers: [imageMarker],
       userLocation: this.mapStatusSubject.getValue().userLocation
-    })
+    });
   }
 
-  setMultipleMarkers(imageMarkers: ImageMarker[]): void {
+  setMultipleMarkers(imageMarkers: GeoNFT[]): void {
     console.log('new image markers', imageMarkers);
     this.mapStatusSubject.next({
       showUser: false,

@@ -4,6 +4,7 @@ import { ConfirmOrderComponent } from './confirm-order/confirm-order.component';
 import { StartComponent } from './start/start.component';
 import { TransactionResultComponent } from './transaction-result/transaction-result.component';
 import { AllNFTsComponent } from './all-nfts/all-nfts.component';
+import { SellComponent } from './sell/sell.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,10 @@ const routes: Routes = [
   {
     component: ConfirmOrderComponent,
     path: 'confirm-order/:id',
+  },
+  {
+    component: SellComponent,
+    path: 'sell/:id'
   },
   {
     component: TransactionResultComponent,

@@ -30,9 +30,14 @@
     </div>
   </div>
 </div>
-<div class="buy-button">
+<div class="buy-button" *ngIf="nft.status === 1">
   <app-loading-button (click)="buyNFT()" [loading]="buying">
     <mat-icon>shopping_basket</mat-icon>
     <span class="button-label"> Buy </span>
   </app-loading-button>
+</div>
+<div class="sold" *ngIf="nft.status === 0">
+  <span>
+    {{ nft.owner ? 'Owned' : 'Sold'}}
+  </span>
 </div>

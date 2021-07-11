@@ -8,6 +8,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 export enum SoldStatus {
   SOLD,
   AVAILABLE,
+  OWNED
 }
 // declare let window: any;
 export interface NFT {
@@ -16,6 +17,7 @@ export interface NFT {
   status: string;
   price: number;
   layer: number;
+  owner?: string;
 }
 
 export interface NewNFTEvent {
@@ -31,6 +33,8 @@ export interface GeoNFT {
   status: SoldStatus;
   id: number;
   layer: number;
+  ownerAddress: string;
+  owner: boolean;
 }
 export interface WalletInfo {
   address: string;
@@ -70,12 +74,12 @@ export class ContractService {
   contract: any;
   currentWeb3: any;
   wallet: any;
-  selectedAddress: any;
+  selectedAddress: string;
 
   initializing = false;
 
   constructor(private domSanitizer: DomSanitizer) { }
-  async init() {
+  async init(): Promise<void> {
     this.initializing = true;
     this.wallet = (window as any).ethereum || (window as any).onewallet;
     if (!this.wallet) {
@@ -97,8 +101,8 @@ export class ContractService {
       this.selectedAddress = this.wallet.selectedAddress;
       console.log('selected address', this.selectedAddress);
       await this.loadWalletInfo();
-      await this.loadNFTs(1);
       await this.loadOwnedNFTs();
+      await this.loadNFTs(1);
       this.setEvents();
       this.initializing = false;
     } catch (error) {
@@ -109,12 +113,13 @@ export class ContractService {
   }
 
   setEvents(): void {
-    this.wallet.on('networkChanged', function (networkId) {
+    this.wallet.on('networkChanged', function(networkId) {
       // Time to reload your interface with the new networkId
-      console.log("New network ID:", networkId);
-      if (networkId != "0x6357d2e0") {
-        console.error("You are not connected to harmony testnet s0");
+      console.log('New network ID:', networkId);
+      if (networkId !== '0x6357d2e0') {
+        console.error('You are not connected to harmony testnet s0');
         this.errorSubject.next('You are not connected to harmony testnet s0');
+        return;
       }
     });
     this.contract.events.NFTCreation({})
@@ -132,13 +137,23 @@ export class ContractService {
   async loadNFTs(layer = 0): Promise<GeoNFT[]> {
     return new Promise((resolve, reject) => {
       // TODO: I need to add timeout because of some limits
+      // TODO: compare with owned and set SoldStatus
 
       this.contract.methods
         .getAllNFT(100, 1)
         .call({ from: this.selectedAddress })
         .then(nftsArr => nftsArr[0])
-        .then((nfts: NFT[]) => {
-          const geoNFTs: GeoNFT[] = nfts
+        .then(async (nfts: NFT[]) => {
+          const ownerPromises = nfts.map((nft, index) => nft.status === '0' ?
+            this.ownerOf(index + 1) : new Promise((resolve) => resolve(null)));
+
+          const owners: any[] = await Promise.all(ownerPromises);
+          const nftsWithOwners = nfts.map((nft, index) => {
+            const nftCopy = { ...nft };
+            nftCopy.owner = owners[index];
+            return nftCopy;
+          });
+          const geoNFTs: GeoNFT[] = nftsWithOwners
             .filter((nft) => {
               return nft.location.length > 0;
             })
@@ -153,7 +168,7 @@ export class ContractService {
             });
             this.nftsSubject.next(geoNFTs);
             resolve(geoNFTs);
-          })
+          });
 
         });
     });
@@ -167,12 +182,15 @@ export class ContractService {
       .then((svg: string) => {
         svgSub.next(this.domSanitizer.bypassSecurityTrustHtml(decodeURIComponent(svg)));
         svgSub.complete();
-      })
+      });
     return svg$;
   }
 
   mapNftToGeoNFT(nft: NFT, index: number): GeoNFT {
     console.log('mapping nft', nft);
+    // check if owned
+    const soldStatus = nft.status === '1' ? SoldStatus.AVAILABLE :
+      (nft.owner === this.selectedAddress ? SoldStatus.OWNED : SoldStatus.SOLD);
     return {
       name: nft.name,
       layer: Number(nft.layer),
@@ -185,8 +203,10 @@ export class ContractService {
       //   decodeURIComponent(nft.svg)
       // ),
       price: Number(nft.price),
-      status: nft.status === "0" ? SoldStatus.SOLD : SoldStatus.AVAILABLE,
-      id: index + 1
+      status: soldStatus,
+      id: index + 1,
+      ownerAddress: nft.owner,
+      owner: nft.owner ? nft.owner.toLowerCase() === this.selectedAddress.toLowerCase() : false
     };
   }
 
@@ -211,7 +231,7 @@ export class ContractService {
     const result = this.contract.methods
       .Buy(tokenId)
       .send({ from: this.selectedAddress, value: amount });
-      console.log(result);
+    console.log(result);
     result
       .on('transactionHash', (hash: string) => {
         console.log(
@@ -234,18 +254,24 @@ export class ContractService {
             fee: receipt.fee,
             success: true,
             txid: receipt.id,
-            confirmationNumber: confirmationNumber
-          })
+            confirmationNumber
+          });
         } else {
           this.transactionsSubject.next({
             fee: receipt.fee,
             success: true,
             txid: receipt.id,
-            confirmationNumber: confirmationNumber
+            confirmationNumber
           });
         }
         console.log(receipt);
       });
+  }
+
+  async ownerOf(tokenId: number): Promise<string> {
+    return this.contract.methods
+      .ownerOf(tokenId)
+      .call({ from: this.selectedAddress });
   }
 
   loadOwnedNFTs(): Promise<void> {
@@ -260,7 +286,7 @@ export class ContractService {
         this.ownedNFTsSubject.error(err);
         reject(err);
       });
-    })
+    });
   }
 
   weiToOne(balance): string {

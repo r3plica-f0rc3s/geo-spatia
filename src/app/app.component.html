@@ -12,7 +12,7 @@
   </mat-drawer>
 
   <!-- Move to separate component -->
-  <app-map-gl [userLocation]="userLocation" [markers]="markers"></app-map-gl>
+  <app-map-gl></app-map-gl>
   <div [@slideUpIn]="outletRef.isActivated ? outletRef.activatedRoute : ''">
     <router-outlet #outletRef="outlet"></router-outlet>
   </div>

@@ -2,6 +2,7 @@ import {
   Component,
   Input,
   OnChanges,
+  OnDestroy,
   QueryList,
   SimpleChanges,
   ViewChildren,
@@ -9,8 +10,9 @@ import {
 import { Router } from '@angular/router';
 import { LngLat, LngLatBounds, Map } from 'mapbox-gl';
 import { MarkerComponent } from 'ngx-mapbox-gl/lib/marker/marker.component';
-import { fromEvent, timer } from 'rxjs';
+import { fromEvent, Subscription, timer } from 'rxjs';
 import { debounce } from 'rxjs/operators';
+import { GeoNFT } from '../services/contract.service';
 import { ImageMarker } from '../services/map-helper.service';
 import { NftUxState } from '../ux-components/nft-marker/nft-marker.component';
 import {
@@ -24,31 +26,34 @@ import {
   templateUrl: './map-gl.component.html',
   styleUrls: ['./map-gl.component.scss'],
 })
-export class MapGlComponent implements OnChanges {
+export class MapGlComponent implements OnChanges, OnDestroy {
   @Input()
-  markers: ImageMarker[] = [];
+  nfts: GeoNFT[] = [];
   @Input()
   userLocation: LngLat = null;
   public bounds: LngLatBounds;
   public map: Map;
   public mapStatus: MapStatus;
+  subscription = [];
   level = 1;
+  CameraState = CameraState;
   NftUxState = NftUxState;
   @ViewChildren('markers') public markerViews: QueryList<MarkerComponent>;
   constructor(
     private mapHelperService: MapHelperService,
     private router: Router
-  ) {}
+  ) { }
 
-  private setEvents() {
+
+  private setEvents(): void {
     const source = fromEvent(this.map, 'zoom');
-    source.pipe(debounce(() => timer(500))).subscribe(() => {
+    this.subscription.push(source.pipe(debounce(() => timer(500))).subscribe(() => {
       if (this.mapStatus.markers && this.mapStatus.cameraState !== CameraState.SINGLE) {
-        this.markers = this.mapStatus.markers.filter((marker) => {
+        this.nfts = this.mapStatus.markers.filter((marker) => {
           return Math.max(Math.floor(this.map.getZoom()), 1) === marker.layer;
         });
       }
-    });
+    }));
   }
 
   private setCamera(): void {
@@ -56,7 +61,7 @@ export class MapGlComponent implements OnChanges {
       case CameraState.NEARBY:
         this.bounds = new LngLatBounds();
         this.mapStatus.markers.forEach((marker) => {
-          this.bounds.extend(marker.coordinates);
+          this.bounds.extend(marker.location);
         });
         this.bounds.extend(this.mapStatus.userLocation);
         if (this.map) {
@@ -67,7 +72,7 @@ export class MapGlComponent implements OnChanges {
         if (this.map && this.mapStatus.markers) {
           this.bounds = new LngLatBounds();
           this.mapStatus.markers.forEach((marker) => {
-            this.bounds.extend(marker.coordinates);
+            this.bounds.extend(marker.location);
           });
           if (this.map) {
             this.map.fitBounds(this.bounds, {
@@ -83,12 +88,12 @@ export class MapGlComponent implements OnChanges {
         if (!this.mapStatus.markers) {
           return;
         }
-        const coords = this.mapStatus.markers[0].coordinates;
+        const coords = this.mapStatus.markers[0].location;
         this.map.flyTo({
           center: coords,
           essential: true,
           pitch: 60,
-          zoom: 7,
+          zoom: 10
         });
         break;
     }
@@ -100,7 +105,7 @@ export class MapGlComponent implements OnChanges {
     if (changes.markers.currentValue) {
       const currentValue = changes.markers.currentValue;
 
-      console.log(this.markers);
+      console.log(this.nfts);
       this.map.fitBounds(this.bounds, { padding: 50 });
     }
   }
@@ -110,13 +115,19 @@ export class MapGlComponent implements OnChanges {
     this.mapHelperService.mapStatus$.subscribe((mapState) => {
       this.mapStatus = mapState;
       // apply status
-      this.markers = mapState.markers;
+      this.nfts = mapState.markers;
       this.setCamera();
       this.setEvents();
     });
   }
 
-  markerClicked(marker: ImageMarker) {
+  markerClicked(marker: ImageMarker): void {
     this.router.navigate(['confirm-order', marker.id]);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
   }
 }

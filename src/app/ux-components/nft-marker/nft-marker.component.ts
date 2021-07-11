@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';
+import { GeoNFT, SoldStatus } from 'src/app/services/contract.service';
 
 export enum NftUxState {
   AVAILABLE, OWNEDBYME, OWNEDBYSOMEBODY
@@ -13,15 +14,14 @@ export enum NftUxState {
 })
 export class NftMarkerComponent implements OnInit {
   @Input()
-  image: SafeHtml;
+  nft: GeoNFT;
   @Input()
-  state: NftUxState;
-  NftUxState = NftUxState;
-  @Input()
-  focused: boolean; // sets width and height +24px
+  focused: boolean;
+  SoldStatus = SoldStatus;
   constructor() { }
 
   ngOnInit(): void {
+    console.log('nft param', this.nft);
   }
 
 }

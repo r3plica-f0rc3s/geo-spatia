@@ -137,3 +137,13 @@
     margin-right: 10px;
   }
 }
+.sold {
+  display: flex;
+  align-items: center;
+  place-content: center;
+  width: 100%;
+  span {
+    font-size: 24px;
+    letter-spacing: 1px;
+  }
+}
