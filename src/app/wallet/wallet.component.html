@@ -1,26 +1,4 @@
 <mat-toolbar color="secondary">
-  <button
-    class="wallet-button-wrapper"
-    mat-raised-button
-    color="primary"
-    aria-label="wallet address"
-  >
-    <button
-      class="mini-fab"
-      disableRipple
-      mat-mini-fab
-      color="secondary"
-      (click)="uxService.openLeftSidenav()"
-    >
-      <mat-icon>person</mat-icon>
-    </button>
-    <div class="wallet-button">
-      <div class="start">
-        {{ (contractService.walletInfo$ | async)?.address | shortAddress }}
-      </div>
-      <div class="end">dE2g</div>
-    </div>
-  </button>
   <div class="logo-nft">
     <span> GeoNFT </span>
     <div class="sidenav-open fab-close" *ngIf="isMobile">
@@ -29,7 +7,6 @@
       </button>
     </div>
   </div>
-
 </mat-toolbar>
 <mat-tab-group mat-stretch-tabs>
   <mat-tab label="Collection">
@@ -37,9 +14,35 @@
   </mat-tab>
   <mat-tab label="Wallet">
     <div class="info-wrapper">
-      <button class="big-avatar" mat-fab color="primary">
-        <mat-icon>person</mat-icon>
+      <div class="address-bar">
+      <button
+        class="wallet-button-wrapper"
+        mat-raised-button
+        color="primary"
+        aria-label="wallet address"
+      >
+        <button
+          class="mini-fab"
+          disableRipple
+          mat-mini-fab
+          color="secondary"
+          (click)="uxService.openLeftSidenav()"
+        >
+          <mat-icon>person</mat-icon>
+        </button>
+        <div class="wallet-button">
+          <div class="start">
+            {{ (contractService.walletInfo$ | async)?.address | shortAddress }}
+          </div>
+        </div>
       </button>
+      <mat-slide-toggle
+        color="primary"
+        (ngModelChange)="toggleSales()"
+        [(ngModel)]="enableSales"
+        >Sales enabled</mat-slide-toggle
+      >
+    </div>
       <div>
         <span> ~ {{ convertedBalance }} $ </span>
       </div>
@@ -48,14 +51,7 @@
 
         <span> ONE </span>
       </div>
-      <div class="address">
-        <span>
-          {{ walletInfo?.address }}
-        </span>
-      </div>
-      <mat-slide-toggle color="primary" (ngModelChange)="toggleSales()" [(ngModel)]="enableSales">Sales enabled</mat-slide-toggle>
       <button mat-raised-button color="primary">Logout</button>
     </div>
   </mat-tab>
-
 </mat-tab-group>

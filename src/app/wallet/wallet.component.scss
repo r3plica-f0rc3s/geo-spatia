@@ -100,3 +100,11 @@
 ::ng-deep .mat-tab-body-wrapper {
   height: 100%;
 }
+.address-bar {
+  display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+    place-items: center;
+    margin-bottom: 32px;
+}
