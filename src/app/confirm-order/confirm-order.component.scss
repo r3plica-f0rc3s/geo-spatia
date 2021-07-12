@@ -42,7 +42,6 @@
 }
 .top-label {
   padding-left: 32px;
-  padding-top: 32px;
   span {
     font-size: 24px;
     line-height: 32px;
@@ -51,7 +50,7 @@
 }
 .nft-name {
   display: flex;
-  padding: 32px;
+  padding-left: 32px;
   height: 100%;
 }
 .nft-image {
@@ -105,12 +104,12 @@
   align-items: center;
 }
 .nft-name {
-  align-items: center;
+  align-items: flex-start;
+  margin-top:24px;
   display: flex;
   span {
     font-size: 24px;
   }
-
 }
 
 .mat-h3 {
@@ -119,14 +118,12 @@
 }
 .divider-wrapper {
   display: flex;
-  padding: 32px 32px 0px 32px;
 }
 .divider {
   height: 1px;
   width: 100%;
   background-color: white;
   opacity: 0.2;
-
 }
 .location-button {
   width: 100%;
@@ -146,4 +143,41 @@
     font-size: 24px;
     letter-spacing: 1px;
   }
+}
+.more-or-less {
+  cursor: pointer;
+  color: black;
+}
+.number {
+  margin: 100px;
+}
+.minus,
+.plus {
+  width: 20px;
+  height: 20px;
+  background: #f2f2f2;
+  border-radius: 4px;
+  padding: 8px 5px 8px 5px;
+  border: 1px solid #ddd;
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+}
+.value {
+  height: 34px;
+  width: 100px;
+  text-align: center;
+  font-size: 26px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.price-picker {
+  place-items: center;
+  place-content: center;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  align-content: center;
 }

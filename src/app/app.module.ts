@@ -38,6 +38,8 @@ import { NftListItemComponent } from './ux-components/nft-list-item/nft-list-ite
 import { MatChipsModule } from '@angular/material/chips';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
+import { PricePickerComponent } from './ux-components/price-picker/price-picker.component';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 @NgModule({
   declarations: [
@@ -58,6 +60,7 @@ import { FormsModule } from '@angular/forms';
     SellComponent,
     ButtonComponent,
     NftListItemComponent,
+    PricePickerComponent,
   ],
   imports: [
     BrowserModule,
@@ -73,6 +76,7 @@ import { FormsModule } from '@angular/forms';
     MatListModule,
     MatChipsModule,
     MatSnackBarModule,
+    MatButtonToggleModule,
     NgxMapboxGLModule.withConfig({
       accessToken:
         'pk.eyJ1IjoidGhlY3liZXJkM20wbiIsImEiOiJja2FpcnNyeXowM21tMndwamxyZjU5ajJpIn0.TjWqQxlCdOZmoVFLFJBRsA', // Optional, can also be set per map (accessToken input of mgl-map)

@@ -93,7 +93,8 @@ export class MapGlComponent implements OnChanges, OnDestroy {
           center: coords,
           essential: true,
           pitch: 60,
-          zoom: 10
+          zoom: 10,
+          offset: [-400, 1]
         });
         break;
     }

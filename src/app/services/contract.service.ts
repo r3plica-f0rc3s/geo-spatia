@@ -21,8 +21,10 @@ export interface NFT {
 }
 
 export interface NewNFTEvent {
-  Info: NFT;
-  tokenId: string;
+  returnValues: {
+    Info: NFT;
+    tokenID: string;
+  };
 }
 
 export interface GeoNFT {
@@ -61,7 +63,7 @@ export type TransactionEventUnion = TransactionResultEvent | TransactionStartedE
 export class ContractService {
 
   // old: 0x277333e8187d6d5C3f9d994E564662583EE88E4D
-  contractAddress = '0x09732A1AbED30c32307bE6389FF3d3d33B8C66F6';
+  contractAddress = '0x44C6a24b4182B18a02266ce94d387f76cE62EA53';
 
   private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
   walletInfo$ = this.walletInfoSubject.asObservable();
@@ -131,18 +133,24 @@ export class ContractService {
     });
     this.contract.events.NFTCreation({})
       .on('data', (nft: NewNFTEvent) => {
-        const geoNft = this.mapNftToGeoNFT(nft.Info, Number(nft.tokenId));
+        console.log('nft created', nft);
+        const geoNft = this.mapNftToGeoNFT(
+          nft.returnValues.Info,
+          Number(nft.returnValues.tokenID));
         // TODO: invoke emits
         const nfts = this.nftsSubject.getValue();
+        this.getSvg$(geoNft.id).subscribe((svg) => {
+          geoNft.image = svg;
 
-        this.nftsSubject.next(
-          nfts.concat([geoNft])
-        );
+          this.nftsSubject.next(
+            nfts.concat([geoNft])
+          );
+        });
       });
 
     this.contract.events.NFTSale({})
       .on('data', (data: any) => {
-        console.log(data);
+        console.log('nft-sale', data);
         // const geoNft = this.mapNftToGeoNFT(nft.Info, Number(nft.tokenId));
         // // TODO: invoke emits
         // const nfts = this.nftsSubject.getValue();
@@ -204,6 +212,10 @@ export class ContractService {
         svgSub.complete();
       });
     return svg$;
+  }
+
+  getNftById(tokenId: number): GeoNFT {
+    return this.nftsSubject.getValue().find(x => x.id === tokenId);
   }
 
   mapNftToGeoNFT(nft: NFT, index: number): GeoNFT {

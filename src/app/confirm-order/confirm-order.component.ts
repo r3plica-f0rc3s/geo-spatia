@@ -42,8 +42,6 @@ export class ConfirmOrderComponent implements OnInit, OnDestroy {
       this.contractService.transactions$.subscribe((transactionEvent: TransactionResultEvent) => {
         if (transactionEvent && transactionEvent.success !== undefined) {
           this.router.navigate(['/', 'transaction-result'], { state: transactionEvent});
-        } else if (transactionEvent && transactionEvent.success) {
-
         }
       })
     );

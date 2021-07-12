@@ -66,6 +66,14 @@
       >
         Buy
       </button>
+      <button
+        *ngIf="nft?.owner"
+        disableRipple
+        mat-raised-button
+        color="warn"
+      >
+        Sell
+      </button>
     </div>
   </div>
 </div>

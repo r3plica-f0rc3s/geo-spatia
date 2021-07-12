@@ -1,8 +1,8 @@
 <div
   (click)="openNft()"
   [ngStyle]="{
-    height: focused ? '64px' : '32px',
-    width: focused ? '64px' : '32px'
+    height: focused ? '72px' : '48px',
+    width: focused ? '72px' : '48px'
   }"
   [ngClass]="
     nft.owner ? 'owned' : nft.ownerAddress ? 'ownedByOther' : 'available'
@@ -12,8 +12,8 @@
   <div
     class="svg-icon"
     [ngStyle]="{
-      height: focused ? '48px' : '24px',
-      width: focused ? '48px' : '24px'
+      height: focused ? '52px' : '32px',
+      width: focused ? '52px' : '32px'
     }"
     [ngClass]="{
       bounce: nft.status === SoldStatus.AVAILABLE && !focused,

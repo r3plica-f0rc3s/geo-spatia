@@ -36,6 +36,9 @@
     <span class="button-label"> Buy </span>
   </app-loading-button>
 </div>
+<div class="price-picker">
+  <app-price-picker></app-price-picker>
+</div>
 <div class="sold" *ngIf="nft.status === 0">
   <span>
     {{ nft.owner ? 'Owned' : 'Sold'}}
