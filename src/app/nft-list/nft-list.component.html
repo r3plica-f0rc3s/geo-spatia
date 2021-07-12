@@ -3,7 +3,7 @@
     *ngFor="let nft of nfts; let i = index"
     (click)="confirmOrder(i)"
   >
-    <div class="nft-image">
+    <!-- <div class="nft-image">
       <button
         mat-fab
         class="nft-svg"
@@ -11,48 +11,8 @@
         viewBox="0 0 300 300"
         [innerHTML]="nft?.image"
       ></button>
-    </div>
-    <div class="second">
-      <div class="list-item section">
-        <span class="label">Token name:</span>
-        <div class="name">
-          <span>
-            {{ nft?.name }}
-          </span>
-        </div>
-      </div>
-      <div class="list-item section">
-        <span class="label">Location</span>
-        <div class="details">
-          <span>
-            {{ nft?.location }}
-          </span>
-        </div>
-      </div>
-      <div class="list-item section">
-        <span class="label">Price</span>
-        <div class="details">
-          <span> {{ nft?.price | weiToOne }} ONE </span>
-        </div>
-      </div>
-      <div class="list-item">
-        <span class="label">{{
-          nft?.status === 1 ? "AVAILABLE" : nft.owner ? "OWNED" : "SOLD"
-        }}</span>
-        <div class="details">
-          <span>
-            <button
-              *ngIf="nft?.status === 1"
-              disableRipple
-              mat-raised-button
-              color="primary"
-            >
-              Buy
-            </button>
-          </span>
-        </div>
-      </div>
-    </div>
+    </div> -->
+    <app-nft-list-item [nft]="nft"></app-nft-list-item>    
   </mat-list-option>
   <div class="no-results">
     <p *ngIf="nfts?.length === 0">No avaible NFT's :(</p>

@@ -54,6 +54,8 @@ export interface TransactionResultEvent {
 export type TransactionEventUnion = TransactionResultEvent | TransactionStartedEvent;
 @Injectable()
 export class ContractService {
+
+  // old: 0x277333e8187d6d5C3f9d994E564662583EE88E4D
   contractAddress = '0x277333e8187d6d5C3f9d994E564662583EE88E4D';
 
   private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
@@ -291,5 +293,10 @@ export class ContractService {
 
   weiToOne(balance): string {
     return this.currentWeb3.utils.fromWei(balance, 'ether');
+  }
+
+  logout(): void {
+    // TODO: to implement
+    throw new Error('Not implemented yet');
   }
 }

@@ -32,6 +32,9 @@
 
 </mat-toolbar>
 <mat-tab-group mat-stretch-tabs>
+  <mat-tab label="Collection">
+    <app-nft-list [nfts]="ownedNFTs$ | async"></app-nft-list>
+  </mat-tab>
   <mat-tab label="Wallet">
     <div class="info-wrapper">
       <button class="big-avatar" mat-fab color="primary">
@@ -50,9 +53,8 @@
           {{ walletInfo?.address }}
         </span>
       </div>
+      <button mat-raised-button color="primary">Logout</button>
     </div>
   </mat-tab>
-  <mat-tab label="Your NFTs">
-    <app-nft-list [nfts]="ownedNFTs$ | async"></app-nft-list>
-  </mat-tab>
+
 </mat-tab-group>

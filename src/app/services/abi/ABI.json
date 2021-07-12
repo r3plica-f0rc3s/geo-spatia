@@ -162,6 +162,20 @@
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "disableResale",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "enableResale",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -246,10 +260,51 @@
 		"type": "event"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "bool",
+				"name": "isReserved",
+				"type": "bool"
+			},
+			{
+				"internalType": "uint256",
+				"name": "price",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "TokenID",
+				"type": "uint256"
+			}
+		],
+		"name": "putTokenForResale",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "renounceOwnership",
 		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "resaleID",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "TokenID",
+				"type": "uint256"
+			}
+		],
+		"name": "reSale",
+		"outputs": [],
+		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
@@ -441,6 +496,19 @@
 			}
 		],
 		"name": "balanceOf",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "contractBalance",
 		"outputs": [
 			{
 				"internalType": "uint256",

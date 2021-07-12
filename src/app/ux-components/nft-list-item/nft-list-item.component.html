@@ -1,0 +1,70 @@
+<div class="main-container">
+  <div class="nft-image">
+    <button
+      mat-fab
+      class="nft-svg"
+      preserveAspectRatio="none"
+      viewBox="0 0 300 300"
+      [innerHTML]="nft?.image"
+    ></button>
+  </div>
+  <div class="item-description">
+    <div class="section-one">
+      <div class="name">
+        <span>
+          {{ nft?.name }}
+        </span>
+      </div>
+      <mat-chip-list aria-label="labels">
+        <mat-chip *ngIf="nft.owner" color="primary" [selectable]="false"
+          >Owned</mat-chip
+        >
+        <mat-chip
+          color="secondary"
+          *ngIf="!nft.owner && nft.status === 1"
+          color="primary"
+          [selectable]="false"
+          >On sale</mat-chip
+        >
+        <mat-chip
+        color="secondary"
+        *ngIf="!nft.owner && nft.status === 0"
+        color="primary"
+        [selectable]="false"
+        >Sold</mat-chip
+      >
+        <!-- <mat-chip color="accent" selected>Accent fish</mat-chip> -->
+      </mat-chip-list>
+    </div>
+    <!-- <div class="list-item section">
+      <span class="label">Location</span>
+      <div class="details">
+        <span>
+          {{ nft?.location }}
+        </span>
+      </div>
+    </div> -->
+    <!-- <div class="list-item section">
+      <span class="label">Price</span>
+      <div class="details">
+        <span> {{ nft?.price | weiToOne }} ONE </span>
+      </div>
+    </div> -->
+    <div class="second-section">
+      <!-- TODO: replace to mat-chip -->
+
+      <!-- <span class="label">{{
+          nft?.status === 1 ? "AVAILABLE" : nft.owner ? "OWNED" : "SOLD"
+        }}</span> -->
+
+      <button
+        *ngIf="nft?.status === 1"
+        disableRipple
+        mat-raised-button
+        color="primary"
+      >
+        Buy
+      </button>
+    </div>
+  </div>
+</div>

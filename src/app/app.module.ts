@@ -33,6 +33,9 @@ import { AllNFTsComponent } from './all-nfts/all-nfts.component';
 import { LoadingButtonComponent } from './ux-components/loading-button/loading-button.component';
 import { NftMarkerComponent } from './ux-components/nft-marker/nft-marker.component';
 import { SellComponent } from './sell/sell.component';
+import { ButtonComponent } from './ux-components/button/button.component';
+import { NftListItemComponent } from './ux-components/nft-list-item/nft-list-item.component';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   declarations: [
@@ -51,6 +54,8 @@ import { SellComponent } from './sell/sell.component';
     LoadingButtonComponent,
     NftMarkerComponent,
     SellComponent,
+    ButtonComponent,
+    NftListItemComponent,
   ],
   imports: [
     BrowserModule,
@@ -64,6 +69,7 @@ import { SellComponent } from './sell/sell.component';
     MatToolbarModule,
     MatDialogModule,
     MatListModule,
+    MatChipsModule,
     MatSnackBarModule,
     NgxMapboxGLModule.withConfig({
       accessToken:
@@ -81,4 +87,4 @@ import { SellComponent } from './sell/sell.component';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
