@@ -5,6 +5,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class WeiToOnePipe implements PipeTransform {
   constructor(private contractService: ContractService) {}
   transform(value: number, ...args: any[]) {
-    return this.contractService.weiToOne(String(value));
+    return Number(this.contractService.weiToOne(String(value))).toFixed(args[0]);
   }
 }

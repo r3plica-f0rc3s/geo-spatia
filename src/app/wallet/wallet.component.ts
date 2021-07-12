@@ -15,6 +15,7 @@ export class WalletComponent implements OnInit {
   balance: number;
   convertedBalance: string;
   walletInfo: WalletInfo;
+  enableSales: boolean;
   ownedNFTs$ = this.contractService.ownedNFTs$.pipe(tap(console.log));
   constructor(
     public uxService: UxService,
@@ -30,8 +31,25 @@ export class WalletComponent implements OnInit {
       switchMap(walletInfo => this.priceConverter.convertOneToUSDT(Number(walletInfo.balance)))
     ).subscribe((convertedBalance: number) => {
       this.convertedBalance = convertedBalance.toFixed(2);
+      this.loadSalesStatus();
     });
 
+  }
+
+  loadSalesStatus(): void {
+    this.contractService.isApprovedForAll().then((result) => {
+      this.enableSales = result;
+    }).catch(e => {
+      console.error(e);
+    });
+  }
+
+  toggleSales(): void {
+    if (!this.enableSales) {
+      this.contractService.enableResalePermission();
+    } else {
+      this.contractService.disableResalePermission();
+    }
   }
 
 }

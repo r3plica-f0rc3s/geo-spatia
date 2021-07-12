@@ -36,6 +36,8 @@ import { SellComponent } from './sell/sell.component';
 import { ButtonComponent } from './ux-components/button/button.component';
 import { NftListItemComponent } from './ux-components/nft-list-item/nft-list-item.component';
 import { MatChipsModule } from '@angular/material/chips';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -76,6 +78,8 @@ import { MatChipsModule } from '@angular/material/chips';
         'pk.eyJ1IjoidGhlY3liZXJkM20wbiIsImEiOiJja2FpcnNyeXowM21tMndwamxyZjU5ajJpIn0.TjWqQxlCdOZmoVFLFJBRsA', // Optional, can also be set per map (accessToken input of mgl-map)
     }),
     MatProgressSpinnerModule,
+    MatSlideToggleModule,
+    FormsModule
   ],
   providers: [
     GeolocationService,

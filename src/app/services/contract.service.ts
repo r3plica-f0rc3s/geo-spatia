@@ -51,12 +51,17 @@ export interface TransactionResultEvent {
   confirmationNumber: number;
 }
 
+export interface NFTSaleEvent {
+  address: string;
+  tokenId: string;
+}
+
 export type TransactionEventUnion = TransactionResultEvent | TransactionStartedEvent;
 @Injectable()
 export class ContractService {
 
   // old: 0x277333e8187d6d5C3f9d994E564662583EE88E4D
-  contractAddress = '0x277333e8187d6d5C3f9d994E564662583EE88E4D';
+  contractAddress = '0x09732A1AbED30c32307bE6389FF3d3d33B8C66F6';
 
   private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
   walletInfo$ = this.walletInfoSubject.asObservable();
@@ -134,6 +139,19 @@ export class ContractService {
           nfts.concat([geoNft])
         );
       });
+
+    this.contract.events.NFTSale({})
+      .on('data', (data: any) => {
+        console.log(data);
+        // const geoNft = this.mapNftToGeoNFT(nft.Info, Number(nft.tokenId));
+        // // TODO: invoke emits
+        // const nfts = this.nftsSubject.getValue();
+
+        // this.nftsSubject.next(
+        //   nfts.concat([geoNft])
+        // );
+      });
+
   }
 
   async loadNFTs(layer = 0): Promise<GeoNFT[]> {
@@ -259,9 +277,9 @@ export class ContractService {
             confirmationNumber
           });
         } else {
-          this.transactionsSubject.next({
+          this.transactionsSubject.error({
             fee: receipt.fee,
-            success: true,
+            success: false,
             txid: receipt.id,
             confirmationNumber
           });
@@ -274,6 +292,53 @@ export class ContractService {
     return this.contract.methods
       .ownerOf(tokenId)
       .call({ from: this.selectedAddress });
+  }
+
+  enableResalePermission(): void {
+    const transaction = this.contract.methods
+      .enableResale()
+      .send({ from: this.selectedAddress });
+    this.listenToTransaction(transaction);
+  }
+
+  disableResalePermission(): void {
+    const transaction = this.contract.methods
+      .disableResale()
+      .send({ from: this.selectedAddress });
+    this.listenToTransaction(transaction);
+  }
+
+  async isApprovedForAll(): Promise<boolean> {
+    return this.contract.methods.isApprovedForAll(this.selectedAddress, this.contractAddress);
+  }
+
+  listenToTransaction(transaction): void {
+    transaction.on('transactionHash', (hash: string) => {
+      console.log(
+        'Transaction sent successfully. Check console for Transaction hash'
+      );
+      this.transactionsSubject.next({
+        txid: hash
+      });
+      console.log('Transaction Hash is ', hash);
+    })
+      .once('confirmation', (confirmationNumber, receipt) => {
+        if (receipt.status) {
+          this.transactionsSubject.next({
+            fee: receipt.fee,
+            success: true,
+            txid: receipt.id,
+            confirmationNumber
+          });
+        } else {
+          this.transactionsSubject.error({
+            fee: receipt.fee,
+            success: false,
+            txid: receipt.id,
+            confirmationNumber
+          });
+        }
+      });
   }
 
   loadOwnedNFTs(): Promise<void> {

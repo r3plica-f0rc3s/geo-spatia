@@ -53,6 +53,7 @@
           {{ walletInfo?.address }}
         </span>
       </div>
+      <mat-slide-toggle color="primary" (ngModelChange)="toggleSales()" [(ngModel)]="enableSales">Sales enabled</mat-slide-toggle>
       <button mat-raised-button color="primary">Logout</button>
     </div>
   </mat-tab>

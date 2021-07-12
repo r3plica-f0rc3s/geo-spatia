@@ -16,7 +16,8 @@
         </span>
       </div>
       <mat-chip-list aria-label="labels">
-        <mat-chip *ngIf="nft.owner" color="primary" [selectable]="false"
+        <mat-chip disableRipple color="primary" selected> {{ nft?.price | weiToOne : 4 }} ONE</mat-chip>
+        <mat-chip disableRipple *ngIf="nft.owner" color="accent" selected
           >Owned</mat-chip
         >
         <mat-chip
