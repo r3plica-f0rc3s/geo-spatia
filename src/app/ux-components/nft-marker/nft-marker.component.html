@@ -1,11 +1,31 @@
-<div 
-[ngStyle]="{'height': focused ? '64px' : '32px', 'width': focused ? '64px' : '32px'}"
-[ngClass]="nft.owner ? 'owned' : (nft.ownerAddress ? 'ownedByOther' : 'available')" class="circle">
+<div
+  (click)="openNft()"
+  [ngStyle]="{
+    height: focused ? '64px' : '32px',
+    width: focused ? '64px' : '32px'
+  }"
+  [ngClass]="
+    nft.owner ? 'owned' : nft.ownerAddress ? 'ownedByOther' : 'available'
+  "
+  class="circle"
+>
   <div
-  class="svg-icon"
-  [ngStyle]="{'height': focused ? '48px' : '24px', 'width': focused ? '48px' : '24px'}"
-  [ngClass]="{'bounce': nft.status === SoldStatus.AVAILABLE && !focused, 'rotate': focused && !nft.owner}"
-  [innerHTML]="nft.image"
-></div>
+    class="svg-icon"
+    [ngStyle]="{
+      height: focused ? '48px' : '24px',
+      width: focused ? '48px' : '24px'
+    }"
+    [ngClass]="{
+      bounce: nft.status === SoldStatus.AVAILABLE && !focused,
+      rotate: focused && !nft.owner
+    }"
+    [innerHTML]="nft.image"
+  ></div>
 </div>
-
+<span
+class="label"
+  [ngClass]="
+    nft.owner ? 'owned' : nft.ownerAddress ? 'ownedByOther' : 'available'
+  "
+  >{{ nft?.price | weiToOne: 4 }} ONE</span
+>

@@ -70,15 +70,25 @@
     vertical-align: middle;
     align-items: center;
     &.owned {
-      
-    background-color: green;
+      background-color: green;
     }
     &.ownedByOther {
-      
-    background-color: grey;
+      background-color: grey;
     }
     &.available {
-    background-color: transparent;
+      background-color: transparent;
     }
+  }
+  .owned {
+    color: green;
+  }
+  .ownedByOther {
+    color: grey;
+  }
+  .available {
+    color: white;
+  }
+  .label {
+    width: 100%;
   }
 }

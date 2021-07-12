@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 import { GeoNFT, SoldStatus } from 'src/app/services/contract.service';
 
 export enum NftUxState {
@@ -18,10 +19,14 @@ export class NftMarkerComponent implements OnInit {
   @Input()
   focused: boolean;
   SoldStatus = SoldStatus;
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
     console.log('nft param', this.nft);
+  }
+
+  openNft(): void {
+    this.router.navigate(['/', 'confirm-order', this.nft.id]);
   }
 
 }
