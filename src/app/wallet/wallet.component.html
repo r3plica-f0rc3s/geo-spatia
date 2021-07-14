@@ -8,11 +8,8 @@
     </div>
   </div>
 </mat-toolbar>
-<mat-tab-group mat-stretch-tabs>
-  <mat-tab label="Collection">
-    <app-nft-list [nfts]="ownedNFTs$ | async"></app-nft-list>
-  </mat-tab>
-  <mat-tab label="Wallet">
+
+
     <div class="info-wrapper">
       <div class="address-bar">
       <button
@@ -42,7 +39,17 @@
         [(ngModel)]="enableSales"
         >Sales enabled</mat-slide-toggle
       >
+    
     </div>
+    <div class="divider-2">
+
+    </div>
+    <div class="wallet-label">
+      <span>
+        Wallet status
+      </span>
+    </div>
+    <div class="description-wallet">
       <div>
         <span> ~ {{ convertedBalance }} $ </span>
       </div>
@@ -53,5 +60,13 @@
       </div>
       <button mat-raised-button color="primary">Logout</button>
     </div>
-  </mat-tab>
-</mat-tab-group>
+
+    </div>
+    <div class="divider">
+
+    </div>
+    <div class="wallet-label">
+      <span class="collection-label">
+       NFT collection
+      </span>
+    </div>

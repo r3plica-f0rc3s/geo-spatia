@@ -15,7 +15,7 @@ export interface NFT {
   name: string;
   location: string;
   status: string;
-  price: number;
+  price: string;
   layer: number;
   owner?: string;
 }
@@ -24,19 +24,29 @@ export interface NewNFTEvent {
   returnValues: {
     Info: NFT;
     tokenID: string;
+    creationTime: string;
+    saleTime: string;
   };
+}
+
+export interface BidInfo {
+  highestBid: number;
+  bidderAddress: string;
 }
 
 export interface GeoNFT {
   name: string;
   location: LngLat;
   image?: SafeHtml;
-  price: number;
+  price: string;
   status: SoldStatus;
   id: number;
   layer: number;
   ownerAddress: string;
   owner: boolean;
+  saleTime?: Date;
+  bidInfo?: BidInfo;
+  creationTime?: Date;
 }
 export interface WalletInfo {
   address: string;
@@ -58,13 +68,21 @@ export interface NFTSaleEvent {
   tokenId: string;
 }
 
+export interface NftBidEvent {
+  returnValues: {
+    newBid: BidInfo; // name of the property? auctionInfo, or something else?
+    tokenID: number;
+  };
+
+}
+
 export type TransactionEventUnion = TransactionResultEvent | TransactionStartedEvent;
 @Injectable()
 export class ContractService {
 
   // old: 0x277333e8187d6d5C3f9d994E564662583EE88E4D
-  contractAddress = '0x44C6a24b4182B18a02266ce94d387f76cE62EA53';
-
+  contractAddress = '0xC7B5D47E23bAc2E41F758f4cecF4d71FC0Bb31Ef';
+  blockNumber = 12200520;
   private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
   walletInfo$ = this.walletInfoSubject.asObservable();
 
@@ -79,6 +97,9 @@ export class ContractService {
 
   private transactionsSubject = new BehaviorSubject<TransactionEventUnion>(null);
   transactions$ = this.transactionsSubject.asObservable();
+
+  private bidsMap = new Subject<Map<string, BidInfo>>();
+  bidsMap$ = this.bidsMap.asObservable();
 
   contract: any;
   currentWeb3: any;
@@ -111,7 +132,8 @@ export class ContractService {
       console.log('selected address', this.selectedAddress);
       await this.loadWalletInfo();
       await this.loadOwnedNFTs();
-      await this.loadNFTs(1);
+      // await this.loadNFTs(1);
+      await this.loadNftPassedEvents();
       this.setEvents();
       this.initializing = false;
     } catch (error) {
@@ -148,17 +170,23 @@ export class ContractService {
         });
       });
 
-    this.contract.events.NFTSale({})
-      .on('data', (data: any) => {
-        console.log('nft-sale', data);
-        // const geoNft = this.mapNftToGeoNFT(nft.Info, Number(nft.tokenId));
-        // // TODO: invoke emits
-        // const nfts = this.nftsSubject.getValue();
+    this.contract.events.NFTBid({})
+      .on('data', (nft: NftBidEvent) => {
+        console.log('nft bid', nft);
 
-        // this.nftsSubject.next(
-        //   nfts.concat([geoNft])
-        // );
       });
+
+    // this.contract.events.NFTSale({})
+    //   .on('data', (data: any) => {
+    //     console.log('nft-sale', data);
+    //     // const geoNft = this.mapNftToGeoNFT(nft.Info, Number(nft.tokenId));
+    //     // // TODO: invoke emits
+    //     // const nfts = this.nftsSubject.getValue();
+
+    //     // this.nftsSubject.next(
+    //     //   nfts.concat([geoNft])
+    //     // );
+    //   });
 
   }
 
@@ -187,19 +215,61 @@ export class ContractService {
             })
             .map((nft, index) => this.mapNftToGeoNFT(nft, index));
           // load nfts
-          const observables = geoNFTs.map((nft) => {
+          const imageObservables = geoNFTs.map((nft) => {
             return this.getSvg$(nft.id);
           });
-          forkJoin(observables).subscribe((svgs: string[]) => {
-            svgs.forEach((svg, index) => {
-              geoNFTs[index].image = svg;
-            });
-            this.nftsSubject.next(geoNFTs);
-            resolve(geoNFTs);
+          const tokenSaleTimeObservables = geoNFTs.map((nft) => {
+            return this.tokenSaleTime(nft.id);
           });
+          const auctionInfoObservables = geoNFTs.map((nft) => {
+            return this.auctionInfo$(nft.id);
+          });
+          forkJoin([forkJoin(imageObservables), forkJoin(tokenSaleTimeObservables), forkJoin(auctionInfoObservables)])
+            .subscribe(([svgs, tokenSaleTimes, auctionInfo]: [string[], Date[], BidInfo[]]) => {
+              svgs.forEach((svg, index) => {
+                geoNFTs[index].image = svg;
+              });
+              tokenSaleTimes.forEach((tst: Date, index) => {
+                geoNFTs[index].saleTime = tst;
+              });
+              auctionInfo.forEach((auctionInfo: BidInfo, index) => {
+                if (auctionInfo) {
+                  geoNFTs[index].bidInfo = auctionInfo;
+                }
+              });
+              this.nftsSubject.next(geoNFTs);
+              resolve(geoNFTs);
+            });
 
         });
     });
+  }
+
+  tokenSaleTime(tokenId: number): Observable<unknown> {
+    const tokenSaleTimeSubject = new Subject();
+    const tokenSaleTime$ = tokenSaleTimeSubject.asObservable();
+    this.contract.methods.TokenSaleTime(tokenId)
+      .call({ from: this.selectedAddress })
+      .then((result: any) => {
+        console.log('tst result', result);
+        // TODO: convert epoch to date
+        const utcSeconds = result;
+
+        const date = new Date(0); // The 0 there is the key, which sets the date to the epoch
+        date.setUTCSeconds(utcSeconds);
+
+        tokenSaleTimeSubject.next(date);
+        tokenSaleTimeSubject.complete();
+      });
+    return tokenSaleTime$;
+
+  }
+
+  private epochToDate(epoch: string): Date {
+    const date = new Date(0);
+    const utcSeconds = Number(epoch);
+    date.setUTCSeconds(utcSeconds);
+    return date;
   }
 
   getSvg$(tokenId: number): Observable<SafeHtml> {
@@ -212,6 +282,14 @@ export class ContractService {
         svgSub.complete();
       });
     return svg$;
+  }
+
+  getSvg(tokenId: number): Promise<SafeHtml> {
+    return this.contract.methods
+      .GetTokenSVG(tokenId).call({ from: this.selectedAddress })
+      .then((svg: string) => {
+        return this.domSanitizer.bypassSecurityTrustHtml(decodeURIComponent(svg));
+      });
   }
 
   getNftById(tokenId: number): GeoNFT {
@@ -234,7 +312,7 @@ export class ContractService {
       //   // '<svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><mask id="mask__beam" maskUnits="userSpaceOnUse" x="0" y="0" width="36" height="36"><rect width="36" height="36" rx="72" fill="white"></rect></mask><g mask="url(#mask__beam)"><rect width="36" height="36" fill="#f85931"></rect><rect x="0" y="0" width="36" height="36" transform="translate(-5 9) rotate(209 18 18) scale(1.2)" fill="#009989" rx="36"></rect><g transform="translate(-1 4.5) rotate(-9 18 18)"><path d="M13,21 a1,0.75 0 0,0 10,0" fill="white"></path><rect x="10" y="14" width="1.5" height="2" rx="1" stroke="none" fill="white"></rect><rect x="24" y="14" width="1.5" height="2" rx="1" stroke="none" fill="white"></rect></g></g></svg>'
       //   decodeURIComponent(nft.svg)
       // ),
-      price: Number(nft.price),
+      price: nft.price,
       status: soldStatus,
       id: index + 1,
       ownerAddress: nft.owner,
@@ -258,10 +336,10 @@ export class ContractService {
     });
   }
 
-  buyNFT(tokenId: number, amount: number): void {
+  bidNFT(tokenId: number, amount: string): void {
     // TODO: make it observable
     const result = this.contract.methods
-      .Buy(tokenId)
+      .Bid(tokenId)
       .send({ from: this.selectedAddress, value: amount });
     console.log(result);
     result
@@ -298,6 +376,70 @@ export class ContractService {
         }
         console.log(receipt);
       });
+  }
+
+  private loadNftPassedEvents(): Promise<void> {
+    return this.contract.getPastEvents('NFTCreation', { fromBlock: this.blockNumber })
+      .then((nftCreationEvents: NewNFTEvent[]) => {
+        console.log('passed nftcreation', nftCreationEvents);
+        return Promise.all(nftCreationEvents.map((nftCreationEvent => this.mapNewNFTEventToGeoNFT(nftCreationEvent))));
+      })
+      .then((nfts: GeoNFT[]) => {
+
+        this.nftsSubject.next(nfts);
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  }
+
+  private mapNewNFTEventToGeoNFT(nftCreation: NewNFTEvent): Promise<GeoNFT> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const image = await this.getSvg(Number(nftCreation.returnValues.tokenID));
+        const owner = await (nftCreation.returnValues.Info.status === '0' ?
+        this.ownerOf(Number(nftCreation.returnValues.tokenID)) : new Promise((res) => res(null)));
+        const auctionInfo = await this.auctionInfo(Number(nftCreation.returnValues.tokenID));
+        const status = nftCreation.returnValues.Info.status === '1' ? SoldStatus.AVAILABLE :
+        ((owner as string) === this.selectedAddress ? SoldStatus.OWNED : SoldStatus.SOLD);
+        resolve({
+          id: Number(nftCreation.returnValues.tokenID),
+          layer: Number(nftCreation.returnValues.Info.layer),
+          location: new LngLat(
+            Number(nftCreation.returnValues.Info.location.split(',')[1]),
+            Number(nftCreation.returnValues.Info.location.split(',')[0])
+          ),
+          name: nftCreation.returnValues.Info.name,
+          ownerAddress: owner as string,
+          owner: owner ? (owner as string).toLowerCase() === this.selectedAddress.toLowerCase() : false,
+          saleTime: this.epochToDate(nftCreation.returnValues.saleTime),
+          creationTime: this.epochToDate(nftCreation.returnValues.creationTime),
+          bidInfo: auctionInfo,
+          price: nftCreation.returnValues.Info.price,
+          image,
+          status
+        });
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
+  auctionInfo$(tokenID: number): Observable<BidInfo> {
+    const bidSubject = new Subject<BidInfo>();
+    const bid$ = bidSubject.asObservable();
+    this.contract.methods.AuctionInfo(tokenID)
+      .call({ from: this.selectedAddress })
+      .then((bidInfo) => {
+        bidSubject.next(bidInfo);
+        bidSubject.complete();
+      });
+    return bid$;
+  }
+
+  auctionInfo(tokenID: number): Promise<BidInfo> {
+    return this.contract.methods.AuctionInfo(tokenID)
+      .call({ from: this.selectedAddress });
   }
 
   async ownerOf(tokenId: number): Promise<string> {
@@ -370,6 +512,11 @@ export class ContractService {
 
   weiToOne(balance): string {
     return this.currentWeb3.utils.fromWei(balance, 'ether');
+  }
+
+
+  oneToWei(balance): string {
+    return this.currentWeb3.utils.toWei(balance, 'ether');
   }
 
   logout(): void {

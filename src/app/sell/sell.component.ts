@@ -10,6 +10,7 @@ import { ContractService, GeoNFT } from '../services/contract.service';
 export class SellComponent implements OnInit, OnDestroy {
   subscriptions = [];
   nft: GeoNFT;
+  buying = false;
   constructor(
     private activatedRoute: ActivatedRoute,
     private contractService: ContractService

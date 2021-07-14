@@ -8,10 +8,8 @@
 }
 .second-section {
   display: flex;
-  align-items: center;
-  flex-direction: row;
+  flex-direction: column;
   width: 30%;
-  place-content: flex-end;
 }
 mat-list-option {
   border-bottom: rgb(92, 92, 92) 1px solid;
@@ -24,6 +22,14 @@ mat-list-option {
   display: flex;
   align-items: center;
 }
+::ng-deep .mat-list-base {
+  padding-top: 0 !important;
+}
+::ng-deep .mat-fab {
+  width: 66px;
+  height: 66px;
+}
+
 ::ng-deep .mat-list-base .mat-list-item,
 .mat-list-base .mat-list-option {
   height: 100%;
@@ -50,7 +56,7 @@ mat-list-option {
 }
 .name {
   padding-left: 7px;
-  margin-bottom: 4px;
+  margin-bottom: 16px;
   span {
     font-size: 16px;
   }
@@ -76,7 +82,6 @@ mat-list-option {
   color: #d0a0e4;
 }
 
-
 .top-label {
   width: 100%;
   height: 40px;
@@ -93,4 +98,24 @@ mat-list-option {
     padding-left: 16px;
     box-sizing: border-box;
   }
+}
+.progress-spinner {
+  display: flex;
+  align-items: center;
+  place-content: center;
+  flex-direction: column;
+}
+.time {
+  display: flex;
+  width: 100%;
+  place-content: flex-end;
+  align-items: center;
+  margin-bottom: 8px;
+  margin-top: 4px;
+  span {
+    font-size: 14px;
+    margin-right: 4px;
+    color: #9c27b0;
+  }
+
 }

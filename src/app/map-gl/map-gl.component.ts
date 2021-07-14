@@ -80,6 +80,7 @@ export class MapGlComponent implements OnChanges, OnDestroy {
               bearing: 0,
               pitch: 0,
               essential: true,
+              offset: [-400, 1]
             });
           }
         }

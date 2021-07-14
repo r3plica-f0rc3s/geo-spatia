@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 import { withLatestFrom } from 'rxjs/operators';
 import { ContractService, GeoNFT, TransactionResultEvent } from './../services/contract.service';
 import { MapHelperService } from './../services/map-helper.service';
@@ -9,9 +9,12 @@ import { MapHelperService } from './../services/map-helper.service';
   styleUrls: ['./confirm-order.component.scss'],
 })
 export class ConfirmOrderComponent implements OnInit, OnDestroy {
+  timeLeft: number;
+  Math = Math;
   public nft: GeoNFT;
   subscriptions: Subscription[] = [];
   buying = false;
+  newBid = -1;
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -32,11 +35,14 @@ export class ConfirmOrderComponent implements OnInit, OnDestroy {
       })
     );
 
-
+    this.timeLeft = this.nft.saleTime.getTime() - Date.now();
+    this.subscriptions.push(timer(1000, 1000).subscribe(() => {
+      this.timeLeft = this.timeLeft - 1000;
+    }));
   }
 
-  buyNFT(): void {
-    this.contractService.buyNFT(this.nft.id, this.nft.price);
+  submitBid(): void {
+    this.contractService.bidNFT(this.nft.id, this.contractService.oneToWei(String(this.newBid)));
     this.buying = true;
     this.subscriptions.push(
       this.contractService.transactions$.subscribe((transactionEvent: TransactionResultEvent) => {
@@ -46,6 +52,14 @@ export class ConfirmOrderComponent implements OnInit, OnDestroy {
       })
     );
 
+  }
+
+  getMinPrice(wei: string): number {
+    return Number(this.contractService.weiToOne(wei));
+  }
+
+  bidChanged(newBid: number): void {
+    this.newBid = newBid;
   }
 
   ngOnDestroy(): void {

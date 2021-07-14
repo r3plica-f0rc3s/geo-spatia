@@ -60,5 +60,12 @@
 .toolbar-label {
   display: flex;
   place-items: center;
+  justify-items: end;
   height: 100%;
+  .toolbar-span {
+    letter-spacing: 1px;
+    font-size: 16px;
+    color: grey;
+    font-family: "Krona One";
+  }
 }

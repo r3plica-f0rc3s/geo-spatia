@@ -8,7 +8,6 @@
   }
 }
 mat-list-option {
-  border-bottom: rgb(92, 92, 92) 1px solid;
   display: flex;
   flex-direction: row;
 }
@@ -25,6 +24,12 @@ mat-list-option {
 ::ng-deep .mat-list-base .mat-list-item .mat-list-item-content-reverse,
 .mat-list-base .mat-list-option .mat-list-item-content-reverse {
   padding: 16px !important;
+}
+::ng-deep .mat-list-base .mat-list-item.mat-list-item-with-avatar .mat-list-item-content-reverse .mat-list-text, .mat-list-base .mat-list-item.mat-list-option .mat-list-item-content-reverse .mat-list-text, .mat-list-base .mat-list-option.mat-list-item-with-avatar .mat-list-item-content-reverse .mat-list-text, .mat-list-base .mat-list-option.mat-list-option .mat-list-item-content-reverse .mat-list-text {
+  padding-right: 0 !important;
+}
+::ng-deep .mat-list-text {
+  padding-right: 0 !important;
 }
 .nft-image {
   width: 22%;
@@ -99,4 +104,8 @@ mat-list-option {
   align-items: center;
   align-content: center;
   height: 100%;
+  margin-top: 24px;
+}
+.divider {
+  background-color: grey;
 }

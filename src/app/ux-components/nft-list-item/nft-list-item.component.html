@@ -1,3 +1,14 @@
+<div class="progress">
+  <mat-progress-bar mode="determinate" [value]="endedPercent"></mat-progress-bar>
+
+  <div class="time">
+    <span>Time left:</span>
+    <span> {{ Math.floor(timeLeft / (1000 * 60 * 60 * 24)) }} days </span>
+    <span>{{ timeLeft | date: "HH:mm:ss" }}</span>
+  </div>
+</div>
+
+
 <div class="main-container">
   <div class="nft-image">
     <button
@@ -16,7 +27,9 @@
         </span>
       </div>
       <mat-chip-list aria-label="labels">
-        <mat-chip disableRipple color="primary" selected> {{ nft?.price | weiToOne : 4 }} ONE</mat-chip>
+        <mat-chip disableRipple color="primary" selected>
+          {{ nft?.price | weiToOne: 4 }} ONE</mat-chip
+        >
         <mat-chip disableRipple *ngIf="nft.owner" color="accent" selected
           >Owned</mat-chip
         >
@@ -28,12 +41,12 @@
           >On sale</mat-chip
         >
         <mat-chip
-        color="secondary"
-        *ngIf="!nft.owner && nft.status === 0"
-        color="primary"
-        [selectable]="false"
-        >Sold</mat-chip
-      >
+          color="secondary"
+          *ngIf="!nft.owner && nft.status === 0"
+          color="primary"
+          [selectable]="false"
+          >Sold</mat-chip
+        >
         <!-- <mat-chip color="accent" selected>Accent fish</mat-chip> -->
       </mat-chip-list>
     </div>
@@ -52,6 +65,7 @@
       </div>
     </div> -->
     <div class="second-section">
+      <div class="progress-spinner"></div>
       <!-- TODO: replace to mat-chip -->
 
       <!-- <span class="label">{{
@@ -66,12 +80,7 @@
       >
         Buy
       </button>
-      <button
-        *ngIf="nft?.owner"
-        disableRipple
-        mat-raised-button
-        color="warn"
-      >
+      <button *ngIf="nft?.owner" disableRipple mat-raised-button color="warn">
         Sell
       </button>
     </div>
