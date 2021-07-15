@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, timer } from 'rxjs';
 import { withLatestFrom } from 'rxjs/operators';
-import { ContractService, GeoNFT, TransactionResultEvent } from '../services/contract.service';
+import { BidInfo, BidViewModel, ContractService, GeoNFT, TransactionResultEvent } from '../services/contract.service';
 import { MapHelperService } from '../services/map-helper.service';
 @Component({
   templateUrl: './single-nft.component.html',
@@ -18,6 +18,7 @@ export class SingleNftComponent implements OnInit, OnDestroy {
   highestBid: string;
   endedPercent: number;
   latestBidIsOwn: boolean;
+  bidsViewModel: BidViewModel;
   newBid = -1;
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -39,16 +40,23 @@ export class SingleNftComponent implements OnInit, OnDestroy {
         }
         this.mapHelperService.setSingleMarker(this.nft);
         this.calculateTimeLeft();
-        this.highestBid = null;
-        if (Number(this.nft.bidInfo.highestBid) > Number(this.nft.price)) {
-          this.highestBid = String(this.nft.bidInfo.highestBid);
-          this.latestBidIsOwn = this.contractService.selectedAddress.toLowerCase() === this.nft.bidInfo.bidderAddress.toLowerCase();
-        }
+        this.subscriptions.push(
+          this.contractService.getNFTBids$(String(this.nft.id))
+            .subscribe((bids: BidInfo[]) => {
+              console.log('nft', this.nft, 'bids', bids);
+              this.processBids(bids);
+            })
+        );
         this.changeDetector.detectChanges();
       })
     );
 
 
+  }
+
+  processBids(bids: BidInfo[]): void {
+    this.bidsViewModel = this.contractService.normalizeBids(bids);
+    this.changeDetector.detectChanges();
   }
 
   calculateTimeLeft(): void {

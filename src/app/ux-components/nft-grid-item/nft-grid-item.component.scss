@@ -1,0 +1,22 @@
+.container-inner {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  align-items: center;
+  place-content: center;
+  &:hover {
+      cursor: pointer;
+  }
+}
+.circle {
+  width: 70px;
+  height: 70px;
+  margin-bottom: 4px;
+}
+.label-wrapper {
+  span {
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+}

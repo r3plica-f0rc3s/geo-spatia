@@ -42,6 +42,7 @@ import { PricePickerComponent } from './ux-components/price-picker/price-picker.
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { NftGridComponent } from './ux-components/nft-grid/nft-grid.component';
+import { NftGridItemComponent } from './ux-components/nft-grid-item/nft-grid-item.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { NftGridComponent } from './ux-components/nft-grid/nft-grid.component';
     NftListItemComponent,
     PricePickerComponent,
     NftGridComponent,
+    NftGridItemComponent,
   ],
   imports: [
     BrowserModule,

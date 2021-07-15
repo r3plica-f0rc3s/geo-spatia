@@ -65,13 +65,13 @@
     <div class="divider">
 
     </div>
-    <div class="wallet-label">
+    <div class="wallet-label" *ngIf="nftsWithBids$">
       <span class="collection-label">
        Nfts with your bids
       </span>
     </div>
     <app-nft-grid [nfts]="nftsWithBids$ | async"></app-nft-grid>    
-    <div class="wallet-label">
+    <div class="wallet-label" *ngIf="ownedNFTs$">
       <span class="collection-label">
        NFT collection
       </span>

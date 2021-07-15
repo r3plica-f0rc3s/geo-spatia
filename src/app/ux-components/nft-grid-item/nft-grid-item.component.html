@@ -1,0 +1,24 @@
+<div class="container-inner">
+    <div
+    (click)="openNft()"
+  
+    [ngClass]="
+      nft?.owner ? 'owned' : nft?.ownerAddress ? 'ownedByOther' : 'available'
+    "
+    class="circle"
+  >
+    <div
+      class="svg-icon"
+      [innerHTML]="nft?.image"
+    ></div>
+  </div>
+  <div class="label-wrapper">
+    <span
+      [ngClass]="
+        nft?.owner ? 'owned' : nft?.ownerAddress ? 'ownedByOther' : 'available'
+      "
+      >{{ nft?.price | weiToOne: 4 }} ONE</span
+    >
+  </div>
+ 
+  </div>

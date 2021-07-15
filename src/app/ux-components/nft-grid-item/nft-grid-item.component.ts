@@ -1,31 +1,28 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactoryResolver, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
 import { BidInfo, BidViewModel, ContractService, GeoNFT } from 'src/app/services/contract.service';
 
 @Component({
-  selector: 'app-nft-list-item',
-  templateUrl: './nft-list-item.component.html',
-  styleUrls: ['./nft-list-item.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-nft-grid-item',
+  templateUrl: './nft-grid-item.component.html',
+  styleUrls: ['./nft-grid-item.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NftListItemComponent implements OnInit, OnDestroy {
+export class NftGridItemComponent implements OnInit, OnDestroy {
   @Input()
+  nftId: number;
   nft: GeoNFT;
+
   timeLeft: Date;
   subscriptions = [];
   endedPercent: number;
   Math = Math;
   bidsViewModel: BidViewModel;
-  constructor(
-    private changeDetector: ChangeDetectorRef,
-    private contractService: ContractService
-  ) { }
+  constructor(private contractService: ContractService, private changeDetector: ChangeDetectorRef) { }
+
 
   ngOnInit(): void {
-    // this.contractService.getNftById
-    console.log('rendering nft', this.nft.saleTime.getTime() - Date.now());
-    console.log(this.nft.saleTime.getTime() - Date.now());
-    this.calculateTimeLeft();
+    this.nft = this.contractService.getNftById(this.nftId);
 
     this.subscriptions.push(
       this.contractService.getNFTBids$(String(this.nft.id))
@@ -62,9 +59,12 @@ export class NftListItemComponent implements OnInit, OnDestroy {
 
   }
 
+  openNft() {}
+
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub: Subscription) => {
       sub.unsubscribe();
     });
   }
+
 }

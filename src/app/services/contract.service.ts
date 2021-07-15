@@ -88,8 +88,8 @@ export type TransactionEventUnion = TransactionResultEvent | TransactionStartedE
 export class ContractService {
 
   // old: 0x277333e8187d6d5C3f9d994E564662583EE88E4D
-  contractAddress = '0x2804Bdcb0e54BED79E63713170DaDAeEefd5Bb2B';
-  blockNumber = 12252647;
+  contractAddress = '0x94b0D7a854fA17Ed63049135CEf14396228F0528';
+  blockNumber = 12295877;
   private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
   walletInfo$ = this.walletInfoSubject.asObservable();
 
@@ -111,6 +111,9 @@ export class ContractService {
 
   newBidsSubject = new Subject<NftBidEvent>();
   newBids$ = this.newBidsSubject.asObservable();
+
+  newNftsSubject = new Subject<NewNFTEvent>();
+  newNfts$ = this.newNftsSubject.asObservable();
 
   contract: any;
   currentWeb3: any;
@@ -155,7 +158,7 @@ export class ContractService {
   }
 
   setEvents(): void {
-    this.wallet.on('networkChanged', function (networkId) {
+    this.wallet.on('networkChanged', function(networkId) {
       // Time to reload your interface with the new networkId
       console.log('New network ID:', networkId);
       if (networkId !== '0x6357d2e0') {
@@ -167,10 +170,11 @@ export class ContractService {
     this.contract.events.NFTCreation({})
       .on('data', async (nft: NewNFTEvent) => {
         console.log('nft created', nft);
+        this.newNftsSubject.next(nft);
         const geoNft = await this.mapNewNFTEventToGeoNFT(
           nft
         );
-        // TODO: invoke emits
+
         const nfts = this.nftsSubject.getValue();
         this.getSvg$(geoNft.id).subscribe((svg) => {
           geoNft.image = svg;
@@ -183,7 +187,7 @@ export class ContractService {
 
     this.contract.events.NFTBid({})
       .on('data', (bidEvent: NftBidEvent) => {
-        console.log('nft bid', bidEvent);
+
         this.newBidsSubject.next(bidEvent);
       });
 
@@ -330,8 +334,16 @@ export class ContractService {
       // has own bid but not highest
       outBidden: !(this.selectedAddress.toLowerCase() === highestBid.bidderAddress.toLowerCase()) && !!(bids
         .find(x => x.bidderAddress.toLowerCase() === this.selectedAddress.toLowerCase()))
-      };
-    }
+    };
+  }
+
+  getNftsWithAvailableActions$(): Observable<GeoNFT[]> {
+    const sub = new Subject<GeoNFT[]>();
+    this.nftsSubject.pipe(
+
+    );
+    return sub.asObservable();
+  }
 
   private mapNftToGeoNFT(nft: NFT, index: number): GeoNFT {
     console.log('mapping nft', nft);
