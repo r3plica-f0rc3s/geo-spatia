@@ -166,6 +166,58 @@
 		"anonymous": false,
 		"inputs": [
 			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "highestBid",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "bidderAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "resalePrice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "tokenID",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "resaleTime",
+						"type": "uint256"
+					}
+				],
+				"indexed": false,
+				"internalType": "struct GeoTokens.resaleInfo",
+				"name": "latestInfo",
+				"type": "tuple"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "resaleId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "tokenID",
+				"type": "uint256"
+			}
+		],
+		"name": "ResaleBid",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
 				"indexed": true,
 				"internalType": "address",
 				"name": "from",
@@ -374,7 +426,7 @@
 		],
 		"name": "RetrieveNFT",
 		"outputs": [],
-		"stateMutability": "payable",
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{

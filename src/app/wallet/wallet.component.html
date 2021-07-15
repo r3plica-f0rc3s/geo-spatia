@@ -9,71 +9,62 @@
   </div>
 </mat-toolbar>
 
-
-    <div class="info-wrapper">
-      <div class="address-bar">
+<div class="info-wrapper">
+  <div class="address-bar">
+    <button
+      class="wallet-button-wrapper"
+      mat-raised-button
+      color="primary"
+      aria-label="wallet address"
+    >
       <button
-        class="wallet-button-wrapper"
-        mat-raised-button
-        color="primary"
-        aria-label="wallet address"
+        class="mini-fab"
+        disableRipple
+        mat-mini-fab
+        color="secondary"
+        (click)="uxService.openLeftSidenav()"
       >
-        <button
-          class="mini-fab"
-          disableRipple
-          mat-mini-fab
-          color="secondary"
-          (click)="uxService.openLeftSidenav()"
-        >
-          <mat-icon>person</mat-icon>
-        </button>
-        <div class="wallet-button">
-          <div class="start">
-            {{ (contractService.walletInfo$ | async)?.address | shortAddress }}
-          </div>
-        </div>
+        <mat-icon>person</mat-icon>
       </button>
-      <mat-slide-toggle
-        color="primary"
-        (ngModelChange)="toggleSales()"
-        [(ngModel)]="enableSales"
-        >Sales enabled</mat-slide-toggle
-      >
-    
-    </div>
-    <div class="divider-2">
-
-    </div>
-    <div class="wallet-label">
-      <span>
-        Wallet status
-      </span>
-    </div>
-    <div class="description-wallet">
-      <div>
-        <span> ~ {{ convertedBalance }} $ </span>
+      <div class="wallet-button">
+        <div class="start">
+          {{ (contractService.walletInfo$ | async)?.address | shortAddress }}
+        </div>
       </div>
-      <div class="info-inner">
-        <span class="amount"> {{ walletInfo?.balance.substring(0, 12) }} </span>
+    </button>
+    <mat-slide-toggle
+      color="primary"
+      (ngModelChange)="toggleSales()"
+      [(ngModel)]="enableSales"
+      >Sales enabled</mat-slide-toggle
+    >
+  </div>
+  <div class="divider-2"></div>
+  <div class="wallet-label">
+    <span> Wallet status </span>
+  </div>
+  <div class="description-wallet">
+    <div>
+      <span> ~ {{ convertedBalance }} $ </span>
+    </div>
+    <div class="info-inner">
+      <span class="amount"> {{ walletInfo?.balance.substring(0, 12) }} </span>
 
-        <span> ONE </span>
-      </div>
-      <button mat-raised-button color="primary">Logout</button>
+      <span> ONE </span>
     </div>
+    <button mat-raised-button color="primary"><mat-icon>power_settings_new</mat-icon>
+      Logout</button>
+  </div>
+</div>
+<div class="wallet-label" *ngIf="(nftsWithBids$ | async).length > 0">
+  <div class="divider"></div>
 
-    </div>
-    <div class="divider">
+  <span class="collection-label"> Nfts with your bids </span>
+</div>
+<app-nft-grid [nfts]="nftsWithBids$ | async"></app-nft-grid>
+<div class="wallet-label" *ngIf="(ownedNFTs$ | async).length > 0">
+  <div class="divider"></div>
 
-    </div>
-    <div class="wallet-label" *ngIf="nftsWithBids$">
-      <span class="collection-label">
-       Nfts with your bids
-      </span>
-    </div>
-    <app-nft-grid [nfts]="nftsWithBids$ | async"></app-nft-grid>    
-    <div class="wallet-label" *ngIf="ownedNFTs$">
-      <span class="collection-label">
-       NFT collection
-      </span>
-    </div>
-    <app-nft-grid [nfts]="ownedNFTs$ | async"></app-nft-grid>
+  <span class="collection-label"> NFT collection </span>
+</div>
+<app-nft-grid [nfts]="ownedNFTs$ | async"></app-nft-grid>

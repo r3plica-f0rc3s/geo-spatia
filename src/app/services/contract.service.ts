@@ -4,7 +4,7 @@ const Web3 = require('web3');
 import abi from './abi/ABI.json';
 import { LngLat } from 'mapbox-gl';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { filter, map, switchMap, tap } from 'rxjs/operators';
+import { filter, first, map, switchMap, tap } from 'rxjs/operators';
 
 export enum SoldStatus {
   SOLD,
@@ -88,7 +88,7 @@ export type TransactionEventUnion = TransactionResultEvent | TransactionStartedE
 export class ContractService {
 
   // old: 0x277333e8187d6d5C3f9d994E564662583EE88E4D
-  contractAddress = '0x94b0D7a854fA17Ed63049135CEf14396228F0528';
+  contractAddress = '0x3a3B277712DcD3C1607c09A4b241AF7edCB5eb39';
   blockNumber = 12295877;
   private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
   walletInfo$ = this.walletInfoSubject.asObservable();
@@ -324,6 +324,13 @@ export class ContractService {
   }
 
   normalizeBids(bids: BidInfo[]): BidViewModel {
+    if (bids.length === 0) {
+      return {
+        highestBid: '0',
+        latestBidIsOwn: false,
+        outBidden: false
+      };
+    }
     const highestBid = bids.reduce((prev, current) => {
       return (prev.highestBid > current.highestBid) ? prev : current;
     });
@@ -337,13 +344,12 @@ export class ContractService {
     };
   }
 
-  getNftsWithAvailableActions$(): Observable<GeoNFT[]> {
-    const sub = new Subject<GeoNFT[]>();
-    this.nftsSubject.pipe(
-
+  getNftsOnSale$(): Observable<GeoNFT[]> {
+    return this.nftsSubject.pipe(
+      map(nfts => nfts.filter(nft => !(nft.ownerAddress)))
     );
-    return sub.asObservable();
   }
+
 
   private mapNftToGeoNFT(nft: NFT, index: number): GeoNFT {
     console.log('mapping nft', nft);

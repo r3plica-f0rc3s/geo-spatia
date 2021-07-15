@@ -85,7 +85,7 @@ export class AppComponent implements OnInit {
       this.connectToMetamask();
     }
     this.subscriptions.push(
-      this.contractService.nfts$.subscribe((nfts) => {
+      this.contractService.getNftsOnSale$().subscribe((nfts) => {
         this.nfts = nfts;
       }),
     );

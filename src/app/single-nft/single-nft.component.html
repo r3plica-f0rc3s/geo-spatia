@@ -15,8 +15,13 @@
 
     <div class="time">
       <span>Time left:</span>
-      <span> {{ Math.floor(timeLeft.getTime() / (1000 * 60 * 60 * 24)) }} days </span>
-      <span> {{ timeLeft.getUTCHours()}}h : {{ timeLeft | date: "mm" }}m : {{ timeLeft | date: "ss"}}s</span>
+      <span>
+        {{ Math.floor(timeLeft.getTime() / (1000 * 60 * 60 * 24)) }} days
+      </span>
+      <span>
+        {{ timeLeft.getUTCHours() }}h : {{ timeLeft | date: "mm" }}m :
+        {{ timeLeft | date: "ss" }}s</span
+      >
     </div>
   </div>
 
@@ -30,17 +35,19 @@
       <div class="price">
         <span class="mat-h3"
           >{{
-            highestBid ? getMinPrice(highestBid) : getMinPrice(nft.price)
+            bidsViewModel?.highestBid
+              ? getMinPrice(bidsViewModel?.highestBid)
+              : getMinPrice(nft.price)
           }}
           ONE</span
         >
       </div>
     </div>
   </div>
-  <div *ngIf="latestBidIsOwn" class="highest-label">
+  <div *ngIf="bidsViewModel?.latestBidIsOwn" class="highest-label">
     <span> Your bet is the highest </span>
   </div>
-  <div class="bid-wrapper" *ngIf="!latestBidIsOwn">
+  <div class="bid-wrapper" *ngIf="!bidsViewModel?.latestBidIsOwn">
     <div class="bid-label">
       <span> Put your price </span>
     </div>
@@ -48,13 +55,18 @@
       <app-price-picker
         (bidChanged)="bidChanged($event)"
         [minPrice]="
-          highestBid ? getMinPrice(highestBid) : getMinPrice(nft.price)
+          bidsViewModel?.highestBid
+            ? getMinPrice(bidsViewModel?.highestBid)
+            : getMinPrice(nft.price)
         "
       ></app-price-picker>
     </div>
   </div>
 
-  <div class="buy-button" *ngIf="nft.status === 1 && !latestBidIsOwn">
+  <div
+    class="buy-button"
+    *ngIf="nft.status === 1 && !bidsViewModel?.latestBidIsOwn"
+  >
     <app-loading-button (click)="submitBid()" [loading]="buying">
       <mat-icon>shopping_basket</mat-icon>
       <span class="button-label"> Bid </span>

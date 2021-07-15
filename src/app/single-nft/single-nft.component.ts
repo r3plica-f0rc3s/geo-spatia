@@ -43,7 +43,6 @@ export class SingleNftComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
           this.contractService.getNFTBids$(String(this.nft.id))
             .subscribe((bids: BidInfo[]) => {
-              console.log('nft', this.nft, 'bids', bids);
               this.processBids(bids);
             })
         );
