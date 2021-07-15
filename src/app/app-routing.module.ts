@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ConfirmOrderComponent } from './confirm-order/confirm-order.component';
+import { SingleNftComponent } from './single-nft/single-nft.component';
 import { StartComponent } from './start/start.component';
 import { TransactionResultComponent } from './transaction-result/transaction-result.component';
 import { AllNFTsComponent } from './all-nfts/all-nfts.component';
@@ -16,7 +16,7 @@ const routes: Routes = [
     path: 'all-nfts',
   },
   {
-    component: ConfirmOrderComponent,
+    component: SingleNftComponent,
     path: 'confirm-order/:id',
   },
   {

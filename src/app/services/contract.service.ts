@@ -1,9 +1,10 @@
-import { BehaviorSubject, forkJoin, Observable, ReplaySubject, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, forkJoin, Observable, ReplaySubject, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 const Web3 = require('web3');
 import abi from './abi/ABI.json';
 import { LngLat } from 'mapbox-gl';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
 
 export enum SoldStatus {
   SOLD,
@@ -30,7 +31,7 @@ export interface NewNFTEvent {
 }
 
 export interface BidInfo {
-  highestBid: number;
+  highestBid: string;
   bidderAddress: string;
 }
 
@@ -71,7 +72,7 @@ export interface NFTSaleEvent {
 export interface NftBidEvent {
   returnValues: {
     newBid: BidInfo; // name of the property? auctionInfo, or something else?
-    tokenID: number;
+    tokenId: string;
   };
 
 }
@@ -81,8 +82,8 @@ export type TransactionEventUnion = TransactionResultEvent | TransactionStartedE
 export class ContractService {
 
   // old: 0x277333e8187d6d5C3f9d994E564662583EE88E4D
-  contractAddress = '0xC7B5D47E23bAc2E41F758f4cecF4d71FC0Bb31Ef';
-  blockNumber = 12200520;
+  contractAddress = '0x3B3f34f8b7FEB736359Db694A446BE94FF3a1c76';
+  blockNumber = 12252647;
   private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
   walletInfo$ = this.walletInfoSubject.asObservable();
 
@@ -98,8 +99,9 @@ export class ContractService {
   private transactionsSubject = new BehaviorSubject<TransactionEventUnion>(null);
   transactions$ = this.transactionsSubject.asObservable();
 
-  private bidsMap = new Subject<Map<string, BidInfo>>();
-  bidsMap$ = this.bidsMap.asObservable();
+  bidsMap = new Map<string, BidInfo[]>();
+  bidsMapSubject = new BehaviorSubject<Map<string, BidInfo[]>>(new Map<string, BidInfo[]>());
+  bidsMap$ = this.bidsMapSubject.asObservable();
 
   contract: any;
   currentWeb3: any;
@@ -245,7 +247,7 @@ export class ContractService {
     });
   }
 
-  tokenSaleTime(tokenId: number): Observable<unknown> {
+  private tokenSaleTime(tokenId: number): Observable<unknown> {
     const tokenSaleTimeSubject = new Subject();
     const tokenSaleTime$ = tokenSaleTimeSubject.asObservable();
     this.contract.methods.TokenSaleTime(tokenId)
@@ -296,7 +298,7 @@ export class ContractService {
     return this.nftsSubject.getValue().find(x => x.id === tokenId);
   }
 
-  mapNftToGeoNFT(nft: NFT, index: number): GeoNFT {
+  private mapNftToGeoNFT(nft: NFT, index: number): GeoNFT {
     console.log('mapping nft', nft);
     // check if owned
     const soldStatus = nft.status === '1' ? SoldStatus.AVAILABLE :
@@ -320,7 +322,7 @@ export class ContractService {
     };
   }
 
-  async loadWalletInfo(): Promise<void> {
+  private async loadWalletInfo(): Promise<void> {
     return new Promise((resolve, reject) => {
       const address = this.wallet.selectedAddress;
       this.currentWeb3.eth
@@ -379,10 +381,30 @@ export class ContractService {
   }
 
   private loadNftPassedEvents(): Promise<void> {
-    return this.contract.getPastEvents('NFTCreation', { fromBlock: this.blockNumber })
-      .then((nftCreationEvents: NewNFTEvent[]) => {
+    return Promise.all([
+      this.contract.getPastEvents('NFTCreation', { fromBlock: this.blockNumber }),
+      this.contract.getPastEvents('NFTBid', { fromBlock: this.blockNumber })
+    ])
+      .then(([nftCreationEvents, nftBidsEvents]: [NewNFTEvent[], NftBidEvent[]]) => {
         console.log('passed nftcreation', nftCreationEvents);
+        console.log('passed nftbids', nftBidsEvents);
+        nftBidsEvents.forEach((bid: NftBidEvent) => {
+          if (!this.bidsMap.get(bid.returnValues.tokenId)) {
+            this.bidsMap.set(bid.returnValues.tokenId, []);
+          }
+          const arr = this.bidsMap.get(bid.returnValues.tokenId);
+          arr.push(bid.returnValues.newBid);
+          this.bidsMap.set(bid.returnValues.tokenId, arr);
+
+        });
+        this.bidsMapSubject.next(this.bidsMap);
         return Promise.all(nftCreationEvents.map((nftCreationEvent => this.mapNewNFTEventToGeoNFT(nftCreationEvent))));
+      })
+      .then((nfts: GeoNFT[]) => {
+        // map biddings
+        const auctionInfos = nfts.map((nft, idx) => ({ bid: nft.bidInfo, idx }));
+        console.log('auctionInfos', auctionInfos);
+        return nfts;
       })
       .then((nfts: GeoNFT[]) => {
 
@@ -392,6 +414,7 @@ export class ContractService {
         console.error(e);
       });
   }
+
 
   private mapNewNFTEventToGeoNFT(nftCreation: NewNFTEvent): Promise<GeoNFT> {
     return new Promise(async (resolve, reject) => {
@@ -448,6 +471,23 @@ export class ContractService {
       .call({ from: this.selectedAddress });
   }
 
+  getNftsWithMyBids(): Observable<GeoNFT[]> {
+    return combineLatest([this.bidsMap$, this.nfts$]).pipe(
+      filter(([bidsMap, nfts]) => !!bidsMap && !!nfts),
+      map(([bidsMap, nfts]: [Map<string, BidInfo[]>, GeoNFT[]]) => {
+        const nftIds: string[] = [];
+        bidsMap.forEach((bid: BidInfo[], key: string) => {
+          if (bid.find(x => x.bidderAddress.toLowerCase() === this.selectedAddress.toLowerCase())) {
+            nftIds.push(key);
+          }
+        });
+
+        return nftIds.map((x) => nfts.find(nft => String(nft.id) === x));
+      }),
+    );
+
+  }
+
   enableResalePermission(): void {
     const transaction = this.contract.methods
       .enableResale()
@@ -500,7 +540,6 @@ export class ContractService {
       this.contract.methods.getUserOwnedNFT().call({
         from: this.selectedAddress
       }).then((result) => {
-        console.log('owned nfts', []);
         this.ownedNFTsSubject.next(result);
         resolve();
       }).catch((err) => {

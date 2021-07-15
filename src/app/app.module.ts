@@ -13,7 +13,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MapService, NgxMapboxGLModule } from 'ngx-mapbox-gl';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ConfirmOrderComponent } from './confirm-order/confirm-order.component';
+import { SingleNftComponent } from './single-nft/single-nft.component';
 import { CurtainComponent } from './curtain/curtain.component';
 import { DialogComponent } from './dialog/dialog.component';
 import { MapGlComponent } from './map-gl/map-gl.component';
@@ -48,7 +48,7 @@ import { NftGridComponent } from './ux-components/nft-grid/nft-grid.component';
     AppComponent,
     DialogComponent,
     MapGlComponent,
-    ConfirmOrderComponent,
+    SingleNftComponent,
     StartComponent,
     AllNFTsComponent,
     NftListComponent,

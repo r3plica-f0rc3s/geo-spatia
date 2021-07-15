@@ -70,7 +70,6 @@ export class MapHelperService {
   }
 
   setMultipleMarkers(imageMarkers: GeoNFT[]): void {
-    console.log('new image markers', imageMarkers);
     this.mapStatusSubject.next({
       showUser: false,
       cameraState: CameraState.IDLE,

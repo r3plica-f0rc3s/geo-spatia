@@ -22,7 +22,7 @@ export class NftMarkerComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit(): void {
-    console.log('nft param', this.nft);
+
   }
 
   openNft(): void {

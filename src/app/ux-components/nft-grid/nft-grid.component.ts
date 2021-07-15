@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { GeoNFT } from 'src/app/services/contract.service';
+import { ContractService, GeoNFT } from 'src/app/services/contract.service';
 
 @Component({
   selector: 'app-nft-grid',
@@ -8,7 +8,7 @@ import { GeoNFT } from 'src/app/services/contract.service';
 })
 export class NftGridComponent implements OnInit {
   @Input()
-  nft: GeoNFT;
+  nfts: GeoNFT[];
   constructor() { }
 
   ngOnInit(): void {

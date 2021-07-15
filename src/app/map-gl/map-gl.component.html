@@ -5,6 +5,7 @@
   (load)="onMapLoaded($event)"
 >
   <mgl-marker
+
     *ngIf="mapStatus?.showUser"
     [lngLat]="[mapStatus?.userLocation.lng, mapStatus?.userLocation.lat]"
     #markers
@@ -20,7 +21,7 @@
       />
     </svg>
   </mgl-marker>
-  <mgl-marker *ngFor="let marker of nfts" [lngLat]="marker.location">
+  <mgl-marker style="text-align: center;" *ngFor="let marker of nfts" [lngLat]="marker.location">
     <!-- <div class="marker" style="height: 24px; width: 24px"> -->
     <app-nft-marker [nft]="marker" [focused]="mapStatus.cameraState === CameraState.SINGLE">
       <!-- <div

@@ -67,6 +67,13 @@
     </div>
     <div class="wallet-label">
       <span class="collection-label">
+       Nfts with your bids
+      </span>
+    </div>
+    <app-nft-grid [nfts]="nftsWithBids$ | async"></app-nft-grid>    
+    <div class="wallet-label">
+      <span class="collection-label">
        NFT collection
       </span>
     </div>
+    <app-nft-grid [nfts]="ownedNFTs$ | async"></app-nft-grid>

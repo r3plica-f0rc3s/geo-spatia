@@ -32,7 +32,6 @@ export class AllNFTsComponent implements OnInit {
       this.NFTs = nfts;
       this.mapHelperService.setMultipleMarkers(
         this.NFTs.map((nft) => {
-          console.log('image', nft.image)
           return nft;
         }))
     }, (err) => {

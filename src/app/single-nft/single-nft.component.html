@@ -1,0 +1,68 @@
+<div class="main-container">
+  <div class="top-wrapper">
+    <div class="top-label">
+      <span> Checkout </span>
+    </div>
+    <div class="close-wrapper">
+      <button mat-icon-button [routerLink]="['/', 'all-nfts']">
+        <mat-icon color="primary">close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="progress">
+    <mat-progress-bar mode="determinate" value="40"></mat-progress-bar>
+
+    <div class="time">
+      <span>Time left:</span>
+      <span> {{ Math.floor(timeLeft.getTime() / (1000 * 60 * 60 * 24)) }} days </span>
+      <span> {{ timeLeft.getUTCHours()}}h : {{ timeLeft | date: "mm" }}m : {{ timeLeft | date: "ss"}}s</span>
+    </div>
+  </div>
+
+  <div class="nft-name" *ngIf="nft">
+    <button mat-fab viewBox="0 0 300 300" [innerHTML]="nft.image"></button>
+
+    <div class="description">
+      <div class="nft-name-2">
+        <span>{{ nft.name }}</span>
+      </div>
+      <div class="price">
+        <span class="mat-h3"
+          >{{
+            highestBid ? getMinPrice(highestBid) : getMinPrice(nft.price)
+          }}
+          ONE</span
+        >
+      </div>
+    </div>
+  </div>
+  <div *ngIf="latestBidIsOwn" class="highest-label">
+    <span> Your bet is the highest </span>
+  </div>
+  <div class="bid-wrapper" *ngIf="!latestBidIsOwn">
+    <div class="bid-label">
+      <span> Put your price </span>
+    </div>
+    <div class="price-picker">
+      <app-price-picker
+        (bidChanged)="bidChanged($event)"
+        [minPrice]="
+          highestBid ? getMinPrice(highestBid) : getMinPrice(nft.price)
+        "
+      ></app-price-picker>
+    </div>
+  </div>
+
+  <div class="buy-button" *ngIf="nft.status === 1 && !latestBidIsOwn">
+    <app-loading-button (click)="submitBid()" [loading]="buying">
+      <mat-icon>shopping_basket</mat-icon>
+      <span class="button-label"> Bid </span>
+    </app-loading-button>
+  </div>
+  <div class="sold" *ngIf="nft.status === 0">
+    <span>
+      {{ nft.owner ? "Owned" : "Sold" }}
+    </span>
+  </div>
+</div>

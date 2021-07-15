@@ -1,0 +1,31 @@
+.circle {
+    width: 75px;
+    height: 75px;
+}
+.container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 12px;
+    box-sizing: border-box;
+    align-items: center;
+    place-content: flex-start;
+    max-height: 32%;
+    overflow-y: auto;
+}
+.container-inner {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+}
+.label-wrapper {
+    display: flex;
+    align-items: center;
+    place-content: center;
+    margin-top: 4px;
+    span {
+        font-size: 12px;
+        font-weight: bold;
+        text-align: center;
+    }
+}

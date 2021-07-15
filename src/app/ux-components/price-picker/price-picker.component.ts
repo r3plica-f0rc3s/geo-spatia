@@ -13,11 +13,12 @@ export class PricePickerComponent implements OnInit, OnChanges {
   bidChanged = new EventEmitter<number>();
   constructor() { }
   ngOnInit(): void {
-    this.currentPrice = this.minPrice + 0.1;
+    this.currentPrice = Number((this.minPrice + 0.1).toPrecision(2));
     this.bidChanged.emit(this.currentPrice);
   }
   ngOnChanges(changes: SimpleChanges): void {
-    this.currentPrice = changes.minPrice.currentValue + 0.1;
+    this.currentPrice = Number((changes.minPrice.currentValue + 0.1).toPrecision(2));
+    console.log('currentPrice', this.currentPrice);
   }
   subtract(): void {
     this.currentPrice = Math.max(this.currentPrice - 0.1, this.minPrice + 0.1);
