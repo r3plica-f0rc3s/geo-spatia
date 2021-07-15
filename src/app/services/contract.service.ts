@@ -156,11 +156,11 @@ export class ContractService {
       }
     });
     this.contract.events.NFTCreation({})
-      .on('data', (nft: NewNFTEvent) => {
+      .on('data', async (nft: NewNFTEvent) => {
         console.log('nft created', nft);
-        const geoNft = this.mapNftToGeoNFT(
-          nft.returnValues.Info,
-          Number(nft.returnValues.tokenID));
+        const geoNft = await this.mapNewNFTEventToGeoNFT(
+          nft
+          );
         // TODO: invoke emits
         const nfts = this.nftsSubject.getValue();
         this.getSvg$(geoNft.id).subscribe((svg) => {
@@ -416,7 +416,7 @@ export class ContractService {
   }
 
 
-  private mapNewNFTEventToGeoNFT(nftCreation: NewNFTEvent): Promise<GeoNFT> {
+  private async mapNewNFTEventToGeoNFT(nftCreation: NewNFTEvent): Promise<GeoNFT> {
     return new Promise(async (resolve, reject) => {
       try {
         const image = await this.getSvg(Number(nftCreation.returnValues.tokenID));
