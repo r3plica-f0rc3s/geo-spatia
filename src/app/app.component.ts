@@ -87,7 +87,7 @@ export class AppComponent implements OnInit {
     this.subscriptions.push(
       this.contractService.nfts$.subscribe((nfts) => {
         this.nfts = nfts;
-      })
+      }),
     );
 
     this.isMobile = this.media.matchMedia('(max-width: 700px)').matches;

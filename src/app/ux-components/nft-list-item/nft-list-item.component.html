@@ -28,25 +28,30 @@
       </div>
       <mat-chip-list aria-label="labels" >
         <mat-chip disableRipple color="primary" selected>
-          {{ highestBid ? (highestBid | weiToOne: 4) : nft?.price | weiToOne: 4 }} ONE</mat-chip
+          {{ bidsViewModel.highestBid ? (bidsViewModel.highestBid | weiToOne: 4) : nft?.price | weiToOne: 4 }} ONE</mat-chip
         >
         <mat-chip disableRipple *ngIf="nft.owner" color="accent" selected
           >Owned</mat-chip
         >
         <mat-chip
           color="accent"
-          *ngIf="!nft.owner && nft.status === 1 && !latestBidIsOwn && timeLeft"
+          *ngIf="!nft.owner && nft.status === 1 && !bidsViewModel.latestBidIsOwn && timeLeft && !bidsViewModel.outBidden"
           selected
           >On sale</mat-chip
         >
 
         <mat-chip
-          *ngIf="latestBidIsOwn"
+          *ngIf="bidsViewModel.latestBidIsOwn"
           color="accent"
           selected
           >Highest Bid</mat-chip
         >
-
+        <mat-chip
+          *ngIf="bidsViewModel.outBidden"
+          color="warn"
+          selected
+          >Outbidden</mat-chip
+        >
         <mat-chip
           *ngIf="!nft.owner && (nft.status === 0 || !timeLeft)"
           color="primary"
@@ -79,7 +84,7 @@
         }}</span> -->
 
       <button
-        *ngIf="nft?.status === 1 && !latestBidIsOwn && timeLeft"
+        *ngIf="nft?.status === 1 && !bidsViewModel.latestBidIsOwn && timeLeft"
         disableRipple
         mat-raised-button
         color="primary"

@@ -77,12 +77,18 @@ export interface NftBidEvent {
 
 }
 
+export interface BidViewModel {
+  highestBid: string;
+  latestBidIsOwn: boolean;
+  outBidden: boolean;
+}
+
 export type TransactionEventUnion = TransactionResultEvent | TransactionStartedEvent;
 @Injectable()
 export class ContractService {
 
   // old: 0x277333e8187d6d5C3f9d994E564662583EE88E4D
-  contractAddress = '0x3B3f34f8b7FEB736359Db694A446BE94FF3a1c76';
+  contractAddress = '0x2804Bdcb0e54BED79E63713170DaDAeEefd5Bb2B';
   blockNumber = 12252647;
   private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
   walletInfo$ = this.walletInfoSubject.asObservable();
@@ -102,6 +108,9 @@ export class ContractService {
   bidsMap = new Map<string, BidInfo[]>();
   bidsMapSubject = new BehaviorSubject<Map<string, BidInfo[]>>(new Map<string, BidInfo[]>());
   bidsMap$ = this.bidsMapSubject.asObservable();
+
+  newBidsSubject = new Subject<NftBidEvent>();
+  newBids$ = this.newBidsSubject.asObservable();
 
   contract: any;
   currentWeb3: any;
@@ -146,7 +155,7 @@ export class ContractService {
   }
 
   setEvents(): void {
-    this.wallet.on('networkChanged', function(networkId) {
+    this.wallet.on('networkChanged', function (networkId) {
       // Time to reload your interface with the new networkId
       console.log('New network ID:', networkId);
       if (networkId !== '0x6357d2e0') {
@@ -160,7 +169,7 @@ export class ContractService {
         console.log('nft created', nft);
         const geoNft = await this.mapNewNFTEventToGeoNFT(
           nft
-          );
+        );
         // TODO: invoke emits
         const nfts = this.nftsSubject.getValue();
         this.getSvg$(geoNft.id).subscribe((svg) => {
@@ -173,9 +182,9 @@ export class ContractService {
       });
 
     this.contract.events.NFTBid({})
-      .on('data', (nft: NftBidEvent) => {
-        console.log('nft bid', nft);
-
+      .on('data', (bidEvent: NftBidEvent) => {
+        console.log('nft bid', bidEvent);
+        this.newBidsSubject.next(bidEvent);
       });
 
     // this.contract.events.NFTSale({})
@@ -297,6 +306,32 @@ export class ContractService {
   getNftById(tokenId: number): GeoNFT {
     return this.nftsSubject.getValue().find(x => x.id === tokenId);
   }
+
+  getNFTBids$(tokenId: string): Observable<BidInfo[]> {
+    const sub = new BehaviorSubject<BidInfo[]>(this.bidsMap.get(tokenId) || []);
+    this.newBids$.pipe(
+      filter((newBidEvent: NftBidEvent) => newBidEvent.returnValues.tokenId === tokenId),
+    ).subscribe((newBidEvent: NftBidEvent) => {
+      const bids = sub.getValue();
+      bids.push(newBidEvent.returnValues.newBid);
+      sub.next(bids);
+    });
+    return sub.asObservable();
+  }
+
+  normalizeBids(bids: BidInfo[]): BidViewModel {
+    const highestBid = bids.reduce((prev, current) => {
+      return (prev.highestBid > current.highestBid) ? prev : current;
+    });
+    return {
+      highestBid: highestBid.highestBid,
+      latestBidIsOwn: this.selectedAddress.toLowerCase() === highestBid.bidderAddress.toLowerCase(),
+
+      // has own bid but not highest
+      outBidden: !(this.selectedAddress.toLowerCase() === highestBid.bidderAddress.toLowerCase()) && !!(bids
+        .find(x => x.bidderAddress.toLowerCase() === this.selectedAddress.toLowerCase()))
+      };
+    }
 
   private mapNftToGeoNFT(nft: NFT, index: number): GeoNFT {
     console.log('mapping nft', nft);
@@ -421,10 +456,10 @@ export class ContractService {
       try {
         const image = await this.getSvg(Number(nftCreation.returnValues.tokenID));
         const owner = await (nftCreation.returnValues.Info.status === '0' ?
-        this.ownerOf(Number(nftCreation.returnValues.tokenID)) : new Promise((res) => res(null)));
+          this.ownerOf(Number(nftCreation.returnValues.tokenID)) : new Promise((res) => res(null)));
         const auctionInfo = await this.auctionInfo(Number(nftCreation.returnValues.tokenID));
         const status = nftCreation.returnValues.Info.status === '1' ? SoldStatus.AVAILABLE :
-        ((owner as string) === this.selectedAddress ? SoldStatus.OWNED : SoldStatus.SOLD);
+          ((owner as string) === this.selectedAddress ? SoldStatus.OWNED : SoldStatus.SOLD);
         resolve({
           id: Number(nftCreation.returnValues.tokenID),
           layer: Number(nftCreation.returnValues.Info.layer),
