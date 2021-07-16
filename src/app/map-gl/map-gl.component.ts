@@ -73,7 +73,7 @@ export class MapGlComponent implements OnChanges, OnDestroy {
           this.mapStatus.markers.forEach((marker) => {
             this.bounds.extend(marker.location);
           });
-          if (this.map) {
+          if (this.map && !this.bounds.isEmpty()) {
             this.map.fitBounds(this.bounds, {
               zoom: 1,
               bearing: 0,

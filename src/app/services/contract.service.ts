@@ -97,7 +97,8 @@ export class ContractService {
   error$ = this.errorSubject.asObservable();
 
   private nftsSubject = new BehaviorSubject<GeoNFT[]>(null);
-  nfts$ = this.nftsSubject.asObservable().pipe(
+  nfts$ = this.nftsSubject.asObservable();
+  nftsOnSale$ = this.nftsSubject.asObservable().pipe(
     filter(x => !!x),
     map(nfts => {
       return nfts.filter(((nft) => {
@@ -324,6 +325,10 @@ export class ContractService {
     return this.nftsSubject.getValue().find(x => x.id === tokenId);
   }
 
+  getNftById$(tokenId: number): Observable<GeoNFT> {
+    return this.nfts$.pipe(map(nfts => nfts.find(x => x.id === tokenId)));
+  }
+
   getNFTBids$(tokenId: string): Observable<BidInfo[]> {
     const sub = new BehaviorSubject<BidInfo[]>(this.bidsMap.get(tokenId) || []);
     this.newBids$.pipe(
@@ -541,14 +546,23 @@ export class ContractService {
   }
 
   async ownerOf(tokenId: number): Promise<string> {
-    return this.contract.methods
-      .ownerOf(tokenId)
-      .call({ from: this.selectedAddress });
+    // TODO: treat error as lack of owner
+    return new Promise((resolve) => {
+      this.contract.methods
+        .ownerOf(tokenId)
+        .call({ from: this.selectedAddress })
+        .then((result) => {
+          resolve(result);
+        })
+        .catch(e => {
+          resolve(null);
+        });
+    });
   }
 
   getNftsWithMyBids$(): Observable<GeoNFT[]> {
     const subject = new BehaviorSubject<GeoNFT[]>([]);
-    this.nfts$.pipe(
+    this.nftsOnSale$.pipe(
       filter(nfts => nfts.length > 0),
       withLatestFrom(this.bidsMap$.pipe(filter(x => x.size > 0))),
       map(([nfts, bidsMap]: [GeoNFT[], Map<string, BidInfo[]>]) => {
@@ -561,7 +575,7 @@ export class ContractService {
         return nftIds.map(nftId => nfts.find(x => String(x.id) === nftId));
       }),
     ).subscribe((nfts: GeoNFT[]) => {
-      subject.next(nfts);
+      subject.next(nfts.filter(x => !!x));
     });
 
 

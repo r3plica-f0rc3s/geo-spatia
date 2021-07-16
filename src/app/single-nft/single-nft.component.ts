@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, timer } from 'rxjs';
-import { withLatestFrom } from 'rxjs/operators';
+import { switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { BidInfo, BidViewModel, ContractService, GeoNFT, TransactionResultEvent } from '../services/contract.service';
 import { MapHelperService } from '../services/map-helper.service';
 @Component({
@@ -29,17 +29,21 @@ export class SingleNftComponent implements OnInit, OnDestroy {
   ) { }
   ngOnInit(): void {
     this.subscriptions.push(
-      this.activatedRoute.params.subscribe((param) => {
+      this.activatedRoute.params.pipe(
+        switchMap((param) => this.contractService.getNftById$(Number(param.id))),
+        tap(x => console.log('nft', x))
+      ).subscribe((nft: GeoNFT) => {
 
-        this.nft = this.contractService.getNftById(Number(param.id));
+        this.nft = nft;
         if (!this.nft) {
           this.router.navigate(['/', 'all-nfts']);
           return;
         }
-        this.mapHelperService.setSingleMarker(this.nft);
+        console.log(nft);
+        this.mapHelperService.setSingleMarker(nft);
         this.calculateTimeLeft();
         this.subscriptions.push(
-          this.contractService.getNFTBids$(String(this.nft.id))
+          this.contractService.getNFTBids$(String(nft.id))
             .subscribe((bids: BidInfo[]) => {
               this.processBids(bids);
             })

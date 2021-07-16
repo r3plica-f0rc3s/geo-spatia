@@ -25,7 +25,7 @@ export class AllNFTsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.contractService.nfts$.subscribe((nfts) => {
+    this.contractService.nftsOnSale$.subscribe((nfts) => {
       if (!nfts) {
         return;
       }
