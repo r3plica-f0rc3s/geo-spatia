@@ -162,7 +162,7 @@ export class ContractService {
   }
 
   setEvents(): void {
-    this.wallet.on('networkChanged', function (networkId) {
+    this.wallet.on('networkChanged', function(networkId) {
       // Time to reload your interface with the new networkId
       console.log('New network ID:', networkId);
       if (networkId !== '0x6357d2e0') {
@@ -523,15 +523,24 @@ export class ContractService {
   }
 
   getNftsWithMyBids$(): Observable<GeoNFT[]> {
-    const nftIds: string[] = [];
-    this.bidsMap.forEach((bid: BidInfo[], key: string) => {
-      if (bid.find(x => x.bidderAddress.toLowerCase() === this.selectedAddress.toLowerCase())) {
-        nftIds.push(key);
-      }
+    const subject = new BehaviorSubject<GeoNFT[]>([]);
+    this.nfts$.pipe(
+      filter(nfts => nfts.length > 0),
+      withLatestFrom(this.bidsMap$.pipe(filter(x => x.size > 0))),
+      map(([nfts, bidsMap]: [GeoNFT[], Map<string, BidInfo[]>]) => {
+        const nftIds: string[] = [];
+        bidsMap.forEach((bid: BidInfo[], key: string) => {
+          if (bid.find(x => x.bidderAddress.toLowerCase() === this.selectedAddress.toLowerCase())) {
+            nftIds.push(key);
+          }
+        });
+        return nftIds.map(nftId => nfts.find(x => String(x.id) === nftId));
+      }),
+    ).subscribe((nfts: GeoNFT[]) => {
+      subject.next(nfts);
     });
-    const nfts = nftIds.map(nftId => this.getNftById(Number(nftId)));
 
-    const subject = new BehaviorSubject<GeoNFT[]>(nfts);
+
     this.newBids$.subscribe((newBidEvent) => {
       if (newBidEvent.returnValues.newBid.bidderAddress.toLowerCase() === this.selectedAddress) {
 
