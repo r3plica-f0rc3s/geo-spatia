@@ -27,7 +27,6 @@ import {
   styleUrls: ['./map-gl.component.scss'],
 })
 export class MapGlComponent implements OnChanges, OnDestroy {
-  @Input()
   nfts: GeoNFT[] = [];
   @Input()
   userLocation: LngLat = null;

@@ -1,17 +1,26 @@
+:host {
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 140px;
+    flex-direction: row;
+    padding: 8px;
+}
 .circle {
     width: 75px;
     height: 75px;
+    
 }
 .container {
-    width: 100%;
+    width: 27%;
     display: flex;
     flex-wrap: wrap;
-    padding: 12px;
+ 
     box-sizing: border-box;
     align-items: center;
     place-content: flex-start;
     max-height: 32%;
     overflow-y: auto;
+  
 }
 .container-inner {
     display: flex;

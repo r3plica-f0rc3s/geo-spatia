@@ -39,8 +39,9 @@
       >Sales enabled</mat-slide-toggle
     >
   </div>
-  <div class="divider-2"></div>
+
   <div class="wallet-label">
+    <div class="divider-2"></div>
     <span> Wallet status </span>
   </div>
   <div class="description-wallet">
@@ -56,15 +57,16 @@
       Logout</button>
   </div>
 </div>
-<div class="wallet-label" *ngIf="(nftsWithBids$ | async).length > 0">
+<div class="wallet-label" *ngIf="nftsWithBids.length > 0">
   <div class="divider"></div>
 
   <span class="collection-label"> Nfts with your bids </span>
 </div>
-<app-nft-grid [nfts]="nftsWithBids$ | async"></app-nft-grid>
-<div class="wallet-label" *ngIf="(ownedNFTs$ | async).length > 0">
+<app-nft-grid [nfts]="nftsWithBids"></app-nft-grid>
+<!-- TODO -->
+<!-- <div class="wallet-label" *ngIf="(ownedNFTs$ | async)?.length > 0">
   <div class="divider"></div>
 
   <span class="collection-label"> NFT collection </span>
 </div>
-<app-nft-grid [nfts]="ownedNFTs$ | async"></app-nft-grid>
+<app-nft-grid [nfts]="ownedNFTs$ | async"></app-nft-grid> -->

@@ -29,6 +29,7 @@ export class NftGridItemComponent implements OnInit, OnDestroy {
         .subscribe((bids: BidInfo[]) => {
           console.log('nft', this.nft, 'bids', bids);
           this.processBids(bids);
+          this.calculateTimeLeft();
         })
     );
   }

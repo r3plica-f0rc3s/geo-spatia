@@ -43,6 +43,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { NftGridComponent } from './ux-components/nft-grid/nft-grid.component';
 import { NftGridItemComponent } from './ux-components/nft-grid-item/nft-grid-item.component';
+import { RetrieveNftsComponent } from './retrieve-nfts/retrieve-nfts.component';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { NftGridItemComponent } from './ux-components/nft-grid-item/nft-grid-ite
     PricePickerComponent,
     NftGridComponent,
     NftGridItemComponent,
+    RetrieveNftsComponent,
   ],
   imports: [
     BrowserModule,

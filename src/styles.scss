@@ -54,3 +54,19 @@ button {
   font-size: 15px;
   letter-spacing: 1px;
 }
+.mapboxgl-map {
+  text-align: center;
+}
+
+.mat-standard-chip {
+  min-height: 25px !important;
+  min-width: 40px !important;
+}
+
+mat-chip {
+  display: flex;
+  font-weight: bold;
+  align-items: center;
+  font-size: 10px;
+  padding: 4px 9px !important;
+}

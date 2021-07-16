@@ -4,7 +4,7 @@ const Web3 = require('web3');
 import abi from './abi/ABI.json';
 import { LngLat } from 'mapbox-gl';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { filter, first, map, switchMap, tap } from 'rxjs/operators';
+import { filter, first, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 
 export enum SoldStatus {
   SOLD,
@@ -88,7 +88,7 @@ export type TransactionEventUnion = TransactionResultEvent | TransactionStartedE
 export class ContractService {
 
   // old: 0x277333e8187d6d5C3f9d994E564662583EE88E4D
-  contractAddress = '0x3a3B277712DcD3C1607c09A4b241AF7edCB5eb39';
+  contractAddress = '0x895bdF91ea4426c5fC3FD53Af1fAa28a8C3D89B4';
   blockNumber = 12295877;
   private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
   walletInfo$ = this.walletInfoSubject.asObservable();
@@ -97,7 +97,11 @@ export class ContractService {
   error$ = this.errorSubject.asObservable();
 
   private nftsSubject = new BehaviorSubject<GeoNFT[]>(null);
-  nfts$ = this.nftsSubject.asObservable();
+  nfts$ = this.nftsSubject.asObservable().pipe(filter(x => !!x), map(nfts => {
+    return nfts.filter(((nft) => {
+      return nft.saleTime.getTime() > Date.now();
+    }));
+  }));
 
   private ownedNFTsSubject = new BehaviorSubject<GeoNFT[]>(null);
   ownedNFTs$ = this.ownedNFTsSubject.asObservable();
@@ -158,7 +162,7 @@ export class ContractService {
   }
 
   setEvents(): void {
-    this.wallet.on('networkChanged', function(networkId) {
+    this.wallet.on('networkChanged', function (networkId) {
       // Time to reload your interface with the new networkId
       console.log('New network ID:', networkId);
       if (networkId !== '0x6357d2e0') {
@@ -326,7 +330,7 @@ export class ContractService {
   normalizeBids(bids: BidInfo[]): BidViewModel {
     if (bids.length === 0) {
       return {
-        highestBid: '0',
+        highestBid: null,
         latestBidIsOwn: false,
         outBidden: false
       };
@@ -342,12 +346,6 @@ export class ContractService {
       outBidden: !(this.selectedAddress.toLowerCase() === highestBid.bidderAddress.toLowerCase()) && !!(bids
         .find(x => x.bidderAddress.toLowerCase() === this.selectedAddress.toLowerCase()))
     };
-  }
-
-  getNftsOnSale$(): Observable<GeoNFT[]> {
-    return this.nftsSubject.pipe(
-      map(nfts => nfts.filter(nft => !(nft.ownerAddress)))
-    );
   }
 
 
@@ -524,21 +522,33 @@ export class ContractService {
       .call({ from: this.selectedAddress });
   }
 
-  getNftsWithMyBids(): Observable<GeoNFT[]> {
-    return combineLatest([this.bidsMap$, this.nfts$]).pipe(
-      filter(([bidsMap, nfts]) => !!bidsMap && !!nfts),
-      map(([bidsMap, nfts]: [Map<string, BidInfo[]>, GeoNFT[]]) => {
-        const nftIds: string[] = [];
-        bidsMap.forEach((bid: BidInfo[], key: string) => {
-          if (bid.find(x => x.bidderAddress.toLowerCase() === this.selectedAddress.toLowerCase())) {
-            nftIds.push(key);
-          }
-        });
+  getNftsWithMyBids$(): Observable<GeoNFT[]> {
+    const nftIds: string[] = [];
+    this.bidsMap.forEach((bid: BidInfo[], key: string) => {
+      if (bid.find(x => x.bidderAddress.toLowerCase() === this.selectedAddress.toLowerCase())) {
+        nftIds.push(key);
+      }
+    });
+    const nfts = nftIds.map(nftId => this.getNftById(Number(nftId)));
 
-        return nftIds.map((x) => nfts.find(nft => String(nft.id) === x));
-      }),
-    );
+    const subject = new BehaviorSubject<GeoNFT[]>(nfts);
+    this.newBids$.subscribe((newBidEvent) => {
+      if (newBidEvent.returnValues.newBid.bidderAddress.toLowerCase() === this.selectedAddress) {
 
+        const newArr = subject.getValue().concat(this.getNftById(Number(newBidEvent.returnValues.tokenId)));
+        const filteredArr = [...new Map(newArr.map(item =>
+          [item.id, item])).values()];
+        subject.next(filteredArr);
+      }
+    });
+    return subject.asObservable();
+
+  }
+
+  getNftsToRetrieve$(): Observable<GeoNFT[]> {
+    return this.nfts$.pipe(map(nfts => {
+      return nfts.filter(nft => nft.bidInfo.bidderAddress.toLowerCase() === this.selectedAddress.toLowerCase() && nft.saleTime.getTime() < Date.now());
+    }));
   }
 
   enableResalePermission(): void {

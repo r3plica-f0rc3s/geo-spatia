@@ -33,7 +33,7 @@ export class AllNFTsComponent implements OnInit {
       this.mapHelperService.setMultipleMarkers(
         this.NFTs.map((nft) => {
           return nft;
-        }))
+        }));
     }, (err) => {
       this.router.navigate(['/', 'start']);
     });

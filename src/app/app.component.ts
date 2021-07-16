@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { LngLat, Map } from 'mapbox-gl';
+import { filter } from 'rxjs/operators';
 import { DialogComponent } from './dialog/dialog.component';
 import { ContractService, GeoNFT } from './services/contract.service';
 import { ImageMarker } from './services/map-helper.service';
@@ -84,11 +85,6 @@ export class AppComponent implements OnInit {
     if (wasStarted) {
       this.connectToMetamask();
     }
-    this.subscriptions.push(
-      this.contractService.getNftsOnSale$().subscribe((nfts) => {
-        this.nfts = nfts;
-      }),
-    );
 
     this.isMobile = this.media.matchMedia('(max-width: 700px)').matches;
     this.uxService.sidenavOpened$.subscribe((sideNavOpened) => {
@@ -121,17 +117,11 @@ export class AppComponent implements OnInit {
     // });
   }
 
-  openDialog() {
-    const dialogRef = this.dialog.open(DialogComponent, {
-      backdropClass: 'backdropBackground',
-    });
+  listenToRetrieveNfts(): void {
 
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}`);
-    });
   }
 
-  async connectToMetamask() {
+  async connectToMetamask(): Promise<void> {
     window.localStorage.setItem('wasStarted', 'true');
     try {
       this.loading = true;
