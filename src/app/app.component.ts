@@ -127,6 +127,9 @@ export class AppComponent implements OnInit {
             if (nftsToRetrieve.length > 0) {
               await this.router.navigate(['/', 'retrieve-nfts']);
               this.curtain = false;
+              this.uxService.disableLeftSidenav();
+              this.uxService.disableSidenav();
+              console.log('nftsToRetrieve', nftsToRetrieve);
             } else {
               await this.router.navigate(['/', 'all-nfts']);
               this.curtain = false;

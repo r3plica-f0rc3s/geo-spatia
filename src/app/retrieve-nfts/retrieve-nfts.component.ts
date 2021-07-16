@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { ContractService, GeoNFT } from '../services/contract.service';
 import { MapHelperService } from '../services/map-helper.service';
@@ -11,7 +12,10 @@ export class RetrieveNftsComponent implements OnInit {
   subscriptions = [];
   retrieving = false;
   nftsToRetrieve: GeoNFT[] = [];
-  constructor(private contractService: ContractService, private mapHelperService: MapHelperService) { }
+  constructor(
+    private contractService: ContractService, 
+    private mapHelperService: MapHelperService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.contractService.getNftsToRetrieve$().pipe(filter(x => x.length > 0)).subscribe((nftsToRetrieve) => {
@@ -21,7 +25,10 @@ export class RetrieveNftsComponent implements OnInit {
   }
 
   retrieve(): void {
-
+    this.retrieving = true;
+    this.contractService.retrieveNFTs(this.nftsToRetrieve.map(nft => String(nft.id))).then(() => {
+      this.router.navigate(['', 'all-nfts']);
+    });
   }
 
 }

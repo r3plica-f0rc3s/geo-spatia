@@ -88,7 +88,7 @@ export type TransactionEventUnion = TransactionResultEvent | TransactionStartedE
 export class ContractService {
 
   // old: 0x277333e8187d6d5C3f9d994E564662583EE88E4D
-  contractAddress = '0x5cCD12730757BC8E6Cc397EE28AC99836603b084';
+  contractAddress = '0xB4fC5386eb1245d4f1f8e4D525E8f25d4aF79F23';
   blockNumber = 12341288;
   private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
   walletInfo$ = this.walletInfoSubject.asObservable();
@@ -158,7 +158,7 @@ export class ContractService {
       this.selectedAddress = this.wallet.selectedAddress;
       console.log('selected address', this.selectedAddress);
       await this.loadWalletInfo();
-      await this.loadOwnedNFTs();
+      // await this.loadOwnedNFTs();
       // await this.loadNFTs(1);
       await this.loadNftPassedEvents();
       this.setEvents();
@@ -469,10 +469,26 @@ export class ContractService {
       .then((nfts: GeoNFT[]) => {
 
         this.nftsSubject.next(nfts);
+        this.startNFTWatch();
       })
       .catch(e => {
         console.error(e);
       });
+  }
+
+  getOwnedNFTs$(): Observable<GeoNFT[]> {
+    return this.nftsOutdated$.pipe(
+      map(
+        (nfts: GeoNFT[]) => {
+          return nfts.filter(nft => {
+            return nft.owner;
+          });
+        })
+    );
+  }
+
+  private startNFTWatch(): void {
+    this.nftsSubject.next(this.nftsSubject.getValue());
   }
 
 
@@ -480,8 +496,7 @@ export class ContractService {
     return new Promise(async (resolve, reject) => {
       try {
         const image = await this.getSvg(Number(nftCreation.returnValues.tokenID));
-        const owner = await (nftCreation.returnValues.Info.status === '0' ?
-          this.ownerOf(Number(nftCreation.returnValues.tokenID)) : new Promise((res) => res(null)));
+        const owner = await this.ownerOf(Number(nftCreation.returnValues.tokenID));
         const auctionInfo = await this.auctionInfo(Number(nftCreation.returnValues.tokenID));
         const status = nftCreation.returnValues.Info.status === '1' ? SoldStatus.AVAILABLE :
           ((owner as string) === this.selectedAddress ? SoldStatus.OWNED : SoldStatus.SOLD);
@@ -581,9 +596,9 @@ export class ContractService {
           }
         });
         return nftIds.map(nftId => nfts.find(x => String(x.id) === nftId));
-      }),
+      })
     ).subscribe((nfts: GeoNFT[]) => {
-      subject.next(nfts);
+      subject.next(nfts.filter(nft => !!(nft)).filter(nft => nft.saleTime.getTime() < Date.now()).filter(nft => nft.bidInfo.highestBid !== '0'));
     });
 
 
@@ -618,6 +633,11 @@ export class ContractService {
     return this.contract.methods.isApprovedForAll(this.selectedAddress, this.contractAddress);
   }
 
+  async retrieveNFTs(tokenIds: string[]): Promise<void> {
+    console.log('retrieve', tokenIds);
+    return this.contract.methods.RetrieveNFT(tokenIds).send({ from: this.selectedAddress });
+  }
+
   listenToTransaction(transaction): void {
     transaction.on('transactionHash', (hash: string) => {
       console.log(
@@ -647,19 +667,19 @@ export class ContractService {
       });
   }
 
-  loadOwnedNFTs(): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      this.contract.methods.getUserOwnedNFT().call({
-        from: this.selectedAddress
-      }).then((result) => {
-        this.ownedNFTsSubject.next(result);
-        resolve();
-      }).catch((err) => {
-        this.ownedNFTsSubject.error(err);
-        reject(err);
-      });
-    });
-  }
+  // loadOwnedNFTs(): Promise<void> {
+  //   return new Promise(async (resolve, reject) => {
+  //     this.contract.methods.getUserOwnedNFT().call({
+  //       from: this.selectedAddress
+  //     }).then((result) => {
+  //       this.ownedNFTsSubject.next(result);
+  //       resolve();
+  //     }).catch((err) => {
+  //       this.ownedNFTsSubject.error(err);
+  //       reject(err);
+  //     });
+  //   });
+  // }
 
   weiToOne(balance): string {
     return this.currentWeb3.utils.fromWei(balance, 'ether');
