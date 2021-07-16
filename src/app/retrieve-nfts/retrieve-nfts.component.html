@@ -1,1 +1,19 @@
-<p>retrieve-nfts works!</p>
+<div class="main-container">
+    <div class="top-wrapper">
+      <div class="top-label">
+        <span> You won following auctions </span>
+      </div>
+    </div>
+    <!-- TODO: NFT Grid -->
+    <app-nft-grid [nfts]="nftsToRetrieve"></app-nft-grid>
+    <div
+      class="retrieve-button"
+    >
+      <app-loading-button (click)="retrieve()" [loading]="retrieving">
+        <!-- <mat-icon>shopping_basket</mat-icon> -->
+        <span class="button-label"> Retrieve </span>
+      </app-loading-button>
+    </div>
+
+  </div>
+  

@@ -1,0 +1,240 @@
+:host {
+    position: absolute;
+    bottom: 0;
+    height: 40%;
+    background-color: #212121;
+    opacity: 0.9;
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    display: flex;
+    flex-direction: column;
+  
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .main-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+  }
+  @media only screen and (max-width: 600px) {
+    :host {
+      width: 100%;
+    }
+  }
+  @media only screen and (min-width: 601px) {
+    :host {
+      width: 60%;
+    }
+  }
+  .close-wrapper {
+    display: flex;
+    align-items: center;
+    place-content: flex-end;
+    padding-right: 32px;
+  
+  }
+  .top-wrapper {
+    width: 100%;
+  
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    place-content: space-between;
+  }
+  .top-label {
+    padding-left: 32px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    span {
+      font-size: 20px;
+      line-height: 32px;
+      letter-spacing: 1px;
+      color: grey;
+      font-family: 'Kanit', sans-serif;
+    }
+  }
+  
+  .nft-image {
+    width: 70px;
+    display: flex;
+    overflow: hidden;
+    border: 1px solid white;
+    border-radius: 50%;
+  }
+  .description {
+    display: flex;
+    flex-direction: row;
+    place-content: space-between;
+    align-items: center;
+    width: calc(100% - 98px);
+  }
+  .mat-h1 {
+    margin-bottom: 8px;
+  }
+  .bid-label {
+    margin-bottom: 16px;
+    margin-top: 16px;
+    margin-right: 16px;
+    padding-left: 32px;
+    span {
+      font-size: 20px;
+    
+      letter-spacing: 1px;
+    }
+  }
+  .bid-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    place-content: space-between;
+  }
+  .retrieve-button {
+    margin-right: auto;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    place-content: center;
+    margin-top: 40px;
+    position: absolute;
+    width: 100%;
+    bottom: 8px;
+    button {
+      width: 100%;
+      height: 44px;
+      border-radius: 24px;
+  
+      span {
+        font-size: 18px;
+        line-height: 24px;
+        font-weight: 600;
+        letter-spacing: 1px;
+      }
+      mat-icon {
+        font-size: 20px;
+        height: 20px;
+        margin-right: 8px;
+      }
+    }
+  }
+  ::ng-deep .mat-button-wrapper {
+    display: flex;
+    align-items: center;
+    place-content: center;
+  }
+  .price {
+    display: flex;
+    align-items: center;
+    span {
+      font-weight: bold;
+    }
+  }
+  .nft-name {
+    align-items: flex-start;
+    align-items: center;
+    display: flex;
+    padding-left: 32px;
+    margin-bottom: 32px;
+    span {
+      font-size: 24px;
+    }
+  }
+  .nft-name-2 {
+    align-items: flex-start;
+    align-items: center;
+    display: flex;
+    padding-left: 32px;
+    height: 37%;
+    
+    span {
+      font-size: 24px;
+      font-weight: bold;
+    }
+  }
+  
+  .mat-h3 {
+    font-size: 24px;
+    margin: 0 0 !important;
+  }
+  .divider-wrapper {
+    display: flex;
+  }
+  .divider {
+    height: 1px;
+    width: 100%;
+    background-color: grey;
+    opacity: 0.2;
+  }
+  .location-button {
+    width: 100%;
+  }
+  
+  ::ng-deep app-loading-button {
+    mat-icon {
+      margin-right: 10px;
+    }
+  }
+  .sold {
+    display: flex;
+    align-items: center;
+    place-content: center;
+    width: 100%;
+    span {
+      font-size: 24px;
+      letter-spacing: 1px;
+    }
+  }
+  .more-or-less {
+    cursor: pointer;
+    color: black;
+  }
+  .number {
+    margin: 100px;
+  }
+  .minus,
+  .plus {
+    width: 20px;
+    height: 20px;
+    background: #f2f2f2;
+    border-radius: 4px;
+    padding: 8px 5px 8px 5px;
+    border: 1px solid #ddd;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+  }
+  .value {
+    height: 34px;
+    width: 100px;
+    text-align: center;
+    font-size: 26px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .price-picker {
+    place-items: center;
+    place-content: center;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+    align-content: center;
+    padding-right: 32px;
+   
+  }
+
+  .highest-label {
+    display: flex;
+    align-items: center;
+    place-content: center;
+    width: 100%;
+    margin-top: 48px;
+    span {
+      font-size: 24px;
+      letter-spacing: 1px;
+    }
+  }

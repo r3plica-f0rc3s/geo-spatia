@@ -94,8 +94,8 @@ export class AppComponent implements OnInit {
           : false
         : sideNavOpened.rightSidenavState === SidenavState.HIDDEN ||
           sideNavOpened.rightSidenavState === SidenavState.ACTIVE
-        ? true
-        : false;
+          ? true
+          : false;
 
       this.leftSidenavOpened = this.isMobile
         ? sideNavOpened.leftSidenavState === SidenavState.ACTIVE
@@ -103,8 +103,8 @@ export class AppComponent implements OnInit {
           : false
         : sideNavOpened.leftSidenavState === SidenavState.HIDDEN ||
           sideNavOpened.leftSidenavState === SidenavState.ACTIVE
-        ? true
-        : false;
+          ? true
+          : false;
     });
     this.subscriptions.push(
       this.contractService.nfts$.subscribe((nfts) => {
@@ -112,26 +112,31 @@ export class AppComponent implements OnInit {
       })
     );
 
-    // this.contractService.init().then(() => {
-    //   // this.router.navigate(['/', 'all-nfts'])
-    // });
-  }
-
-  listenToRetrieveNfts(): void {
 
   }
+
 
   async connectToMetamask(): Promise<void> {
     window.localStorage.setItem('wasStarted', 'true');
     try {
       this.loading = true;
       await this.contractService.init();
-      this.curtain = false;
-      await this.router.navigate(['/', 'all-nfts']);
-      setTimeout(() => {
-        this.loading = false;
-      }, 2000);
-      console.log('curtain: ', this.curtain);
+      this.subscriptions.push(
+        this.contractService.getNftsToRetrieve$()
+          .subscribe(async (nftsToRetrieve: GeoNFT[]) => {
+            if (nftsToRetrieve.length > 0) {
+              await this.router.navigate(['/', 'retrieve-nfts']);
+              this.curtain = false;
+            } else {
+              await this.router.navigate(['/', 'all-nfts']);
+              this.curtain = false;
+              setTimeout(() => {
+                this.loading = false;
+              }, 2000);
+
+            }
+          })
+      );
 
       // convert nfts to imagemarkers
     } catch (error) {

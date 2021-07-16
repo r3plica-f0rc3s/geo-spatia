@@ -1,10 +1,15 @@
-<div class="container-inner">
+<div [routerLink]="['/', 'single-nft', nft.id]" class="container-inner">
   <div class="spinner">
-    <mat-spinner mode="determinate" [value]="100 - endedPercent" diameter="81" strokeWidth="3"></mat-spinner>
+    <mat-spinner
+      mode="determinate"
+      [value]="100 - endedPercent"
+      diameter="81"
+      strokeWidth="3"
+    ></mat-spinner>
   </div>
-<div class="nftname">
-  <span>{{nft?.name}}</span>
-</div>
+  <div class="nftname">
+    <span>{{ nft?.name }}</span>
+  </div>
   <div
     (click)="openNft()"
     [ngClass]="

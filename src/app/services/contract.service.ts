@@ -88,8 +88,8 @@ export type TransactionEventUnion = TransactionResultEvent | TransactionStartedE
 export class ContractService {
 
   // old: 0x277333e8187d6d5C3f9d994E564662583EE88E4D
-  contractAddress = '0x895bdF91ea4426c5fC3FD53Af1fAa28a8C3D89B4';
-  blockNumber = 12295877;
+  contractAddress = '0x5cCD12730757BC8E6Cc397EE28AC99836603b084';
+  blockNumber = 12341288;
   private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
   walletInfo$ = this.walletInfoSubject.asObservable();
 
@@ -97,11 +97,20 @@ export class ContractService {
   error$ = this.errorSubject.asObservable();
 
   private nftsSubject = new BehaviorSubject<GeoNFT[]>(null);
-  nfts$ = this.nftsSubject.asObservable().pipe(filter(x => !!x), map(nfts => {
-    return nfts.filter(((nft) => {
-      return nft.saleTime.getTime() > Date.now();
+  nfts$ = this.nftsSubject.asObservable().pipe(
+    filter(x => !!x),
+    map(nfts => {
+      return nfts.filter(((nft) => {
+        return nft.saleTime.getTime() > Date.now();
+      }));
     }));
-  }));
+  nftsOutdated$ = this.nftsSubject.asObservable().pipe(
+    filter(x => !!x),
+    map(nfts => {
+      return nfts.filter(((nft) => {
+        return nft.saleTime.getTime() < Date.now();
+      }));
+    }));
 
   private ownedNFTsSubject = new BehaviorSubject<GeoNFT[]>(null);
   ownedNFTs$ = this.ownedNFTsSubject.asObservable();
@@ -555,9 +564,40 @@ export class ContractService {
   }
 
   getNftsToRetrieve$(): Observable<GeoNFT[]> {
-    return this.nfts$.pipe(map(nfts => {
-      return nfts.filter(nft => nft.bidInfo.bidderAddress.toLowerCase() === this.selectedAddress.toLowerCase() && nft.saleTime.getTime() < Date.now());
-    }));
+    const subject = new BehaviorSubject<GeoNFT[]>([]);
+
+    this.nftsOutdated$.pipe(
+      tap(x => console.log('scanning outdated nfts', x)),
+      filter(nfts => nfts.length > 0),
+      withLatestFrom(this.bidsMap$.pipe(filter(x => x.size > 0))),
+      map(([nfts, bidsMap]: [GeoNFT[], Map<string, BidInfo[]>]) => {
+        const nftIds: string[] = [];
+        bidsMap.forEach((bid: BidInfo[], key: string) => {
+          const highestBid = bid.reduce((prev, current) => {
+            return (Number(prev.highestBid) > Number(current.highestBid)) ? prev : current;
+          }); // returns object
+          if (highestBid.bidderAddress.toLowerCase() === this.selectedAddress.toLowerCase()) {
+            nftIds.push(key);
+          }
+        });
+        return nftIds.map(nftId => nfts.find(x => String(x.id) === nftId));
+      }),
+    ).subscribe((nfts: GeoNFT[]) => {
+      subject.next(nfts);
+    });
+
+
+    this.newBids$.subscribe((newBidEvent) => {
+      if (newBidEvent.returnValues.newBid.bidderAddress.toLowerCase() === this.selectedAddress) {
+
+        const newArr = subject.getValue().concat(this.getNftById(Number(newBidEvent.returnValues.tokenId)));
+        const filteredArr = [...new Map(newArr.map(item =>
+          [item.id, item])).values()];
+        subject.next(filteredArr);
+      }
+    });
+    return subject.asObservable();
+
   }
 
   enableResalePermission(): void {

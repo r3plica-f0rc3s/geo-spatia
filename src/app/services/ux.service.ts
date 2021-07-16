@@ -20,6 +20,7 @@ export class UxService {
     rightSidenavState: SidenavState.DISABLED,
   });
   sidenavOpened$ = this.sidenavOpenedSubject.asObservable();
+  routeLock = false;
 
   openSidenav() {
     this.sidenavOpenedSubject.next({

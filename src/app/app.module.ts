@@ -44,6 +44,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { NftGridComponent } from './ux-components/nft-grid/nft-grid.component';
 import { NftGridItemComponent } from './ux-components/nft-grid-item/nft-grid-item.component';
 import { RetrieveNftsComponent } from './retrieve-nfts/retrieve-nfts.component';
+import { RouteLockGuard } from './services/guards/route-lock.guard';
 
 @NgModule({
   declarations: [
@@ -99,7 +100,8 @@ import { RetrieveNftsComponent } from './retrieve-nfts/retrieve-nfts.component';
     SVGGeneratorService,
     ContractService,
     DeviceDetectorService,
-    PriceConverterService
+    PriceConverterService,
+    RouteLockGuard
   ],
   bootstrap: [AppComponent],
 })

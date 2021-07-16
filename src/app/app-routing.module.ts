@@ -6,6 +6,7 @@ import { TransactionResultComponent } from './transaction-result/transaction-res
 import { AllNFTsComponent } from './all-nfts/all-nfts.component';
 import { SellComponent } from './sell/sell.component';
 import { RetrieveNftsComponent } from './retrieve-nfts/retrieve-nfts.component';
+import { RouteLockGuard } from './services/guards/route-lock.guard';
 
 const routes: Routes = [
   {
@@ -30,7 +31,8 @@ const routes: Routes = [
   },
   {
     component: RetrieveNftsComponent,
-    path: 'retrieve-nfts'
+    path: 'retrieve-nfts',
+    canDeactivate: [RouteLockGuard],
   },
   {
     path: '**',
