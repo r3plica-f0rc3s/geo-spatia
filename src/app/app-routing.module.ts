@@ -19,7 +19,7 @@ const routes: Routes = [
   },
   {
     component: SingleNftComponent,
-    path: 'confirm-order/:id',
+    path: 'single-nft/:id',
   },
   {
     component: SellComponent,

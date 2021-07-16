@@ -26,7 +26,7 @@ export class NftMarkerComponent implements OnInit {
   }
 
   openNft(): void {
-    this.router.navigate(['/', 'confirm-order', this.nft.id]);
+    this.router.navigate(['/', 'single-nft', this.nft.id]);
   }
 
 }

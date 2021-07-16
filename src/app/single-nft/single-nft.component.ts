@@ -29,11 +29,9 @@ export class SingleNftComponent implements OnInit, OnDestroy {
   ) { }
   ngOnInit(): void {
     this.subscriptions.push(
-      this.activatedRoute.params.pipe(
-        withLatestFrom(this.contractService.nfts$)
-      ).subscribe(([param, nfts]) => {
+      this.activatedRoute.params.subscribe((param) => {
 
-        this.nft = nfts.find((x) => Number(x.id) === Number(param.id));
+        this.nft = this.contractService.getNftById(Number(param.id));
         if (!this.nft) {
           this.router.navigate(['/', 'all-nfts']);
           return;

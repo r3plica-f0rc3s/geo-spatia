@@ -123,7 +123,7 @@ export class MapGlComponent implements OnChanges, OnDestroy {
   }
 
   markerClicked(marker: ImageMarker): void {
-    this.router.navigate(['confirm-order', marker.id]);
+    this.router.navigate(['single-nft', marker.id]);
   }
 
   ngOnDestroy(): void {
