@@ -1,4 +1,15 @@
-.container-inner {
+.container-inner-small {
+  display: flex;
+  flex-direction: column;
+  width: 82px;
+  align-items: center;
+  place-content: center;
+  position: relative;
+  &:hover {
+    cursor: pointer;
+  }
+}
+.container-inner-big {
   display: flex;
   flex-direction: column;
   width: 96px;
@@ -9,7 +20,7 @@
     cursor: pointer;
   }
 }
-.circle {
+.circle-big {
   width: 67px;
   height: 67px;
   margin-bottom: 4px;
@@ -17,9 +28,22 @@
   top: 35px;
   left: 15px;
 }
-.label-wrapper {
+.circle-small {
+  width: 45px;
+  height: 45px;
+  margin-bottom: 4px;
+  position: absolute;
+  top: 35px;
+  left: 15px;
+}
+.label-wrapper-big {
   position: absolute;
   top: 115px;
+}
+.label-wrapper-small {
+  position: absolute;
+  top: 85px;
+  left: 7px;
 }
 .spinner {
   position: absolute;
@@ -39,7 +63,18 @@
     font-weight: bold;
   }
 }
-.nftname {
+.nftname-small {
+  width: 60px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 4px;
+  place-content: center;
+  align-items: center;
+  display: flex;
+  line-height: 26px;
+}
+.nftname-big {
   width: 96px;
   white-space: nowrap;
   overflow: hidden;

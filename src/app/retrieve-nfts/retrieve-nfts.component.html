@@ -3,9 +3,18 @@
       <div class="top-label">
         <span> You won following auctions </span>
       </div>
+      <div class="close-wrapper">
+        <button mat-icon-button [routerLink]="['/', 'all-nfts']">
+          <mat-icon color="primary">close</mat-icon>
+        </button>
+      </div>
     </div>
     <!-- TODO: NFT Grid -->
-    <app-nft-grid [nfts]="nftsToRetrieve"></app-nft-grid>
+    <div class="grid-list">
+      <app-nft-grid [nfts]="nftsToRetrieve"></app-nft-grid>
+    </div>
+
+  
     <div
       class="retrieve-button"
     >

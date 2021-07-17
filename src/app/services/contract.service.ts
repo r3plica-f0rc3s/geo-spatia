@@ -83,12 +83,19 @@ export interface BidViewModel {
   outBidden: boolean;
 }
 
+export interface SaleRetrieveEvent {
+  returnValues: {
+    UserAddress: string;
+    tokenID: string;
+  };
+}
+
 export type TransactionEventUnion = TransactionResultEvent | TransactionStartedEvent;
 @Injectable()
 export class ContractService {
 
   // old: 0x277333e8187d6d5C3f9d994E564662583EE88E4D
-  contractAddress = '0x94E0698DFd2056f7F6718E413F1081d80D03faDd';
+  contractAddress = '0x0C7939ab034B5F278ea9de59A8b395cf61c74f7a';
   blockNumber = 12341288;
   private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
   walletInfo$ = this.walletInfoSubject.asObservable();
@@ -201,8 +208,27 @@ export class ContractService {
 
     this.contract.events.NFTBid({})
       .on('data', (bidEvent: NftBidEvent) => {
-
+        // TODO: update bidsMap
+        if (!this.bidsMap.get(bidEvent.returnValues.tokenId)) {
+          this.bidsMap.set(bidEvent.returnValues.tokenId, [bidEvent.returnValues.newBid]);
+        } else {
+          const arr  = this.bidsMap.get(bidEvent.returnValues.tokenId);
+          arr.push(bidEvent.returnValues.newBid);
+          this.bidsMap.set(bidEvent.returnValues.tokenId, arr);
+        }
+        this.bidsMapSubject.next(this.bidsMap);
         this.newBidsSubject.next(bidEvent);
+      });
+
+    this.contract.events.SaleRetrieve({})
+      .on('data', (saleEvent: SaleRetrieveEvent) => {
+        const nft = this.getNftById(Number(saleEvent.returnValues.tokenID));
+        const nftIdx = this.nftsSubject.getValue().findIndex(x => x.id === Number(saleEvent.returnValues.tokenID));
+        const nfts = this.nftsSubject.getValue();
+        nft.owner = saleEvent.returnValues.UserAddress.toLowerCase() === this.selectedAddress;
+        nft.ownerAddress = saleEvent.returnValues.UserAddress;
+        nfts[nftIdx] = nft;
+        this.nftsSubject.next(nfts);
       });
 
     this.contract.events.ResaleCreation({})

@@ -8,7 +8,7 @@ import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core
   animations: [
     trigger('disableButton', [
       state('true', style({ width: '300px' })),
-      state('false', style({ width: '20px' })),
+      state('false', style({ width: '65px' })),
       transition('false <=> true', animate('500ms ease-out')),
     ]),
   ],

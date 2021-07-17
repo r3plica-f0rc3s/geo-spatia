@@ -11,6 +11,8 @@ import { BidInfo, BidViewModel, ContractService, GeoNFT } from 'src/app/services
 export class NftGridItemComponent implements OnInit, OnDestroy {
   @Input()
   nftId: number;
+  @Input()
+  small = false;
   nft: GeoNFT;
 
   timeLeft: Date;
@@ -22,10 +24,13 @@ export class NftGridItemComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    this.nft = this.contractService.getNftById(this.nftId);
+    this.subscriptions.push(this.contractService.getNftById$(this.nftId).subscribe((nft) => {
+      this.nft = nft;
+      this.changeDetector.detectChanges();
+    }));
 
     this.subscriptions.push(
-      this.contractService.getNFTBids$(String(this.nft.id))
+      this.contractService.getNFTBids$(String(this.nftId))
         .subscribe((bids: BidInfo[]) => {
           console.log('nft', this.nft, 'bids', bids);
           this.processBids(bids);

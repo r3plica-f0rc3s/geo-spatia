@@ -1,25 +1,24 @@
-<div [routerLink]="['/', 'single-nft', nft.id]" class="container-inner">
+<div [routerLink]="['/', 'single-nft', nft.id]" [ngClass]="[small ? 'container-inner-small' : 'container-inner-big']">
   <div class="spinner">
     <mat-spinner
       mode="determinate"
       [value]="100 - endedPercent"
-      diameter="81"
+      [diameter]="small ? 59 : 81"
       strokeWidth="3"
     ></mat-spinner>
   </div>
-  <div class="nftname">
+  <div [ngClass]="[small ? 'nftname-small' : 'nftname-big']">
     <span>{{ nft?.name }}</span>
   </div>
   <div
     (click)="openNft()"
     [ngClass]="
-      nft?.owner ? 'owned' : nft?.ownerAddress ? 'ownedByOther' : 'available'
+      [nft?.owner ? 'owned' : nft?.ownerAddress ? 'ownedByOther' : 'available', small ? 'circle-small' : 'circle-big']
     "
-    class="circle"
   >
-    <div class="svg-icon" [innerHTML]="nft?.image"></div>
+    <div class="svg-icon" [innerHTML]="nft.image"></div>
   </div>
-  <div class="label-wrapper">
+  <div [ngClass]="[small ? 'label-wrapper-small' : 'label-wrapper-big']">
     <mat-chip disableRipple color="primary" selected>
       {{
         bidsViewModel?.highestBid
