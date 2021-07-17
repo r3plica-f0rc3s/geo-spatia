@@ -19,7 +19,9 @@ export class SingleNftComponent implements OnInit, OnDestroy {
   endedPercent: number;
   latestBidIsOwn: boolean;
   bidsViewModel: BidViewModel;
+  resaling = false;
   newBid = -1;
+  resalePrice = 0.1;
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -89,6 +91,19 @@ export class SingleNftComponent implements OnInit, OnDestroy {
       })
     );
 
+  }
+
+  resalePriceChanged(newPrice): void {
+    this.resalePrice = newPrice;
+  }
+
+  submitResale(): void {
+    this.resaling = true;
+    this.contractService.resaleNft(this.contractService.oneToWei(String(this.resalePrice)), String(this.nft.id), 1).then(() => {
+      console.log('resale success');
+    }).catch(e => {
+      console.error(e);
+    });
   }
 
   getMinPrice(wei: string): number {

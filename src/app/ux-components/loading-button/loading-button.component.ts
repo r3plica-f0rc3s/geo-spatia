@@ -19,6 +19,8 @@ export class LoadingButtonComponent implements OnInit {
   loading: boolean;
   @Input()
   label: string;
+  @Input()
+  color = 'primary';
   constructor() { }
 
   ngOnInit(): void {

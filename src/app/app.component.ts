@@ -3,7 +3,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LngLat, Map } from 'mapbox-gl';
 import { filter } from 'rxjs/operators';
 import { DialogComponent } from './dialog/dialog.component';
@@ -74,7 +74,8 @@ export class AppComponent implements OnInit {
     private media: MediaMatcher,
     private contractService: ContractService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private activatedRoute: ActivatedRoute
   ) {
     // this.mobileQueryListener = () => changeDetectorRef.detectChanges();
     // this.isMobile.addListener(this.mobileQueryListener);
@@ -125,13 +126,19 @@ export class AppComponent implements OnInit {
         this.contractService.getNftsToRetrieve$()
           .subscribe(async (nftsToRetrieve: GeoNFT[]) => {
             if (nftsToRetrieve.length > 0) {
-              await this.router.navigate(['/', 'retrieve-nfts']);
+              console.log('current url', this.router.url);
+              if (this.router.url !== '/retrieve-nfts') {
+                await this.router.navigate(['/', 'retrieve-nfts']);
+                this.uxService.disableLeftSidenav();
+                this.uxService.disableSidenav();
+                console.log('nftsToRetrieve', nftsToRetrieve);
+              }
               this.curtain = false;
-              this.uxService.disableLeftSidenav();
-              this.uxService.disableSidenav();
-              console.log('nftsToRetrieve', nftsToRetrieve);
+
             } else {
-              await this.router.navigate(['/', 'all-nfts']);
+              if (this.router.url === '/') {
+                await this.router.navigate(['/', 'all-nfts']);
+              }
               this.curtain = false;
               setTimeout(() => {
                 this.loading = false;

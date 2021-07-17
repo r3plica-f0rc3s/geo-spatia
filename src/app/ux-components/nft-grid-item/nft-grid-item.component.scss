@@ -31,9 +31,18 @@
   position: absolute;
   top: 0;
   height: 20px;
+  font-size: 12px;
+ 
   span {
     font-size: 16px;
     letter-spacing: 1px;
     font-weight: bold;
   }
+}
+.nftname {
+  width: 96px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 4px;
 }

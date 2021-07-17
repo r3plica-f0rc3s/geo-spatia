@@ -45,9 +45,10 @@
     place-content: space-between;
   }
   .top-label {
-    padding-left: 32px;
-    padding-top: 16px;
-    padding-bottom: 16px;
+   display: flex;
+   align-items: center;
+   place-content: center;
+   margin-top: 48px;
     span {
       font-size: 20px;
       line-height: 32px;
@@ -232,7 +233,7 @@
     align-items: center;
     place-content: center;
     width: 100%;
-    margin-top: 48px;
+    margin-top: 32px;
     span {
       font-size: 24px;
       letter-spacing: 1px;

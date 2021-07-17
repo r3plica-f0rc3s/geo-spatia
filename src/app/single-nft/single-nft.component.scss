@@ -1,7 +1,7 @@
 :host {
   position: absolute;
   bottom: 0;
-  height: 40%;
+  height: 45%;
   background-color: #212121;
   opacity: 0.9;
   border-top-left-radius: 24px;
@@ -85,12 +85,13 @@
     letter-spacing: 1px;
   }
 }
-.bid-wrapper {
+.bid-wrapper,.resale-wrapper {
   display: flex;
   flex-direction: row;
   width: 100%;
   align-items: center;
   place-content: space-between;
+  margin-top:24px;
 }
 .buy-button {
   margin-right: auto;
@@ -137,7 +138,7 @@
   align-items: center;
   display: flex;
   padding-left: 32px;
-  margin-bottom: 32px;
+  margin-bottom: 16px;
   span {
     font-size: 24px;
   }
@@ -249,11 +250,12 @@
 }
 .highest-label {
   display: flex;
-  align-items: center;
-  place-content: center;
+  align-items: end;
+  place-content: flex-end;
   width: 100%;
-  margin-top: 48px;
+  margin-top: 8px;
   span {
+    margin-right: 43px;
     font-size: 24px;
     letter-spacing: 1px;
   }

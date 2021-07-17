@@ -45,6 +45,10 @@ import { NftGridComponent } from './ux-components/nft-grid/nft-grid.component';
 import { NftGridItemComponent } from './ux-components/nft-grid-item/nft-grid-item.component';
 import { RetrieveNftsComponent } from './retrieve-nfts/retrieve-nfts.component';
 import { RouteLockGuard } from './services/guards/route-lock.guard';
+import { DatePickerComponent } from './ux-components/date-picker/date-picker.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -69,6 +73,7 @@ import { RouteLockGuard } from './services/guards/route-lock.guard';
     NftGridComponent,
     NftGridItemComponent,
     RetrieveNftsComponent,
+    DatePickerComponent,
   ],
   imports: [
     BrowserModule,
@@ -92,7 +97,10 @@ import { RouteLockGuard } from './services/guards/route-lock.guard';
     }),
     MatProgressSpinnerModule,
     MatSlideToggleModule,
-    FormsModule
+    FormsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatFormFieldModule,
   ],
   providers: [
     GeolocationService,

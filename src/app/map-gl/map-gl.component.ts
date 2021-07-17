@@ -68,6 +68,7 @@ export class MapGlComponent implements OnChanges, OnDestroy {
         }
         break;
       case CameraState.IDLE:
+
         if (this.map && this.mapStatus.markers) {
           this.bounds = new LngLatBounds();
           this.mapStatus.markers.forEach((marker) => {
@@ -78,8 +79,8 @@ export class MapGlComponent implements OnChanges, OnDestroy {
               zoom: 1,
               bearing: 0,
               pitch: 0,
-              essential: true,
-              offset: [-400, 1]
+              offset: [-400, 1],
+              duration: 0
             });
           }
         }
@@ -113,12 +114,14 @@ export class MapGlComponent implements OnChanges, OnDestroy {
 
   onMapLoaded($event): void {
     this.map = $event;
+    this.setEvents();
     this.mapHelperService.mapStatus$.subscribe((mapState) => {
       this.mapStatus = mapState;
       // apply status
       this.nfts = mapState.markers;
       this.setCamera();
-      this.setEvents();
+      if (mapState.changeCameraState) {
+      }
     });
   }
 

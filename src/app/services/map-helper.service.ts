@@ -15,6 +15,7 @@ export interface MapStatus {
   markers?: GeoNFT[];
   showUser: boolean;
   userLocation?: LngLat;
+  changeCameraState: boolean;
 }
 
 export interface ImageMarker {
@@ -31,6 +32,7 @@ export class MapHelperService {
   private mapStatusSubject = new BehaviorSubject<MapStatus>({
     cameraState: CameraState.IDLE,
     showUser: false,
+    changeCameraState: false
   });
   userLocation: LngLat = null;
   mapStatus$ = this.mapStatusSubject.asObservable();
@@ -42,7 +44,8 @@ export class MapHelperService {
       this.mapStatusSubject.next({
         cameraState: this.mapStatusSubject.getValue().cameraState,
         showUser: true,
-        userLocation: lngLat
+        userLocation: lngLat,
+        changeCameraState: true
       });
       return lngLat;
     });
@@ -55,7 +58,8 @@ export class MapHelperService {
         cameraState: CameraState.NEARBY,
         showUser: true,
         markers: imageMarkers,
-        userLocation: new LngLat(userLocation.longitude, userLocation.latitude)
+        userLocation: new LngLat(userLocation.longitude, userLocation.latitude),
+        changeCameraState: true
       });
     });
   }
@@ -65,7 +69,8 @@ export class MapHelperService {
       cameraState: CameraState.SINGLE,
       showUser: false,
       markers: [imageMarker],
-      userLocation: this.mapStatusSubject.getValue().userLocation
+      userLocation: this.mapStatusSubject.getValue().userLocation,
+      changeCameraState: true
     });
   }
 
@@ -73,7 +78,8 @@ export class MapHelperService {
     this.mapStatusSubject.next({
       showUser: false,
       cameraState: CameraState.IDLE,
-      markers: imageMarkers
+      markers: imageMarkers,
+      changeCameraState: false
     });
   }
 

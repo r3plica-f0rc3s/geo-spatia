@@ -16,6 +16,7 @@ export class NftListItemComponent implements OnInit, OnDestroy {
   endedPercent: number;
   Math = Math;
   bidsViewModel: BidViewModel;
+  passed = false;
   constructor(
     private changeDetector: ChangeDetectorRef,
     private contractService: ContractService
@@ -50,16 +51,25 @@ export class NftListItemComponent implements OnInit, OnDestroy {
     if (this.timeLeft) {
       this.subscriptions.push(
         timer(1000, 1000).subscribe(() => {
-          if (this.timeLeft) {
+          if (this.timeLeft && this.timeLeft.getTime() > 1000) {
             this.timeLeft = new Date(this.timeLeft.getTime() - 1000);
             const timeFromCreated = this.nft.saleTime.getTime() - Date.now();
             this.endedPercent = (100 - (timeFromCreated / (this.nft.saleTime.getTime() - this.nft.creationTime.getTime())) * 100);
             this.changeDetector.detectChanges();
+          } else {
+            this.timePassed();
           }
         })
       );
     }
 
+  }
+
+  timePassed(): void {
+    if (!this.passed) {
+      this.passed = true;
+      this.contractService.refresh();
+    }
   }
 
   ngOnDestroy(): void {
