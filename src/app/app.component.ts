@@ -127,12 +127,11 @@ export class AppComponent implements OnInit {
           .subscribe(async (nftsToRetrieve: GeoNFT[]) => {
             if (nftsToRetrieve.length > 0) {
               console.log('current url', this.router.url);
-              if (this.router.url !== '/retrieve-nfts') {
-                await this.router.navigate(['/', 'retrieve-nfts']);
-                this.uxService.disableLeftSidenav();
-                this.uxService.disableSidenav();
-                console.log('nftsToRetrieve', nftsToRetrieve);
-              }
+              // if (this.router.url !== '/retrieve-nfts') {
+              await this.router.navigate(['/', 'retrieve-nfts']);
+
+              console.log('nftsToRetrieve', nftsToRetrieve);
+              // }
               this.curtain = false;
 
             } else {

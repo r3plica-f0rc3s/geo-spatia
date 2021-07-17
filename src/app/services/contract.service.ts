@@ -88,7 +88,7 @@ export type TransactionEventUnion = TransactionResultEvent | TransactionStartedE
 export class ContractService {
 
   // old: 0x277333e8187d6d5C3f9d994E564662583EE88E4D
-  contractAddress = '0x0f66cdBaA55E178D374D004B9Dc7D96D498b73A2';
+  contractAddress = '0x94E0698DFd2056f7F6718E413F1081d80D03faDd';
   blockNumber = 12341288;
   private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
   walletInfo$ = this.walletInfoSubject.asObservable();
@@ -610,6 +610,7 @@ export class ContractService {
       filter(nfts => nfts.length > 0),
       withLatestFrom(this.bidsMap$.pipe(filter(x => x.size > 0))),
       map(([nfts, bidsMap]: [GeoNFT[], Map<string, BidInfo[]>]) => {
+        // TODO: not founds highest bid
         const nftIds: string[] = [];
         bidsMap.forEach((bid: BidInfo[], key: string) => {
           const highestBid = bid.reduce((prev, current) => {
@@ -622,7 +623,7 @@ export class ContractService {
         return nftIds.map(nftId => nfts.find(x => String(x.id) === nftId));
       })
     ).subscribe((nfts: GeoNFT[]) => {
-      subject.next(nfts.filter(nft => !!(nft)).filter(nft => nft.saleTime.getTime() < Date.now()).filter(nft => nft.bidInfo.highestBid !== '0'));
+      subject.next(nfts.filter(nft => !!(nft)).filter(nft => nft.saleTime.getTime() < Date.now()).filter(nft => !nft.owner));
     });
 
 
@@ -632,7 +633,7 @@ export class ContractService {
         const newArr = subject.getValue().concat(this.getNftById(Number(newBidEvent.returnValues.tokenId)));
         const filteredArr = [...new Map(newArr.map(item =>
           [item.id, item])).values()];
-        subject.next(filteredArr.filter(nft => nft.saleTime.getTime() < Date.now()).filter(nft => nft.owner));
+        subject.next(filteredArr.filter(nft => nft.saleTime.getTime() < Date.now()).filter(nft => !nft.owner));
       }
     });
     return subject.asObservable();

@@ -68,16 +68,17 @@ export class SingleNftComponent implements OnInit, OnDestroy {
     } else {
       this.timeLeft = new Date(Math.max(this.nft.saleTime.getTime() - Date.now(), 0));
     }
-    if (this.timeLeft) {
-      this.subscriptions.push(
-        timer(1000, 1000).subscribe(() => {
+    this.subscriptions.push(
+      timer(1000, 1000).subscribe(() => {
+        if (this.timeLeft) {
+
           this.timeLeft = new Date(this.timeLeft.getTime() - 1000);
           const timeFromCreated = this.nft.saleTime.getTime() - Date.now();
           this.endedPercent = (100 - (timeFromCreated / (this.nft.saleTime.getTime() - this.nft.creationTime.getTime())) * 100);
           this.changeDetector.detectChanges();
-        })
-        );
-    }
+        }
+      })
+    );
   }
 
   submitBid(): void {
@@ -86,7 +87,7 @@ export class SingleNftComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.contractService.transactions$.subscribe((transactionEvent: TransactionResultEvent) => {
         if (transactionEvent && transactionEvent.success !== undefined) {
-          this.router.navigate(['/', 'transaction-result'], { state: transactionEvent});
+          this.router.navigate(['/', 'transaction-result'], { state: transactionEvent });
         }
       })
     );

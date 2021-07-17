@@ -68,7 +68,9 @@ export class NftListItemComponent implements OnInit, OnDestroy {
   timePassed(): void {
     if (!this.passed) {
       this.passed = true;
-      this.contractService.refresh();
+      setTimeout(() => {
+        this.contractService.refresh();
+      }, 1000);
     }
   }
 

@@ -1,7 +1,7 @@
 :host {
     display: flex;
     flex-wrap: wrap;
-    min-height: 140px;
+    min-height: 35%;
     flex-direction: row;
     padding: 8px;
 }
@@ -11,15 +11,14 @@
     
 }
 .container {
-    width: 27%;
+  
     display: flex;
     flex-wrap: wrap;
- 
+    padding: 4px;
     box-sizing: border-box;
     align-items: center;
     place-content: flex-start;
-    max-height: 32%;
-  
+
 }
 .container-inner {
     display: flex;
