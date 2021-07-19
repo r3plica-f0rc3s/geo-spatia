@@ -95,7 +95,7 @@ export type TransactionEventUnion = TransactionResultEvent | TransactionStartedE
 export class ContractService {
 
   // old: 0x277333e8187d6d5C3f9d994E564662583EE88E4D
-  contractAddress = '0x0C7939ab034B5F278ea9de59A8b395cf61c74f7a';
+  contractAddress = '0x8e4E499098Ae0Ca840E87E642A7a0B47f44ed33C';
   blockNumber = 12341288;
   private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
   walletInfo$ = this.walletInfoSubject.asObservable();
@@ -103,7 +103,7 @@ export class ContractService {
   private errorSubject = new BehaviorSubject<string>('');
   error$ = this.errorSubject.asObservable();
 
-  private nftsSubject = new BehaviorSubject<GeoNFT[]>(null);
+  private nftsSubject = new BehaviorSubject<GeoNFT[]>([]);
   nfts$ = this.nftsSubject.asObservable();
   nftsOnSale$ = this.nftsSubject.asObservable().pipe(
     filter(x => !!x),
@@ -212,7 +212,7 @@ export class ContractService {
         if (!this.bidsMap.get(bidEvent.returnValues.tokenId)) {
           this.bidsMap.set(bidEvent.returnValues.tokenId, [bidEvent.returnValues.newBid]);
         } else {
-          const arr  = this.bidsMap.get(bidEvent.returnValues.tokenId);
+          const arr = this.bidsMap.get(bidEvent.returnValues.tokenId);
           arr.push(bidEvent.returnValues.newBid);
           this.bidsMap.set(bidEvent.returnValues.tokenId, arr);
         }
@@ -476,8 +476,47 @@ export class ContractService {
       });
   }
 
-  resaleNft(price: string, tokenId: string, daysAfter = 1): Promise<void> {
-    return this.contract.methods.putTokenForResale(price, tokenId, daysAfter).call({ from: this.selectedAddress });
+  resaleNft(price: string, tokenId: string, daysAfter = 1): void {
+    // TODO: return transaction, push to resales events stream
+    const result = this.contract.methods
+      .putTokenForResale(price, tokenId, daysAfter)
+      .send({ from: this.selectedAddress });
+    console.log(result);
+    result
+      .on('transactionHash', (hash: string) => {
+        console.log(
+          'Transaction sent successfully. Check console for Transaction hash'
+        );
+        this.transactionsSubject.next({
+          txid: hash
+        });
+        console.log('Transaction Hash is ', hash);
+      })
+      .once('confirmation', (confirmationNumber, receipt) => {
+        if (receipt.status) {
+          console.log('Transaction processed successfully', receipt);
+          // find this nft in loaded nfts
+          // const buyedNft = this.ownedNFTsSubject.getValue().find(x => x.id === tokenId);
+          // this.ownedNFTsSubject.next(
+          //   this.ownedNFTsSubject.getValue().concat(buyedNft)
+          // );
+          this.transactionsSubject.next({
+            fee: receipt.fee,
+            success: true,
+            txid: receipt.id,
+            confirmationNumber
+          });
+        } else {
+          this.transactionsSubject.error({
+            fee: receipt.fee,
+            success: false,
+            txid: receipt.id,
+            confirmationNumber
+          });
+        }
+        console.log(receipt);
+      });
+    // return this.contract.methods.putTokenForResale(price, tokenId, daysAfter).call({ from: this.selectedAddress });
   }
 
   private loadNftPassedEvents(): Promise<void> {

@@ -1,7 +1,18 @@
-<div class="date-picker">
-    <mat-calendar></mat-calendar>
+<!-- <div class="button-container">
+ 
     <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
-        <mat-button-toggle class="middle" value="italic">PRICE</mat-button-toggle>
-        <mat-button-toggle class="toggle plus" color="primary" value="bold">+</mat-button-toggle>
+        <mat-button-toggle class="middle" value="italic">{{ currentDate }}</mat-button-toggle>
+        <mat-button-toggle class="toggle" color="primary" value="bold"><mat-icon>calendar_today</mat-icon>
+        </mat-button-toggle>
+    </mat-button-toggle-group>
+</div> -->
+
+<div class="price-ticker">
+    <mat-calendar (selectedChange)="onDateSelected($event)" *ngIf="calendarOpened"></mat-calendar>
+    <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+   
+      <mat-button-toggle class="middle" (click)="calendarOpened = !calendarOpened" value="italic">{{ currentDate }}</mat-button-toggle>
+      <mat-button-toggle class="toggle" (click)="calendarOpened = !calendarOpened" color="primary" value="bold"><mat-icon>calendar_today</mat-icon>
+      </mat-button-toggle>
     </mat-button-toggle-group>
 </div>

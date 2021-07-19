@@ -7,7 +7,6 @@ import { MapHelperService } from '../services/map-helper.service';
 @Component({
   templateUrl: './single-nft.component.html',
   styleUrls: ['./single-nft.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SingleNftComponent implements OnInit, OnDestroy {
   timeLeft: Date;
@@ -22,6 +21,10 @@ export class SingleNftComponent implements OnInit, OnDestroy {
   resaling = false;
   newBid = -1;
   resalePrice = 0.1;
+  resaleForm = {
+    resalePrice: 0,
+    resaleDate: new Date(Date.now())
+  };
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -95,17 +98,29 @@ export class SingleNftComponent implements OnInit, OnDestroy {
   }
 
   resalePriceChanged(newPrice): void {
-    this.resalePrice = newPrice;
+    this.resaleForm.resalePrice = newPrice;
+  }
+
+  resaleDateSelected($event): void {
+    this.resaleForm.resaleDate = $event;
   }
 
   submitResale(): void {
     this.resaling = true;
-    this.contractService.resaleNft(this.contractService.oneToWei(String(this.resalePrice)), String(this.nft.id), 1).then(() => {
-      console.log('resale success');
-    }).catch(e => {
-      console.error(e);
-    });
+    this.contractService.resaleNft(
+      this.contractService.oneToWei(String(this.resaleForm.resalePrice)),
+      String(this.nft.id), this.resaleForm.resaleDate.getTime());
+    // listen to transactions$ to change view
+    this.subscriptions.push(
+      this.contractService.transactions$.subscribe((transactionEvent: TransactionResultEvent) => {
+        if (transactionEvent && transactionEvent.success !== undefined) {
+          this.router.navigate(['/', 'transaction-result'], { state: transactionEvent });
+        }
+      })
+    );
   }
+
+
 
   getMinPrice(wei: string): number {
     return Number(this.contractService.weiToOne(wei));

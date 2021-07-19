@@ -1,4 +1,4 @@
-<div class="main-container">
+<div class="main-container" *ngIf="nft">
   <div class="top-wrapper">
     <div class="top-label">
       <span> Checkout </span>
@@ -88,9 +88,9 @@
       <div class="bid-label">
         <span> Expiration date </span>
       </div>
-      <!-- <div class="date-picker">
-        <app-date-picker></app-date-picker>
-      </div> -->
+      <div class="date-picker">
+        <app-date-picker (dateSelected)="resaleDateSelected($event)"></app-date-picker>
+      </div>
     </div>
   </div>
   <div class="buy-button">

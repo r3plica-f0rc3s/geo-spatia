@@ -79,6 +79,9 @@
   margin-top: 16px;
   margin-right: 16px;
   padding-left: 32px;
+  width: 50%;
+  display: flex;
+  align-items: center;
   span {
     font-size: 20px;
   
@@ -225,7 +228,8 @@
   align-self: center;
   align-content: center;
   padding-right: 32px;
- 
+  width: 50%;
+  display: flex;
 }
 .progress-spinner {
   display: flex;
@@ -256,7 +260,14 @@
   margin-top: 8px;
   span {
     margin-right: 43px;
-    font-size: 24px;
+    font-size: 20px;
     letter-spacing: 1px;
   }
+}
+.date-picker {
+  margin-right: 32px;
+  width: 50%;
+  display: flex;
+  align-items: center;
+  place-content: center;
 }

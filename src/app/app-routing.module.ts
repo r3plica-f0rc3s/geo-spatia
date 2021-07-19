@@ -10,6 +10,11 @@ import { RouteLockGuard } from './services/guards/route-lock.guard';
 
 const routes: Routes = [
   {
+    path: '*',
+    redirectTo: '',
+    pathMatch: 'full'
+  },
+  {
     component: StartComponent,
     path: 'start',
   },
@@ -34,11 +39,7 @@ const routes: Routes = [
     path: 'retrieve-nfts',
     canDeactivate: [RouteLockGuard],
   },
-  {
-    path: '**',
-    redirectTo: '',
-    pathMatch: 'full',
-  },
+
 ];
 
 @NgModule({

@@ -1,3 +1,6 @@
+:host {
+    width: 100%;
+}
 .price-ticker {
     display: flex;
     place-items: center;
@@ -6,6 +9,7 @@
 .middle {
     width: 168px;
     border: none;
+    overflow: hidden;
 }
 
 .toggle {
