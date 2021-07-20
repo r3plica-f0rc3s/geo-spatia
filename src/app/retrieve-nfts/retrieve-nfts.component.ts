@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { ContractService, GeoNFT } from '../services/contract.service';
+import { ContractService, GeoNFT, TransactionResultEvent } from '../services/contract.service';
 import { MapHelperService } from '../services/map-helper.service';
 import { UxService } from '../services/ux.service';
 
@@ -9,7 +10,7 @@ import { UxService } from '../services/ux.service';
   templateUrl: './retrieve-nfts.component.html',
   styleUrls: ['./retrieve-nfts.component.scss']
 })
-export class RetrieveNftsComponent implements OnInit {
+export class RetrieveNftsComponent implements OnInit, OnDestroy {
   subscriptions = [];
   retrieving = false;
   nftsToRetrieve: GeoNFT[] = [];
@@ -19,19 +20,37 @@ export class RetrieveNftsComponent implements OnInit {
     private uxService: UxService,
     private router: Router) { }
 
+
   ngOnInit(): void {
     this.uxService.disableLeftSidenav();
     this.uxService.disableSidenav();
-    this.contractService.getNftsToRetrieve$().pipe(filter(x => x.length > 0)).subscribe((nftsToRetrieve) => {
-      this.mapHelperService.setMultipleMarkers(nftsToRetrieve);
-      this.nftsToRetrieve = nftsToRetrieve;
-    });
+    this.subscriptions.push(
+      this.contractService.getNftsToRetrieve$().pipe(filter(x => x.length > 0)).subscribe((nftsToRetrieve) => {
+        this.mapHelperService.setMultipleMarkers(nftsToRetrieve);
+        this.nftsToRetrieve = nftsToRetrieve;
+      })
+    );
+
   }
 
   retrieve(): void {
     this.retrieving = true;
-    this.contractService.retrieveNFTs(this.nftsToRetrieve.map(nft => String(nft.id))).then(() => {
-      this.router.navigate(['', 'all-nfts']);
+    this.contractService.retrieveNFTs(this.nftsToRetrieve.map(nft => String(nft.id)));
+    this.subscriptions.push(
+      this.contractService.transactions$.subscribe((transactionEvent: TransactionResultEvent) => {
+        if (transactionEvent && transactionEvent.success !== undefined) {
+          this.router.navigate(['/', 'transaction-result'], { state: { ...{ closable: true }, ...transactionEvent } });
+        }
+      }, (err) => {
+        this.router.navigate(['/', 'transaction-result'], { state: { success: false, closable: false } });
+      })
+    );
+
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub: Subscription) => {
+      sub.unsubscribe();
     });
   }
 

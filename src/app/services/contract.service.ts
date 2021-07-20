@@ -90,12 +90,25 @@ export interface SaleRetrieveEvent {
   };
 }
 
+export interface ResaleInfo {
+  highestBid: number;
+  bidderAddress: string;
+  resalePrice: number;
+  tokenID: string;
+  resaleTime: number;
+}
+export interface ResaleCreation {
+  tokenID: string;
+  resaleID: string;
+  creationTime: number;
+}
+
 export type TransactionEventUnion = TransactionResultEvent | TransactionStartedEvent;
 @Injectable()
 export class ContractService {
 
   // old: 0x277333e8187d6d5C3f9d994E564662583EE88E4D
-  contractAddress = '0x8e4E499098Ae0Ca840E87E642A7a0B47f44ed33C';
+  contractAddress = '0xae2686d77233Df844B948ED9392d04f884b067A3';
   blockNumber = 12341288;
   private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
   walletInfo$ = this.walletInfoSubject.asObservable();
@@ -123,7 +136,7 @@ export class ContractService {
   private ownedNFTsSubject = new BehaviorSubject<GeoNFT[]>(null);
   ownedNFTs$ = this.ownedNFTsSubject.asObservable();
 
-  private transactionsSubject = new BehaviorSubject<TransactionEventUnion>(null);
+  private transactionsSubject = new Subject<TransactionEventUnion>();
   transactions$ = this.transactionsSubject.asObservable();
 
   bidsMap = new Map<string, BidInfo[]>();
@@ -235,95 +248,7 @@ export class ContractService {
       .on('data', (resaleEvent) => {
         console.log('ResaleBid', resaleEvent);
       });
-
-    // this.contract.events.NFTSale({})
-    //   .on('data', (data: any) => {
-    //     console.log('nft-sale', data);
-    //     // const geoNft = this.mapNftToGeoNFT(nft.Info, Number(nft.tokenId));
-    //     // // TODO: invoke emits
-    //     // const nfts = this.nftsSubject.getValue();
-
-    //     // this.nftsSubject.next(
-    //     //   nfts.concat([geoNft])
-    //     // );
-    //   });
-
   }
-
-  // async loadNFTs(layer = 0): Promise<GeoNFT[]> {
-  //   return new Promise((resolve, reject) => {
-  //     // TODO: I need to add timeout because of some limits
-  //     // TODO: compare with owned and set SoldStatus
-
-  //     this.contract.methods
-  //       .getAllNFT(100, 1)
-  //       .call({ from: this.selectedAddress })
-  //       .then(nftsArr => nftsArr[0])
-  //       .then(async (nfts: NFT[]) => {
-  //         const ownerPromises = nfts.map((nft, index) => nft.status === '0' ?
-  //           this.ownerOf(index + 1) : new Promise((resolve) => resolve(null)));
-
-  //         const owners: any[] = await Promise.all(ownerPromises);
-  //         const nftsWithOwners = nfts.map((nft, index) => {
-  //           const nftCopy = { ...nft };
-  //           nftCopy.owner = owners[index];
-  //           return nftCopy;
-  //         });
-  //         const geoNFTs: GeoNFT[] = nftsWithOwners
-  //           .filter((nft) => {
-  //             return nft.location.length > 0;
-  //           })
-  //           .map((nft, index) => this.mapNftToGeoNFT(nft, index));
-  //         // load nfts
-  //         const imageObservables = geoNFTs.map((nft) => {
-  //           return this.getSvg$(nft.id);
-  //         });
-  //         const tokenSaleTimeObservables = geoNFTs.map((nft) => {
-  //           return this.tokenSaleTime(nft.id);
-  //         });
-  //         const auctionInfoObservables = geoNFTs.map((nft) => {
-  //           return this.auctionInfo$(nft.id);
-  //         });
-  //         forkJoin([forkJoin(imageObservables), forkJoin(tokenSaleTimeObservables), forkJoin(auctionInfoObservables)])
-  //           .subscribe(([svgs, tokenSaleTimes, auctionInfo]: [string[], Date[], BidInfo[]]) => {
-  //             svgs.forEach((svg, index) => {
-  //               geoNFTs[index].image = svg;
-  //             });
-  //             tokenSaleTimes.forEach((tst: Date, index) => {
-  //               geoNFTs[index].saleTime = tst;
-  //             });
-  //             auctionInfo.forEach((auctionInfo: BidInfo, index) => {
-  //               if (auctionInfo) {
-  //                 geoNFTs[index].bidInfo = auctionInfo;
-  //               }
-  //             });
-  //             this.nftsSubject.next(geoNFTs);
-  //             resolve(geoNFTs);
-  //           });
-
-  //       });
-  //   });
-  // }
-
-  // private tokenSaleTime(tokenId: number): Observable<unknown> {
-  //   const tokenSaleTimeSubject = new Subject();
-  //   const tokenSaleTime$ = tokenSaleTimeSubject.asObservable();
-  //   this.contract.methods.TokenSaleTime(tokenId)
-  //     .call({ from: this.selectedAddress })
-  //     .then((result: any) => {
-  //       console.log('tst result', result);
-  //       // TODO: convert epoch to date
-  //       const utcSeconds = result;
-
-  //       const date = new Date(0); // The 0 there is the key, which sets the date to the epoch
-  //       date.setUTCSeconds(utcSeconds);
-
-  //       tokenSaleTimeSubject.next(date);
-  //       tokenSaleTimeSubject.complete();
-  //     });
-  //   return tokenSaleTime$;
-
-  // }
 
   private epochToDate(epoch: string): Date {
     const date = new Date(0);
@@ -393,31 +318,6 @@ export class ContractService {
     };
   }
 
-
-  private mapNftToGeoNFT(nft: NFT, index: number): GeoNFT {
-    console.log('mapping nft', nft);
-    // check if owned
-    const soldStatus = nft.status === '1' ? SoldStatus.AVAILABLE :
-      (nft.owner === this.selectedAddress ? SoldStatus.OWNED : SoldStatus.SOLD);
-    return {
-      name: nft.name,
-      layer: Number(nft.layer),
-      location: new LngLat(
-        Number(nft.location.split(',')[1]),
-        Number(nft.location.split(',')[0])
-      ),
-      // image: this.domSanitizer.bypassSecurityTrustHtml(
-      //   // '<svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><mask id="mask__beam" maskUnits="userSpaceOnUse" x="0" y="0" width="36" height="36"><rect width="36" height="36" rx="72" fill="white"></rect></mask><g mask="url(#mask__beam)"><rect width="36" height="36" fill="#f85931"></rect><rect x="0" y="0" width="36" height="36" transform="translate(-5 9) rotate(209 18 18) scale(1.2)" fill="#009989" rx="36"></rect><g transform="translate(-1 4.5) rotate(-9 18 18)"><path d="M13,21 a1,0.75 0 0,0 10,0" fill="white"></path><rect x="10" y="14" width="1.5" height="2" rx="1" stroke="none" fill="white"></rect><rect x="24" y="14" width="1.5" height="2" rx="1" stroke="none" fill="white"></rect></g></g></svg>'
-      //   decodeURIComponent(nft.svg)
-      // ),
-      price: nft.price,
-      status: soldStatus,
-      id: index + 1,
-      ownerAddress: nft.owner,
-      owner: nft.owner ? nft.owner.toLowerCase() === this.selectedAddress.toLowerCase() : false
-    };
-  }
-
   private async loadWalletInfo(): Promise<void> {
     return new Promise((resolve, reject) => {
       const address = this.wallet.selectedAddress;
@@ -440,40 +340,7 @@ export class ContractService {
       .Bid(tokenId)
       .send({ from: this.selectedAddress, value: amount });
     console.log(result);
-    result
-      .on('transactionHash', (hash: string) => {
-        console.log(
-          'Transaction sent successfully. Check console for Transaction hash'
-        );
-        this.transactionsSubject.next({
-          txid: hash
-        });
-        console.log('Transaction Hash is ', hash);
-      })
-      .once('confirmation', (confirmationNumber, receipt) => {
-        if (receipt.status) {
-          console.log('Transaction processed successfully', receipt);
-          // find this nft in loaded nfts
-          const buyedNft = this.ownedNFTsSubject.getValue().find(x => x.id === tokenId);
-          this.ownedNFTsSubject.next(
-            this.ownedNFTsSubject.getValue().concat(buyedNft)
-          );
-          this.transactionsSubject.next({
-            fee: receipt.fee,
-            success: true,
-            txid: receipt.id,
-            confirmationNumber
-          });
-        } else {
-          this.transactionsSubject.error({
-            fee: receipt.fee,
-            success: false,
-            txid: receipt.id,
-            confirmationNumber
-          });
-        }
-        console.log(receipt);
-      });
+    this.listenToTransaction(result);
   }
 
   resaleNft(price: string, tokenId: string, daysAfter = 1): void {
@@ -482,51 +349,20 @@ export class ContractService {
       .putTokenForResale(price, tokenId, daysAfter)
       .send({ from: this.selectedAddress });
     console.log(result);
-    result
-      .on('transactionHash', (hash: string) => {
-        console.log(
-          'Transaction sent successfully. Check console for Transaction hash'
-        );
-        this.transactionsSubject.next({
-          txid: hash
-        });
-        console.log('Transaction Hash is ', hash);
-      })
-      .once('confirmation', (confirmationNumber, receipt) => {
-        if (receipt.status) {
-          console.log('Transaction processed successfully', receipt);
-          // find this nft in loaded nfts
-          // const buyedNft = this.ownedNFTsSubject.getValue().find(x => x.id === tokenId);
-          // this.ownedNFTsSubject.next(
-          //   this.ownedNFTsSubject.getValue().concat(buyedNft)
-          // );
-          this.transactionsSubject.next({
-            fee: receipt.fee,
-            success: true,
-            txid: receipt.id,
-            confirmationNumber
-          });
-        } else {
-          this.transactionsSubject.error({
-            fee: receipt.fee,
-            success: false,
-            txid: receipt.id,
-            confirmationNumber
-          });
-        }
-        console.log(receipt);
-      });
+    this.listenToTransaction(result);
     // return this.contract.methods.putTokenForResale(price, tokenId, daysAfter).call({ from: this.selectedAddress });
   }
 
   private loadNftPassedEvents(): Promise<void> {
     return Promise.all([
       this.contract.getPastEvents('NFTCreation', { fromBlock: this.blockNumber }),
-      this.contract.getPastEvents('NFTBid', { fromBlock: this.blockNumber })
+      this.contract.getPastEvents('NFTBid', { fromBlock: this.blockNumber }),
+      this.contract.getPastEvents('ResaleCreation', { fromBlock: this.blockNumber }),
     ])
-      .then(([nftCreationEvents, nftBidsEvents]: [NewNFTEvent[], NftBidEvent[]]) => {
+      .then(([nftCreationEvents, nftBidsEvents, resaleCreation]: [NewNFTEvent[], NftBidEvent[], any]) => {
         console.log('passed nftcreation', nftCreationEvents);
         console.log('passed nftbids', nftBidsEvents);
+        console.log('resale creations', resaleCreation);
         nftBidsEvents.forEach((bid: NftBidEvent) => {
           if (!this.bidsMap.get(bid.returnValues.tokenId)) {
             this.bidsMap.set(bid.returnValues.tokenId, []);
@@ -723,23 +559,34 @@ export class ContractService {
     return this.contract.methods.isApprovedForAll(this.selectedAddress, this.contractAddress);
   }
 
-  async retrieveNFTs(tokenIds: string[]): Promise<void> {
+  retrieveNFTs(tokenIds: string[]): void {
     console.log('retrieve', tokenIds);
-    return this.contract.methods.RetrieveNFT(tokenIds).send({ from: this.selectedAddress });
+    const transaction = this.contract.methods.RetrieveNFT(tokenIds).send({ from: this.selectedAddress });
+    this.listenToTransaction(transaction);
   }
 
   listenToTransaction(transaction): void {
-    transaction.on('transactionHash', (hash: string) => {
-      console.log(
-        'Transaction sent successfully. Check console for Transaction hash'
-      );
-      this.transactionsSubject.next({
-        txid: hash
-      });
-      console.log('Transaction Hash is ', hash);
-    })
+    transaction
+      .on('transactionHash', (hash: string) => {
+        console.log(
+          'Transaction sent successfully. Check console for Transaction hash'
+        );
+        this.transactionsSubject.next({
+          txid: hash
+        });
+        console.log('Transaction Hash is ', hash);
+      })
+      .on('error', (error) => {
+        this.transactionsSubject.error(error);
+      })
       .once('confirmation', (confirmationNumber, receipt) => {
         if (receipt.status) {
+          console.log('Transaction processed successfully', receipt);
+          // find this nft in loaded nfts
+//           const buyedNft = this.ownedNFTsSubject.getValue().find(x => x.id === tokenId);
+//           this.ownedNFTsSubject.next(
+//             this.ownedNFTsSubject.getValue().concat(buyedNft)
+//           );
           this.transactionsSubject.next({
             fee: receipt.fee,
             success: true,
@@ -754,22 +601,9 @@ export class ContractService {
             confirmationNumber
           });
         }
+        console.log(receipt);
       });
   }
-
-  // loadOwnedNFTs(): Promise<void> {
-  //   return new Promise(async (resolve, reject) => {
-  //     this.contract.methods.getUserOwnedNFT().call({
-  //       from: this.selectedAddress
-  //     }).then((result) => {
-  //       this.ownedNFTsSubject.next(result);
-  //       resolve();
-  //     }).catch((err) => {
-  //       this.ownedNFTsSubject.error(err);
-  //       reject(err);
-  //     });
-  //   });
-  // }
 
   weiToOne(balance): string {
     return this.currentWeb3.utils.fromWei(balance, 'ether');

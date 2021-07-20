@@ -94,7 +94,7 @@ export class MapGlComponent implements OnChanges, OnDestroy {
           essential: true,
           pitch: 60,
           zoom: 10,
-          offset: [-400, 1]
+          offset: [-400, -60]
         });
         break;
     }
@@ -104,9 +104,7 @@ export class MapGlComponent implements OnChanges, OnDestroy {
     this.bounds = new LngLatBounds();
 
     if (changes.markers.currentValue) {
-      const currentValue = changes.markers.currentValue;
 
-      console.log(this.nfts);
       this.map.fitBounds(this.bounds, { padding: 50 });
     }
   }

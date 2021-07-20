@@ -38,7 +38,7 @@ export class CurtainComponent implements AfterViewInit {
           el: this.vantaElement.nativeElement,
           mouseControls: true,
           touchControls: true,
-          gyroControls: false,
+          gyroControls: true,
           minHeight: 200.00,
           minWidth: 200.00,
           scale: 1.00,
@@ -46,8 +46,8 @@ export class CurtainComponent implements AfterViewInit {
           color: 0x7f3bb1,
           THREE: three
         });
-      })
-    })
+      });
+    });
   }
 
   ngOnInit() {

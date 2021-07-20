@@ -87,13 +87,8 @@ export class SingleNftComponent implements OnInit, OnDestroy {
   submitBid(): void {
     this.contractService.bidNFT(this.nft.id, this.contractService.oneToWei(String(this.newBid)));
     this.buying = true;
-    this.subscriptions.push(
-      this.contractService.transactions$.subscribe((transactionEvent: TransactionResultEvent) => {
-        if (transactionEvent && transactionEvent.success !== undefined) {
-          this.router.navigate(['/', 'transaction-result'], { state: transactionEvent });
-        }
-      })
-    );
+
+    this.handleTransaction();
 
   }
 
@@ -111,13 +106,7 @@ export class SingleNftComponent implements OnInit, OnDestroy {
       this.contractService.oneToWei(String(this.resaleForm.resalePrice)),
       String(this.nft.id), this.resaleForm.resaleDate.getTime());
     // listen to transactions$ to change view
-    this.subscriptions.push(
-      this.contractService.transactions$.subscribe((transactionEvent: TransactionResultEvent) => {
-        if (transactionEvent && transactionEvent.success !== undefined) {
-          this.router.navigate(['/', 'transaction-result'], { state: transactionEvent });
-        }
-      })
-    );
+    this.handleTransaction();
   }
 
 
@@ -134,6 +123,18 @@ export class SingleNftComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach((sub: Subscription) => {
       sub.unsubscribe();
     });
+  }
+
+  private handleTransaction(): void {
+    this.subscriptions.push(
+      this.contractService.transactions$.subscribe((transactionEvent: TransactionResultEvent) => {
+        if (transactionEvent && transactionEvent.success !== undefined) {
+          this.router.navigate(['/', 'transaction-result'], { state: { ...{ closable: true }, ...transactionEvent } });
+        }
+      }, (err) => {
+        this.router.navigate(['/', 'transaction-result'], { state: { success: false, closable: true } });
+      })
+    );
   }
 }
 

@@ -80,7 +80,11 @@
       <div class="price-picker">
         <app-price-picker
           (bidChanged)="resalePriceChanged($event)"
-          [minPrice]="0.1"
+          [minPrice]="
+          bidsViewModel?.highestBid
+          ? getMinPrice(bidsViewModel?.highestBid)
+          : getMinPrice(nft.price)
+          "
         ></app-price-picker>
       </div>
     </div>

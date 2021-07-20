@@ -6,7 +6,9 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Location } from '@angular/common';
+
 @Component({
   selector: 'app-transaction-result',
   templateUrl: './transaction-result.component.html',
@@ -20,11 +22,21 @@ import { ActivatedRoute, Params } from '@angular/router';
   ],
 })
 export class TransactionResultComponent implements OnInit {
-  success = true;
+  success = this.router.getCurrentNavigation().extras.state.success;
+  closable = this.router.getCurrentNavigation().extras.state.closable;
   constructor(
-    private activatedRoute: ActivatedRoute
+    private router: Router,
+    private location: Location
     ) {}
 
   ngOnInit(): void {
+  }
+
+  close(): void {
+    if (this.success && this.closable) {
+      this.router.navigate(['/', 'all-nfts']);
+    } else {
+      this.location.back();
+    }
   }
 }
