@@ -240,18 +240,8 @@ export class ContractService {
       .on('data', async (nft: NFTCreationEvent) => {
         console.log('nft created', nft);
         this.newNftsSubject.next(nft);
-        const geoNft = await this.mapNFTCreationEventToGeoNFT(
-          nft
-        );
-
-        const nfts = this.nftsSubject.getValue();
-        this.getSvg$(geoNft.id).subscribe((svg) => {
-          geoNft.image = svg;
-
-          this.nftsSubject.next(
-            nfts.concat([geoNft])
-          );
-        });
+        const newGeoNftList = await this.applyNftCreation(this.nftsSubject.getValue(), nft);
+        this.nftsSubject.next(newGeoNftList);
       });
 
     this.contract.events.NFTBid({})
@@ -449,13 +439,20 @@ export class ContractService {
         // assign resales as bids here
         const mappedNfts = nfts;
         const resaleEvents = await Promise.all([
+          this.contract.getPastEvents('NFTCreation', { fromBlock: this.blockNumber }),
+          this.contract.getPastEvents('NFTBid', { fromBlock: this.blockNumber }),
           this.contract.getPastEvents('ResaleCreation', { fromBlock: this.blockNumber }),
           this.contract.getPastEvents('ResaleBid', { fromBlock: this.blockNumber }),
           this.contract.getPastEvents('ResaleRetrieve', { fromBlock: this.blockNumber }),
         ]);
         console.log('apply modifiers for events', resaleEvents);
-        const resaleCreations = resaleEvents[0] as ResaleCreation[];
-        const resaleBids = resaleEvents[1] as ResaleBidEvent[];
+        const nftCreations = resaleEvents[0] as NFTCreationEvent[];
+        nftCreations.forEach(() => {
+
+        });
+        const nftBids = resaleEvents[1] as NftBidEvent[];
+        const resaleCreations = resaleEvents[2] as ResaleCreation[];
+        const resaleBids = resaleEvents[3] as ResaleBidEvent[];
         resaleCreations.forEach((resaleCreation) => {
           const nftId = resaleCreation.returnValues.tokenID;
           const nft = mappedNfts.find(x => String(x.id) === nftId);
