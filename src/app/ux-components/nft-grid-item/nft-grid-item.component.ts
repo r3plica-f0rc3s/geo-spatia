@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
-import { BidInfo, BidViewModel, ContractService, GeoNFT } from 'src/app/services/contract.service';
+import { BidInfo, BidViewModel, ContractService, GeoNFT, SoldStatus } from 'src/app/services/contract.service';
 
 @Component({
   selector: 'app-nft-grid-item',
@@ -18,6 +18,7 @@ export class NftGridItemComponent implements OnInit, OnDestroy {
   timeLeft: Date;
   subscriptions = [];
   endedPercent: number;
+  SoldStatus = SoldStatus;
   Math = Math;
   bidsViewModel: BidViewModel;
   constructor(private contractService: ContractService, private changeDetector: ChangeDetectorRef) { }

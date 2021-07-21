@@ -5,6 +5,7 @@
       [value]="100 - endedPercent"
       [diameter]="small ? 59 : 81"
       strokeWidth="3"
+      [color]="nft.status === SoldStatus.RESALE ? 'accent' : 'primary'"
     ></mat-spinner>
   </div>
   <div [ngClass]="[small ? 'nftname-small' : 'nftname-big']">
@@ -19,7 +20,7 @@
     <div class="svg-icon" [innerHTML]="nft.image"></div>
   </div>
   <div [ngClass]="[small ? 'label-wrapper-small' : 'label-wrapper-big']">
-    <mat-chip disableRipple color="primary" selected>
+    <mat-chip disableRipple [color]="nft.status === SoldStatus.RESALE ? 'accent' : 'primary'" selected>
       {{
         bidsViewModel?.highestBid
           ? (bidsViewModel?.highestBid | weiToOne: 4)

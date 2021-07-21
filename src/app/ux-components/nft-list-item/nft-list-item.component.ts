@@ -24,7 +24,7 @@ export class NftListItemComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // this.contractService.getNftById
-    console.log('rendering nft', this.nft.saleTime.getTime() - Date.now());
+    console.log('rendering nft', this.nft);
     console.log(this.nft.saleTime.getTime() - Date.now());
     this.calculateTimeLeft();
 

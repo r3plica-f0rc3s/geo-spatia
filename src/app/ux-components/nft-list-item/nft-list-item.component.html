@@ -39,9 +39,15 @@
           selected
           >On sale</mat-chip
         >
+        <mat-chip
+        color="accent"
+        *ngIf="nft.status === 3"
+        selected
+        >Resale</mat-chip
+      >
 
         <mat-chip
-          *ngIf="bidsViewModel?.latestBidIsOwn"
+          *ngIf="bidsViewModel?.latestBidIsOwn && !nft.owner"
           color="accent"
           selected
           >Highest Bid</mat-chip
@@ -92,9 +98,9 @@
       <mat-icon>shopping_basket</mat-icon>
         Bid
       </button>
-      <button *ngIf="nft?.owner" disableRipple mat-raised-button color="warn">
+      <!-- <button *ngIf="nft?.owner" disableRipple mat-raised-button color="warn">
         Sell
-      </button>
+      </button> -->
     </div>
   </div>
 </div>
