@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './nft-list.component.html',
   styleUrls: ['./nft-list.component.scss'],
 })
-export class NftListComponent implements OnInit, OnDestroy {
+export class NftListComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   nfts: GeoNFT[] = [];
   subscriptions = [];
@@ -18,11 +18,15 @@ export class NftListComponent implements OnInit, OnDestroy {
     private router: Router,
     public contractService: ContractService
   ) {}
-
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('rendering nfts list', this.nfts);
   }
 
-  confirmOrder(i: number) {
+  ngOnInit(): void {
+    console.log('rendering nfts list', this.nfts);
+  }
+
+  confirmOrder(i: number): void {
     this.uxService.closeSidenav();
     this.router.navigate(['single-nft', this.nfts[i].id]);
   }

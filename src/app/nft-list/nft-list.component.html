@@ -12,7 +12,7 @@
         [innerHTML]="nft?.image"
       ></button>
     </div> -->
-    <app-nft-list-item [nft]="nft"></app-nft-list-item>    
+    <app-nft-list-item [nftId]="nft.id"></app-nft-list-item>    
   </mat-list-option>
   <div class="no-results">
     <p *ngIf="nfts?.length === 0">No available NFT's :(</p>

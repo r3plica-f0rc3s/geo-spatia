@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactoryResolver, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactoryResolver, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
-import { BidInfo, BidViewModel, ContractService, GeoNFT } from 'src/app/services/contract.service';
+import { BidInfo, BidViewModel, ContractService, GeoNFT, SoldStatus } from 'src/app/services/contract.service';
 
 @Component({
   selector: 'app-nft-list-item',
@@ -10,36 +10,47 @@ import { BidInfo, BidViewModel, ContractService, GeoNFT } from 'src/app/services
 })
 export class NftListItemComponent implements OnInit, OnDestroy {
   @Input()
+  nftId: number;
   nft: GeoNFT;
   timeLeft: Date;
   subscriptions = [];
   endedPercent: number;
   Math = Math;
+  SoldStatus = SoldStatus;
   bidsViewModel: BidViewModel;
   passed = false;
+  hasHighestBid = false;
+  latestBidIsOwn = false;
   constructor(
     private changeDetector: ChangeDetectorRef,
-    private contractService: ContractService
+    public contractService: ContractService
   ) { }
 
   ngOnInit(): void {
     // this.contractService.getNftById
-    console.log('rendering nft', this.nft);
-    console.log(this.nft.saleTime.getTime() - Date.now());
-    this.calculateTimeLeft();
-
     this.subscriptions.push(
-      this.contractService.getNFTBids$(String(this.nft.id))
-        .subscribe((bids: BidInfo[]) => {
-          console.log('nft', this.nft, 'bids', bids);
-          this.processBids(bids);
-        })
+      timer(1000, 1000).subscribe(() => {
+        if (this.timeLeft && this.timeLeft.getTime() > 1000) {
+          this.timeLeft = new Date(this.timeLeft.getTime() - 1000);
+          const timeFromCreated = this.nft.saleTime.getTime() - Date.now();
+          this.endedPercent = (100 - (timeFromCreated / (this.nft.saleTime.getTime() - this.nft.creationTime.getTime())) * 100);
+          this.changeDetector.detectChanges();
+        } else {
+          this.timePassed();
+        }
+      })
     );
-  }
+    this.subscriptions.push(
+      this.contractService.getNftById$(this.nftId).subscribe((nft) => {
+        this.nft = nft;
+        console.log('rendering nft', this.nft);
+        console.log(this.nft.saleTime.getTime() - Date.now());
+        this.calculateTimeLeft();
+        this.latestBidIsOwn = nft.bidInfo && nft.bidInfo.bidderAddress.toLowerCase() === this.contractService.selectedAddress.toLowerCase();
+        this.changeDetector.detectChanges();
+      })
+    );
 
-  processBids(bids: BidInfo[]): void {
-    this.bidsViewModel = this.contractService.normalizeBids(bids);
-    this.changeDetector.detectChanges();
   }
 
   calculateTimeLeft(): void {
@@ -49,20 +60,16 @@ export class NftListItemComponent implements OnInit, OnDestroy {
       this.timeLeft = new Date(Math.max(this.nft.saleTime.getTime() - Date.now(), 0));
     }
     if (this.timeLeft) {
-      this.subscriptions.push(
-        timer(1000, 1000).subscribe(() => {
-          if (this.timeLeft && this.timeLeft.getTime() > 1000) {
-            this.timeLeft = new Date(this.timeLeft.getTime() - 1000);
-            const timeFromCreated = this.nft.saleTime.getTime() - Date.now();
-            this.endedPercent = (100 - (timeFromCreated / (this.nft.saleTime.getTime() - this.nft.creationTime.getTime())) * 100);
-            this.changeDetector.detectChanges();
-          } else {
-            this.timePassed();
-          }
-        })
-      );
+
     }
 
+  }
+
+  isAddressOwn(address: string): boolean {
+    if (!this.contractService.selectedAddress || !address) {
+      return false;
+    }
+    return this.contractService.selectedAddress?.toLowerCase() === address.toLowerCase();
   }
 
   timePassed(): void {

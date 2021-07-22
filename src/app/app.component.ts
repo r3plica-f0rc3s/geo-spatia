@@ -108,7 +108,7 @@ export class AppComponent implements OnInit {
           : false;
     });
     this.subscriptions.push(
-      this.contractService.nftsOnSale$.subscribe((nfts) => {
+      this.contractService.nftsNotOutdated$.subscribe((nfts) => {
         this.nfts = nfts;
       })
     );

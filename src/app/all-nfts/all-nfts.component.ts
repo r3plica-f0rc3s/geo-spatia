@@ -25,17 +25,13 @@ export class AllNFTsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.contractService.nftsOnSale$.subscribe((nfts) => {
+    this.contractService.nftsNotOutdated$.subscribe((nfts) => {
       if (!nfts) {
         return;
       }
       this.NFTs = nfts;
-      this.mapHelperService.setMultipleMarkers(
-        this.NFTs.map((nft) => {
-          return nft;
-        }));
+      this.mapHelperService.setMultipleMarkers(this.NFTs);
     }, (err) => {
-      this.router.navigate(['/', 'start']);
     });
     this.isMobile = this.media.matchMedia('(max-width: 700px)').matches;
     this.uxService.enableSidenav();

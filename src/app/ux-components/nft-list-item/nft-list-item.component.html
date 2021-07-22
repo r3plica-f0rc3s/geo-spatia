@@ -28,14 +28,14 @@
       </div>
       <mat-chip-list aria-label="labels" >
         <mat-chip disableRipple color="primary" selected>
-          {{ bidsViewModel?.highestBid ? (bidsViewModel?.highestBid | weiToOne: 4) : nft?.price | weiToOne: 4 }} ONE</mat-chip
+          {{  nft.bidInfo ? (nft.bidInfo.highestBid | weiToOne: 4) : (nft?.price | weiToOne: 4) }} ONE</mat-chip
         >
         <mat-chip disableRipple *ngIf="nft.owner" color="accent" selected
           >Owned</mat-chip
         >
         <mat-chip
           color="accent"
-          *ngIf="!nft.owner && nft.status === 1 && !bidsViewModel?.latestBidIsOwn && timeLeft && !bidsViewModel?.outBidden"
+          *ngIf="!nft.owner && nft.status === 1 && !nft.hasUserBids && timeLeft && !bidsViewModel?.outBidden"
           selected
           >On sale</mat-chip
         >
@@ -47,13 +47,13 @@
       >
 
         <mat-chip
-          *ngIf="bidsViewModel?.latestBidIsOwn && !nft.owner"
+          *ngIf="nft.hasUserBids && !nft.owner"
           color="accent"
           selected
           >Highest Bid</mat-chip
         >
         <mat-chip
-          *ngIf="bidsViewModel?.outBidden"
+          *ngIf="nft.hasUserBids && nft.bidInfo && nft.bidInfo.bidderAddress.toLowerCase() !== contractService.selectedAddress.toLowerCase()"
           color="warn"
           selected
           >Outbidden</mat-chip
@@ -90,7 +90,7 @@
         }}</span> -->
 
       <button
-        *ngIf="nft?.status === 1 && !bidsViewModel?.latestBidIsOwn && timeLeft"
+        *ngIf="nft?.status === 1 && !latestBidIsOwn && timeLeft"
         disableRipple
         mat-raised-button
         color="primary"

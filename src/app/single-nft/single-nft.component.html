@@ -38,9 +38,7 @@
       <div class="price">
         <span class="mat-h3"
           >{{
-            bidsViewModel?.highestBid
-              ? getMinPrice(bidsViewModel?.highestBid)
-              : getMinPrice(nft.price)
+            getMinPrice(nft.price)
           }}
           ONE</span
         >
@@ -48,7 +46,7 @@
     </div>
   </div>
   <div
-    *ngIf="bidsViewModel?.latestBidIsOwn && !nft.owner"
+    *ngIf="nft && !nft.owner"
     class="highest-label"
   >
     <span> Your bet is the highest </span>
@@ -57,17 +55,14 @@
   <div *ngIf="nft.owner" class="highest-label">
     <span> You are the owner of this NFT </span>
   </div>
-  <div class="bid-wrapper" *ngIf="!bidsViewModel?.latestBidIsOwn">
+  <div class="bid-wrapper" *ngIf="!latestBidIsOwn">
     <div class="bid-label">
       <span> Put your price </span>
     </div>
     <div class="price-picker">
       <app-price-picker
         (bidChanged)="bidChanged($event)"
-        [minPrice]="
-          bidsViewModel?.highestBid
-            ? getMinPrice(bidsViewModel?.highestBid)
-            : getMinPrice(nft.price)
+        [minPrice]="getMinPrice(nft.price)
         "
       ></app-price-picker>
     </div>
@@ -81,9 +76,7 @@
         <app-price-picker
           (bidChanged)="resalePriceChanged($event)"
           [minPrice]="
-          bidsViewModel?.highestBid
-          ? getMinPrice(bidsViewModel?.highestBid)
-          : getMinPrice(nft.price)
+          getMinPrice(nft.price)
           "
         ></app-price-picker>
       </div>
@@ -99,7 +92,7 @@
   </div>
   <div class="buy-button">
     <app-loading-button
-      *ngIf="!nft.owner && nft.status === 1 && !bidsViewModel?.latestBidIsOwn"
+      *ngIf="!nft.owner && nft.status === 1 && !latestBidIsOwn"
       (click)="submitBid()"
       [loading]="buying"
     >

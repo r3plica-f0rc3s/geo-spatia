@@ -20,37 +20,37 @@ export class NftGridItemComponent implements OnInit, OnDestroy {
   endedPercent: number;
   SoldStatus = SoldStatus;
   Math = Math;
-  bidsViewModel: BidViewModel;
   constructor(private contractService: ContractService, private changeDetector: ChangeDetectorRef) { }
 
-
   ngOnInit(): void {
+    this.subscriptions.push(
+      timer(1000, 1000).subscribe(() => {
+        if (this.timeLeft && this.nft) {
+          this.timeLeft = new Date(this.timeLeft.getTime() - 1000);
+          // console.log('endedPercent', this.endedPercent);
+          const timeFromCreated = this.nft.saleTime.getTime() - Date.now();
+          this.endedPercent = (100 - (timeFromCreated / (this.nft.saleTime.getTime() - this.nft.creationTime.getTime())) * 100);
+          this.changeDetector.detectChanges();
+        }
+      })
+    );
     this.subscriptions.push(this.contractService.getNftById$(this.nftId).subscribe((nft) => {
       this.nft = nft;
+      if (this.nft.saleTime.getTime() < Date.now()) {
+        this.timeLeft = null;
+      } else {
+        this.timeLeft = new Date(Math.max(this.nft.saleTime.getTime() - Date.now(), 0));
+      }
+      const timeFromCreated = this.nft.saleTime.getTime() - Date.now();
+      this.endedPercent = (100 - (timeFromCreated / (this.nft.saleTime.getTime() - this.nft.creationTime.getTime())) * 100);
       this.changeDetector.detectChanges();
     }));
 
-    this.subscriptions.push(
-      this.contractService.getNFTBids$(String(this.nftId))
-        .subscribe((bids: BidInfo[]) => {
-          console.log('nft', this.nft, 'bids', bids);
-          this.processBids(bids);
-          this.calculateTimeLeft();
-        })
-    );
   }
 
-  processBids(bids: BidInfo[]): void {
-    this.bidsViewModel = this.contractService.normalizeBids(bids);
-    this.changeDetector.detectChanges();
-  }
 
   calculateTimeLeft(): void {
-    if (this.nft.saleTime.getTime() < Date.now()) {
-      this.timeLeft = null;
-    } else {
-      this.timeLeft = new Date(Math.max(this.nft.saleTime.getTime() - Date.now(), 0));
-    }
+
     if (this.timeLeft) {
       this.subscriptions.push(
         timer(1000, 1000).subscribe(() => {
@@ -66,7 +66,6 @@ export class NftGridItemComponent implements OnInit, OnDestroy {
 
   }
 
-  openNft() {}
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub: Subscription) => {

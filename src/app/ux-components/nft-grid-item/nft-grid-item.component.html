@@ -12,7 +12,6 @@
     <span>{{ nft?.name }}</span>
   </div>
   <div
-    (click)="openNft()"
     [ngClass]="
       [nft?.owner ? 'owned' : nft?.ownerAddress ? 'ownedByOther' : 'available', small ? 'circle-small' : 'circle-big']
     "
@@ -22,9 +21,7 @@
   <div [ngClass]="[small ? 'label-wrapper-small' : 'label-wrapper-big']">
     <mat-chip disableRipple [color]="nft.status === SoldStatus.RESALE ? 'accent' : 'primary'" selected>
       {{
-        bidsViewModel?.highestBid
-          ? (bidsViewModel?.highestBid | weiToOne: 4)
-          : (nft?.price | weiToOne: 4)
+        nft.bidInfo ? (nft.bidInfo.highestBid | weiToOne: 4) : (nft?.price | weiToOne: 4)
       }}
       ONE</mat-chip
     >

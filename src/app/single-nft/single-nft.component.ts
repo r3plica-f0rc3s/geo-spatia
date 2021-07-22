@@ -17,7 +17,6 @@ export class SingleNftComponent implements OnInit, OnDestroy {
   highestBid: string;
   endedPercent: number;
   latestBidIsOwn: boolean;
-  bidsViewModel: BidViewModel;
   resaling = false;
   newBid = -1;
   resalePrice = 0.1;
@@ -47,22 +46,13 @@ export class SingleNftComponent implements OnInit, OnDestroy {
         console.log(nft);
         this.mapHelperService.setSingleMarker(nft);
         this.calculateTimeLeft();
-        this.subscriptions.push(
-          this.contractService.getNFTBids$(String(nft.id))
-            .subscribe((bids: BidInfo[]) => {
-              this.processBids(bids);
-            })
-        );
+        this.latestBidIsOwn = nft.bidInfo && nft.bidInfo.bidderAddress.toLowerCase() === this.contractService.selectedAddress.toLowerCase();
+
         this.changeDetector.detectChanges();
       })
     );
 
 
-  }
-
-  processBids(bids: BidInfo[]): void {
-    this.bidsViewModel = this.contractService.normalizeBids(bids);
-    this.changeDetector.detectChanges();
   }
 
   calculateTimeLeft(): void {
