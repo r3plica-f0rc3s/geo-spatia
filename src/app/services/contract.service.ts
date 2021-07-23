@@ -1,10 +1,10 @@
-import { BehaviorSubject, combineLatest, forkJoin, Observable, ReplaySubject, Subject, timer } from 'rxjs';
 import { Injectable } from '@angular/core';
-const Web3 = require('web3');
-import abi from './abi/ABI.json';
-import { LngLat } from 'mapbox-gl';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { filter, first, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { LngLat } from 'mapbox-gl';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+import abi from './abi/ABI.json';
+const Web3 = require('web3');
 
 export enum SoldStatus {
   SOLD,
@@ -51,6 +51,7 @@ export interface GeoNFT {
   creationTime?: Date;
   latestBidAddress?: string;
   hasUserBids?: boolean;
+  resaleId?: string;
 }
 export interface WalletInfo {
   address: string;
@@ -132,8 +133,8 @@ export interface ResaleRetrieve {
 export type TransactionEventUnion = TransactionResultEvent | TransactionStartedEvent;
 @Injectable()
 export class ContractService {
-  contractAddress = '0x86477Aba3458Fe946d0F1eDa5Dca0E610Ee56237';
-  blockNumber = 12573238;
+  contractAddress = '0x3F6Cd8761f84D6bDafc6985ff7Eb947a0bC626B7';
+  blockNumber = 12612445;
   private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
   walletInfo$ = this.walletInfoSubject.asObservable();
 
@@ -149,7 +150,7 @@ export class ContractService {
         return nft.saleTime.getTime() > Date.now() && !nft.hasUserBids;
       }));
     }));
-  nftsNotOutdated$ = this.nftsSubject.asObservable().pipe(
+  nftNotSold$ = this.nftsSubject.asObservable().pipe(
     filter(x => !!x),
     map(nfts => {
       return nfts.filter(((nft) => {
@@ -268,6 +269,7 @@ export class ContractService {
         nft.owner = saleEvent.returnValues.UserAddress.toLowerCase() === this.selectedAddress;
         nft.ownerAddress = saleEvent.returnValues.UserAddress;
         // nft.bidInfo = null;
+        nfts[nftIdx] = this.applySaleRetrieve(nft, saleEvent);
         nfts[nftIdx] = nft;
         this.nftsSubject.next(nfts);
       });
@@ -278,38 +280,29 @@ export class ContractService {
         const nft = this.getNftById(Number(resaleEvent.returnValues.tokenID));
         const nftIdx = this.nftsSubject.getValue().findIndex(x => x.id === Number(resaleEvent.returnValues.tokenID));
         const nfts = this.nftsSubject.getValue();
-        // set status to resale
-
-        // nft.price = resaleEvent.
-        // set date to new date
         nfts[nftIdx] = this.applyResaleCreationToNft(nft, resaleEvent);
         this.nftsSubject.next(nfts);
-        this.newResaleCreationsSubject.next(resaleEvent);
       });
 
     this.contract.events.ResaleBid({})
       .on('data', (resaleBidEvent) => {
         // add resaleBid to bidsMap, just reusing existing bids system
-        if (!this.bidsMap.get(resaleBidEvent.returnValues.tokenId)) {
-          this.bidsMap.set(resaleBidEvent.returnValues.tokenId, [resaleBidEvent.returnValues.newBid]);
-        } else {
-          const arr = this.bidsMap.get(resaleBidEvent.returnValues.tokenId);
-          arr.push(resaleBidEvent.returnValues.newBid);
-          this.bidsMap.set(resaleBidEvent.returnValues.tokenId, arr);
-        }
-        this.bidsMapSubject.next(this.bidsMap);
-        this.newBidsSubject.next(resaleBidEvent);
-      });
-
-    this.contract.events.ResaleRetrieve({})
-      .on('data', (resaleBidEvent) => {
-        // same as sale retrieve
+        console.log('ResaleBid', resaleBidEvent);
         const nft = this.getNftById(Number(resaleBidEvent.returnValues.tokenID));
         const nftIdx = this.nftsSubject.getValue().findIndex(x => x.id === Number(resaleBidEvent.returnValues.tokenID));
         const nfts = this.nftsSubject.getValue();
-        nft.owner = resaleBidEvent.returnValues.UserAddress.toLowerCase() === this.selectedAddress;
-        nft.ownerAddress = resaleBidEvent.returnValues.UserAddress;
-        nfts[nftIdx] = nft;
+        nfts[nftIdx] = this.applyResaleBidToNft(nft, resaleBidEvent);
+        this.nftsSubject.next(nfts);
+      });
+
+    this.contract.events.ResaleRetrieve({})
+      .on('data', (resaleRetrieveEvent) => {
+        // same as sale retrieve
+        const nft = this.getNftById(Number(resaleRetrieveEvent.returnValues.tokenID));
+        const nftIdx = this.nftsSubject.getValue().findIndex(x => x.id === Number(resaleRetrieveEvent.returnValues.tokenID));
+        const nfts = this.nftsSubject.getValue();
+
+        nfts[nftIdx] = this.applyResaleRetrieveToNft(nft, resaleRetrieveEvent);
         this.nftsSubject.next(nfts);
       });
   }
@@ -349,28 +342,6 @@ export class ContractService {
     return this.nfts$.pipe(map(nfts => nfts.find(x => x.id === tokenId)));
   }
 
-
-  normalizeBids(bids: BidInfo[]): BidViewModel {
-    if (bids.length === 0) {
-      return {
-        highestBid: null,
-        latestBidIsOwn: false,
-        outBidden: false
-      };
-    }
-    const highestBid = bids.reduce((prev, current) => {
-      return (prev.highestBid > current.highestBid) ? prev : current;
-    });
-    return {
-      highestBid: highestBid.highestBid,
-      latestBidIsOwn: this.selectedAddress.toLowerCase() === highestBid.bidderAddress.toLowerCase(),
-
-      // has own bid but not highest
-      outBidden: !(this.selectedAddress.toLowerCase() === highestBid.bidderAddress.toLowerCase()) && !!(bids
-        .find(x => x.bidderAddress.toLowerCase() === this.selectedAddress.toLowerCase()))
-    };
-  }
-
   private async loadWalletInfo(): Promise<void> {
     return new Promise((resolve, reject) => {
       const address = this.wallet.selectedAddress;
@@ -383,7 +354,7 @@ export class ContractService {
             balance: displayBalance,
           });
           resolve();
-        });
+        }, (err) => reject(err));
     });
   }
 
@@ -392,18 +363,16 @@ export class ContractService {
     const result = this.contract.methods
       .Bid(tokenId)
       .send({ from: this.selectedAddress, value: amount });
-    console.log(result);
+
     this.listenToTransaction(result);
   }
 
-  resaleNft(price: string, tokenId: string, daysAfter = 1): void {
+  resaleNft(price: string, tokenId: string, secondsAfter: number): void {
     // TODO: return transaction, push to resales events stream
     const result = this.contract.methods
-      .putTokenForResale(price, tokenId, daysAfter)
+      .putTokenForResale(price, tokenId, secondsAfter)
       .send({ from: this.selectedAddress });
-    console.log(result);
     this.listenToTransaction(result);
-    // return this.contract.methods.putTokenForResale(price, tokenId, daysAfter).call({ from: this.selectedAddress });
   }
 
   private loadPassedEvents(): Promise<void> {
@@ -414,7 +383,13 @@ export class ContractService {
       this.contract.getPastEvents('ResaleBid', { fromBlock: this.blockNumber }),
       this.contract.getPastEvents('ResaleRetrieve', { fromBlock: this.blockNumber })
     ])
-      .then(async ([nftCreations, nftBids, resaleCreations, resaleBids, resaleRetrieves]: [NFTCreationEvent[], NftBidEvent[], ResaleCreation[], ResaleBidEvent[], ResaleRetrieve[]]) => {
+      .then(async ([
+        nftCreations,
+        nftBids,
+        resaleCreations,
+        resaleBids,
+        resaleRetrieves
+      ]: [NFTCreationEvent[], NftBidEvent[], ResaleCreation[], ResaleBidEvent[], ResaleRetrieve[]]) => {
         // assign resales as bids here
         let nftList = [];
         // tslint:disable-next-line: prefer-for-of
@@ -486,9 +461,7 @@ export class ContractService {
     if (nftBid.returnValues.newBid.bidderAddress.toLowerCase() === this.selectedAddress.toLowerCase()) {
       nft.hasUserBids = true;
     }
-    if ((nft.bidInfo && Number(nft.bidInfo.highestBid) > Number(nftBid.returnValues.newBid.highestBid)) || !nft.bidInfo) {
-      nft.bidInfo = nftBid.returnValues.newBid;
-    }
+    nft.bidInfo = nftBid.returnValues.newBid;
 
     return nft;
   }
@@ -497,6 +470,7 @@ export class ContractService {
     // if (nft.)
     nft.owner = saleRetrieveEvent.returnValues.UserAddress.toLowerCase() === this.selectedAddress;
     nft.ownerAddress = saleRetrieveEvent.returnValues.UserAddress;
+    nft.status = SoldStatus.OWNED;
     return nft;
 
   }
@@ -504,8 +478,10 @@ export class ContractService {
   private applyResaleCreationToNft(nft: GeoNFT, resaleCreation: ResaleCreation): GeoNFT {
     nft.status = SoldStatus.RESALE;
     // set price to new price
+    nft.bidInfo = null;
     nft.price = resaleCreation.returnValues.Info.resalePrice;
     nft.saleTime = this.epochToDate(resaleCreation.returnValues.Info.resaleTime);
+    nft.resaleId = resaleCreation.returnValues.resaleID;
     return nft;
   }
 
@@ -521,8 +497,9 @@ export class ContractService {
 
   private applyResaleRetrieveToNft(nft: GeoNFT, resaleRetrieve: ResaleRetrieve): GeoNFT {
     // change owner to new owner, change status to "OWNED"
-    nft.owner = resaleRetrieve.returnValues.previousOwner.toLowerCase() === this.selectedAddress.toLowerCase();
-    nft.status = SoldStatus.OWNED;
+    nft.owner = resaleRetrieve.returnValues.newOwner.toLowerCase() === this.selectedAddress.toLowerCase();
+    nft.ownerAddress = resaleRetrieve.returnValues.newOwner;
+    nft.status = nft.owner ? SoldStatus.OWNED : SoldStatus.SOLD;
     return nft;
   }
 
@@ -641,8 +618,21 @@ export class ContractService {
   }
 
   retrieveNFTs(tokenIds: string[]): void {
-    console.log('retrieve', tokenIds);
     const transaction = this.contract.methods.RetrieveNFT(tokenIds).send({ from: this.selectedAddress });
+    this.listenToTransaction(transaction);
+  }
+
+  bidResale(resaleId: string, tokenId): void {
+    const transaction = this.contract.methods.bidResale(resaleId, tokenId).send({ from: this.selectedAddress });
+    this.listenToTransaction(transaction);
+  }
+
+  /**
+   * TODO: retrieve many NFTs at once
+   * @param tokenId
+   */
+  retrieveResaleNFT(tokenId: string): void {
+    const transaction = this.contract.methods.RetrieveReSale(tokenId).send({ from: this.selectedAddress });
     this.listenToTransaction(transaction);
   }
 
@@ -660,7 +650,7 @@ export class ContractService {
       .on('error', (error) => {
         this.transactionsSubject.error(error);
       })
-      .once('confirmation', (confirmationNumber, receipt) => {
+      .once('confirmation', async (confirmationNumber, receipt) => {
         if (receipt.status) {
           console.log('Transaction processed successfully', receipt);
           this.transactionsSubject.next({
@@ -677,6 +667,7 @@ export class ContractService {
             confirmationNumber
           });
         }
+        await this.loadWalletInfo();
         console.log(receipt);
       });
   }

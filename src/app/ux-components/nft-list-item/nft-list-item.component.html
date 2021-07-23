@@ -47,13 +47,13 @@
       >
 
         <mat-chip
-          *ngIf="nft.hasUserBids && !nft.owner"
+          *ngIf="nft.hasUserBids && nft.bidInfo && nft.bidInfo.bidderAddress.toLowerCase() === contractService.selectedAddress.toLowerCase() && !nft.owner"
           color="accent"
           selected
           >Highest Bid</mat-chip
         >
         <mat-chip
-          *ngIf="nft.hasUserBids && nft.bidInfo && nft.bidInfo.bidderAddress.toLowerCase() !== contractService.selectedAddress.toLowerCase()"
+          *ngIf="nft.bidInfo && nft.bidInfo.bidderAddress.toLowerCase() !== contractService.selectedAddress.toLowerCase() && nft.hasUserBids && !nft.ownerAddress"
           color="warn"
           selected
           >Outbidden</mat-chip

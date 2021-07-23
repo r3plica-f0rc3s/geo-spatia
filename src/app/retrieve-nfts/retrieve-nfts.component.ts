@@ -27,6 +27,7 @@ export class RetrieveNftsComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.contractService.getNftsToRetrieve$().pipe(filter(x => x.length > 0)).subscribe((nftsToRetrieve) => {
         this.mapHelperService.setMultipleMarkers(nftsToRetrieve);
+
         this.nftsToRetrieve = nftsToRetrieve;
       })
     );

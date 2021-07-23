@@ -69,3 +69,6 @@
     font-family: 'Kanit', sans-serif;
   }
 }
+::ng-deep .mat-drawer-content {
+  overflow-y: hidden;
+}

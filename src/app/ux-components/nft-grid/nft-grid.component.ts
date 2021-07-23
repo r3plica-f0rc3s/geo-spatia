@@ -12,6 +12,7 @@ export class NftGridComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    
   }
 
   openNft() {}

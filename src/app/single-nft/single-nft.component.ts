@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, timer } from 'rxjs';
-import { switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { BidInfo, BidViewModel, ContractService, GeoNFT, TransactionResultEvent } from '../services/contract.service';
+import { switchMap, tap } from 'rxjs/operators';
+import { ContractService, GeoNFT, SoldStatus, TransactionResultEvent } from '../services/contract.service';
 import { MapHelperService } from '../services/map-helper.service';
 @Component({
   templateUrl: './single-nft.component.html',
@@ -13,6 +13,7 @@ export class SingleNftComponent implements OnInit, OnDestroy {
   Math = Math;
   public nft: GeoNFT;
   subscriptions: Subscription[] = [];
+  SoldStatus = SoldStatus;
   buying = false;
   highestBid: string;
   endedPercent: number;
@@ -20,6 +21,7 @@ export class SingleNftComponent implements OnInit, OnDestroy {
   resaling = false;
   newBid = -1;
   resalePrice = 0.1;
+  minPrice = 0;
   resaleForm = {
     resalePrice: 0,
     resaleDate: new Date(Date.now())
@@ -44,6 +46,7 @@ export class SingleNftComponent implements OnInit, OnDestroy {
           return;
         }
         console.log(nft);
+        this.minPrice = this.getMinPrice();
         this.mapHelperService.setSingleMarker(nft);
         this.calculateTimeLeft();
         this.latestBidIsOwn = nft.bidInfo && nft.bidInfo.bidderAddress.toLowerCase() === this.contractService.selectedAddress.toLowerCase();
@@ -94,15 +97,19 @@ export class SingleNftComponent implements OnInit, OnDestroy {
     this.resaling = true;
     this.contractService.resaleNft(
       this.contractService.oneToWei(String(this.resaleForm.resalePrice)),
-      String(this.nft.id), this.resaleForm.resaleDate.getTime());
+      String(this.nft.id), this.resaleForm.resaleDate.getTime() - Date.now());
     // listen to transactions$ to change view
     this.handleTransaction();
   }
 
 
 
-  getMinPrice(wei: string): number {
-    return Number(this.contractService.weiToOne(wei));
+  getMinPrice(): number {
+    if (!this.nft) {
+      return null;
+    }
+    const price = this.nft.bidInfo ? (this.nft.bidInfo.highestBid ) : (this.nft?.price);
+    return Number(this.contractService.weiToOne(price));
   }
 
   bidChanged(newBid: number): void {

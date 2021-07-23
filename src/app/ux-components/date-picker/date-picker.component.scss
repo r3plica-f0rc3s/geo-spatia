@@ -1,64 +1,3 @@
-// .date-picker {
-//   display: flex;
-//   place-items: center;
-//   width: 100%;
-// }
-// :host {
-//   box-sizing: border-box;
-//   display: flex;
-//   width: 100%;
-// }
-// .middle {
-//   width: 90%;
-//   overflow: hidden;
-//   display: flex;
-//   align-items: center;
-//   place-content: center;
-// }
-
-// ::ng-deep .mat-button-toggle-group {
-//   border: none;
-// }
-// .toggle {
-//   width: 40px;
-//   background-color: #6f1c92;
-//   border: none;
-//   font-weight: bold;
-//   outline: none;
-// }
-// .button-container {
-//   width: 100%;
-//   display: flex;
-//   align-items: center;
-//   place-content: center;
-// }
-// ::ng-deep .mat-button-toggle-group {
-//   width: 100%;
-//   height: 44px;
-//   border-radius: 24px;
-
-//   // mat-icon {
-//   //   font-size: 16px;
-//   //   height: 20px;
-//   // }
-//   // span {
-//   //   font-size: 18px;
-//   //   line-height: 24px;
-//   //   font-weight: 600;
-//   //   letter-spacing: 1px;
-//   // }
-// }
-// ::ng-deep .mat-button-toggle-standalone.mat-button-toggle-appearance-standard,
-// .mat-button-toggle-group-appearance-standard {
-//   border-radius: 25px;
-//   width: 100%;
-//   display: flex;
-//   align-items: center;
-//   place-content: center;
-// }
-// ::ng-deep .mat-button-toggle-label-content {
-//   max-width: 89%;
-// }
 ::ng-deep .mat-button-toggle-standalone.mat-button-toggle-appearance-standard,
 .mat-button-toggle-group-appearance-standard {
   border-radius: 25px;
@@ -66,20 +5,22 @@
 ::ng-deep .mat-calendar {
   display: block;
   position: absolute;
-  bottom: 52px;
+  width: 72%;
   background-color: black;
   opacity: 0.93;
   border-radius: 25px;
-  left: 16px;
+  left: 0px;
+  bottom: 4px;
 }
 :host {
   width: 100%;
 }
-.price-ticker {
+.date-time-picker {
   display: flex;
   place-items: center;
   width: 100%;
-  position: relative;
+  position: absolute;
+  bottom: 50px;
 }
 .middle {
   width: 208px;
@@ -104,4 +45,23 @@
 }
 ::ng-deep .mat-button-toggle-group {
   border: none;
+}
+.time-picker {
+  height: 50px;
+}
+.date-picker {
+  position: relative;
+  width: 250px;
+}
+::ng-deep .ngx-mat-timepicker {
+  position: absolute;
+  right: 0;
+  background-color: black;
+  opacity: 0.93;
+  border-radius: 25px;
+
+  bottom: 4px;
+}
+::ng-deep .ngx-mat-timepicker form {
+  min-width: 62px !important;
 }

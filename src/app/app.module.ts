@@ -49,6 +49,8 @@ import { DatePickerComponent } from './ux-components/date-picker/date-picker.com
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
+import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
+
 
 @NgModule({
   declarations: [
@@ -101,6 +103,9 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatDatepickerModule,
     MatNativeDateModule,
     MatFormFieldModule,
+    NgxMatNativeDateModule,
+    NgxMatTimepickerModule,
+
   ],
   providers: [
     GeolocationService,

@@ -6,7 +6,6 @@ import { BidInfo, BidViewModel, ContractService, GeoNFT, SoldStatus } from 'src/
   selector: 'app-nft-grid-item',
   templateUrl: './nft-grid-item.component.html',
   styleUrls: ['./nft-grid-item.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NftGridItemComponent implements OnInit, OnDestroy {
   @Input()
@@ -23,6 +22,7 @@ export class NftGridItemComponent implements OnInit, OnDestroy {
   constructor(private contractService: ContractService, private changeDetector: ChangeDetectorRef) { }
 
   ngOnInit(): void {
+
     this.subscriptions.push(
       timer(1000, 1000).subscribe(() => {
         if (this.timeLeft && this.nft) {
@@ -36,6 +36,7 @@ export class NftGridItemComponent implements OnInit, OnDestroy {
     );
     this.subscriptions.push(this.contractService.getNftById$(this.nftId).subscribe((nft) => {
       this.nft = nft;
+      console.log('rendering grid item', this.nft);
       if (this.nft.saleTime.getTime() < Date.now()) {
         this.timeLeft = null;
       } else {

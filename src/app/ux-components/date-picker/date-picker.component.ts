@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-date-picker',
@@ -9,8 +9,10 @@ export class DatePickerComponent implements OnInit {
   calendarOpened = false;
   selectedDate: Date;
   currentDate = new Date(Date.now());
+  currentTime = this.currentDate;
   @Output()
   dateSelected = new EventEmitter<Date>();
+  @ViewChild('picker') picker: any;
   constructor() { }
 
   ngOnInit(): void {
@@ -20,6 +22,15 @@ export class DatePickerComponent implements OnInit {
     this.selectedDate = event;
     this.calendarOpened = false;
     this.dateSelected.next(this.selectedDate);
+  }
+
+  timeChanged(event: Date): void {
+    console.log(event);
+    const hours = event.getHours();
+    const minutes = event.getMinutes();
+    this.currentDate.setHours(hours);
+    this.currentDate.setMinutes(minutes);
+    console.log(this.currentDate);
   }
 
 }
