@@ -13,9 +13,18 @@ This is a submission for Harmony Hackathon (Harmony-One-Love-2). ONE World: Geos
 ## Features
 
 - Admin creates NFT using Remix (CreateNew method, see example NFTS)
-- NFT Auction system
-- NFT Resale
-- Realtime UI updates
+- User can bid and outbid each other
+- User can resale NFTs to each other
+- Realtime UI updates, route switches, timers. No need to refresh the app
+- Map usage. 3D Camera animations.
+
+## Libraries
+
+- Mapbox
+- Vanta.js (for Curtain)
+- Angular with Angular Material
+- Web3
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
@@ -36,6 +45,3 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
