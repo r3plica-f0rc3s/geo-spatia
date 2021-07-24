@@ -48,6 +48,7 @@ export interface GeoNFT {
   owner: boolean;
   saleTime?: Date;
   bidInfo?: BidInfo;
+  resaleTime?: Date;
   creationTime?: Date;
   latestBidAddress?: string;
   hasUserBids?: boolean;
@@ -113,7 +114,7 @@ export interface ResaleCreation {
   returnValues: {
     tokenID: string;
     resaleID: string;
-    creationTime: number;
+    creationTime: string;
     Info: {
       resalePrice: string;
       resaleTime: string;
@@ -133,8 +134,11 @@ export interface ResaleRetrieve {
 export type TransactionEventUnion = TransactionResultEvent | TransactionStartedEvent;
 @Injectable()
 export class ContractService {
-  contractAddress = '0x3F6Cd8761f84D6bDafc6985ff7Eb947a0bC626B7';
-  blockNumber = 12612445;
+  contractAddress = '0x2111Fb953b5C0b4748060953A08ea9938c4A9eEc';
+  blockNumber = 12664489;
+  private loggedSubject = new BehaviorSubject<boolean>(false);
+  logged$ = this.loggedSubject.asObservable();
+
   private walletInfoSubject = new BehaviorSubject<WalletInfo>(null);
   walletInfo$ = this.walletInfoSubject.asObservable();
 
@@ -142,7 +146,10 @@ export class ContractService {
   error$ = this.errorSubject.asObservable();
 
   private nftsSubject = new BehaviorSubject<GeoNFT[]>([]);
-  nfts$ = this.nftsSubject.asObservable();
+  nfts$ = this.nftsSubject.asObservable().pipe(
+    map(nfts => nfts.sort((a, b) => new Date(b.saleTime).getTime() - new Date(a.saleTime).getTime()),
+  ));
+
   nftsOnSale$ = this.nftsSubject.asObservable().pipe(
     filter(x => !!x),
     map(nfts => {
@@ -175,11 +182,6 @@ export class ContractService {
   newBidsSubject = new Subject<NftBidEvent>();
   newBids$ = this.newBidsSubject.asObservable();
 
-  newResaleCreationsSubject = new Subject<ResaleCreation>();
-  newResaleCreations$ = this.newResaleCreationsSubject.asObservable();
-
-  newResaleBidSubject = new Subject<ResaleBidEvent>();
-  newResaleBid$ = this.newResaleCreationsSubject.asObservable();
 
   newNftsSubject = new Subject<NFTCreationEvent>();
   newNfts$ = this.newNftsSubject.asObservable();
@@ -193,6 +195,7 @@ export class ContractService {
   applyNftProcessing: boolean;
 
   constructor(private domSanitizer: DomSanitizer) { }
+
   async init(): Promise<void> {
     this.initializing = true;
     this.wallet = (window as any).ethereum || (window as any).onewallet;
@@ -228,7 +231,7 @@ export class ContractService {
   }
 
   setEvents(): void {
-    this.wallet.on('networkChanged', function(networkId) {
+    this.wallet.on('networkChanged', (networkId) => {
       // Time to reload your interface with the new networkId
       console.log('New network ID:', networkId);
       if (networkId !== '0x6357d2e0') {
@@ -367,10 +370,17 @@ export class ContractService {
     this.listenToTransaction(result);
   }
 
-  resaleNft(price: string, tokenId: string, secondsAfter: number): void {
+  bidResale(resaleId: string, tokenId: string, amount: string): void {
+    console.log('bidResale', resaleId, tokenId, amount);
+    const transaction = this.contract.methods.bidResale(resaleId, tokenId).send({ from: this.selectedAddress, value: amount });
+    this.listenToTransaction(transaction);
+  }
+
+  resaleNft(price: string, tokenId: string, resaleTime: number): void {
     // TODO: return transaction, push to resales events stream
+    console.log('resale token', price, tokenId, 600);
     const result = this.contract.methods
-      .putTokenForResale(price, tokenId, secondsAfter)
+      .putTokenForResale(price, tokenId, 600) // TODO: MOCKED 5mins!!
       .send({ from: this.selectedAddress });
     this.listenToTransaction(result);
   }
@@ -427,6 +437,9 @@ export class ContractService {
 
           nftList[nftIdx] = this.applyResaleRetrieveToNft(nft, resaleRetrieve);
         });
+        // filter out nfts we can delete for sure
+
+        nftList = this.cleanupNfts(nftList);
         // const resaleRetrieve = resaleEvents[2] as ResaleRetir
         this.nftsSubject.next(nftList);
         // this.startNFTWatch();
@@ -434,6 +447,12 @@ export class ContractService {
       .catch(e => {
         console.error(e);
       });
+  }
+
+  private cleanupNfts(nfts: GeoNFT[]): GeoNFT[] {
+    return nfts.filter((nft: GeoNFT) => {
+      return !(!nft.bidInfo && nft.saleTime.getTime() < Date.now() && !nft.ownerAddress);
+    });
   }
 
   // as we're scanning whole history of contract events, "appliers" are desired way to load only newest state of nfts to RAM memory
@@ -476,12 +495,17 @@ export class ContractService {
   }
 
   private applyResaleCreationToNft(nft: GeoNFT, resaleCreation: ResaleCreation): GeoNFT {
-    nft.status = SoldStatus.RESALE;
-    // set price to new price
-    nft.bidInfo = null;
-    nft.price = resaleCreation.returnValues.Info.resalePrice;
-    nft.saleTime = this.epochToDate(resaleCreation.returnValues.Info.resaleTime);
-    nft.resaleId = resaleCreation.returnValues.resaleID;
+    console.log('ResaleCreation', resaleCreation, Date.now());
+    if (this.epochToDate(resaleCreation.returnValues.Info.resaleTime).getTime() > Date.now()) {
+      nft.status = SoldStatus.RESALE;
+      // set price to new price
+      nft.bidInfo = null;
+      nft.price = resaleCreation.returnValues.Info.resalePrice;
+      // console.log('resaleCreation', this.epochToDate(resaleCreation.returnValues.Info.resaleTime));
+      nft.saleTime = this.epochToDate(resaleCreation.returnValues.Info.resaleTime);
+      nft.resaleTime = this.epochToDate(resaleCreation.returnValues.creationTime);
+      nft.resaleId = resaleCreation.returnValues.resaleID;
+    }
     return nft;
   }
 
@@ -517,7 +541,7 @@ export class ContractService {
 
   refresh(): void {
     console.log('refreshing list');
-    this.nftsSubject.next(this.nftsSubject.getValue());
+    this.nftsSubject.next(this.cleanupNfts(this.nftsSubject.getValue()));
   }
 
 
@@ -622,10 +646,6 @@ export class ContractService {
     this.listenToTransaction(transaction);
   }
 
-  bidResale(resaleId: string, tokenId): void {
-    const transaction = this.contract.methods.bidResale(resaleId, tokenId).send({ from: this.selectedAddress });
-    this.listenToTransaction(transaction);
-  }
 
   /**
    * TODO: retrieve many NFTs at once
@@ -680,9 +700,13 @@ export class ContractService {
   oneToWei(balance): string {
     return this.currentWeb3.utils.toWei(balance, 'ether');
   }
-
   logout(): void {
     // TODO: to implement
-    throw new Error('Not implemented yet');
+    this.currentWeb3 = null;
+    this.contract = null;
+    this.selectedAddress = null;
+    this.nftsSubject.next([]);
+
   }
+
 }

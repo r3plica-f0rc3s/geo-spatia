@@ -5,8 +5,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LngLat, Map } from 'mapbox-gl';
-import { filter } from 'rxjs/operators';
-import { DialogComponent } from './dialog/dialog.component';
 import { ContractService, GeoNFT } from './services/contract.service';
 import { ImageMarker } from './services/map-helper.service';
 import { SidenavState, UxService } from './services/ux.service';
@@ -75,7 +73,6 @@ export class AppComponent implements OnInit {
     private contractService: ContractService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private activatedRoute: ActivatedRoute
   ) {
     // this.mobileQueryListener = () => changeDetectorRef.detectChanges();
     // this.isMobile.addListener(this.mobileQueryListener);

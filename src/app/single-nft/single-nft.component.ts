@@ -59,15 +59,16 @@ export class SingleNftComponent implements OnInit, OnDestroy {
   }
 
   calculateTimeLeft(): void {
+    console.log('single-nft sale time', this.nft.saleTime);
     if (Math.max(this.nft.saleTime.getTime() - Date.now(), 0) === 0) {
       this.timeLeft = null;
     } else {
       this.timeLeft = new Date(Math.max(this.nft.saleTime.getTime() - Date.now(), 0));
     }
+    console.log(this.timeLeft);
     this.subscriptions.push(
       timer(1000, 1000).subscribe(() => {
         if (this.timeLeft) {
-
           this.timeLeft = new Date(this.timeLeft.getTime() - 1000);
           const timeFromCreated = this.nft.saleTime.getTime() - Date.now();
           this.endedPercent = (100 - (timeFromCreated / (this.nft.saleTime.getTime() - this.nft.creationTime.getTime())) * 100);
@@ -78,7 +79,12 @@ export class SingleNftComponent implements OnInit, OnDestroy {
   }
 
   submitBid(): void {
-    this.contractService.bidNFT(this.nft.id, this.contractService.oneToWei(String(this.newBid)));
+    console.log('new bid', this.newBid);
+    if (this.nft.resaleId) {
+      this.contractService.bidResale(this.nft.resaleId, String(this.nft.id), this.contractService.oneToWei(String(this.newBid)));
+    } else {
+      this.contractService.bidNFT(this.nft.id, this.contractService.oneToWei(String(this.newBid)));
+    }
     this.buying = true;
 
     this.handleTransaction();
@@ -87,6 +93,7 @@ export class SingleNftComponent implements OnInit, OnDestroy {
 
   resalePriceChanged(newPrice): void {
     this.resaleForm.resalePrice = newPrice;
+    this.newBid = newPrice;
   }
 
   resaleDateSelected($event): void {
@@ -97,7 +104,7 @@ export class SingleNftComponent implements OnInit, OnDestroy {
     this.resaling = true;
     this.contractService.resaleNft(
       this.contractService.oneToWei(String(this.resaleForm.resalePrice)),
-      String(this.nft.id), this.resaleForm.resaleDate.getTime() - Date.now());
+      String(this.nft.id), this.resaleForm.resaleDate.getTime());
     // listen to transactions$ to change view
     this.handleTransaction();
   }

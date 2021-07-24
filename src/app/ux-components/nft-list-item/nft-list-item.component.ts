@@ -43,8 +43,6 @@ export class NftListItemComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.contractService.getNftById$(this.nftId).subscribe((nft) => {
         this.nft = nft;
-        console.log('rendering nft', this.nft);
-        console.log(this.nft.saleTime.getTime() - Date.now());
         this.calculateTimeLeft();
         this.latestBidIsOwn = nft.bidInfo && nft.bidInfo.bidderAddress.toLowerCase() === this.contractService.selectedAddress.toLowerCase();
         this.changeDetector.detectChanges();

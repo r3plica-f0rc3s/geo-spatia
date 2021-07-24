@@ -116,8 +116,29 @@ mat-list-option {
   span {
     font-size: 14px;
     margin-right: 4px;
-    color: #9c27b0;
   }
-
 }
 
+.primary {
+
+    color: #9c27b0;
+  
+}
+
+.accent {
+
+    color: #6DB08F;
+
+}
+::ng-deep .mat-progress-bar.mat-accent .mat-progress-bar-buffer {
+  background-color: black!important;
+}
+.blinking {
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}

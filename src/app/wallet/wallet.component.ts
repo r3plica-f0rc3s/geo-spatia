@@ -59,4 +59,8 @@ export class WalletComponent implements OnInit {
     }
   }
 
+  logout(): void {
+    this.contractService.logout();
+  }
+
 }

@@ -71,7 +71,7 @@
         ></app-price-picker>
       </div>
     </div>
-    <div  *ngIf="!nft.owner && nft.resaleId">
+    <div  *ngIf="nft.owner || nft.resaleId">
       <div class="resale-wrapper">
         <div class="bid-label">
           <span> Put your price </span>
@@ -85,7 +85,7 @@
           ></app-price-picker>
         </div>
       </div>
-      <div class="resale-wrapper">
+      <div class="resale-wrapper" *ngIf="nft.owner">
         <div class="bid-label">
           <span> Expiration date </span>
         </div>

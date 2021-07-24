@@ -2,7 +2,7 @@
   [routerLink]="['/', 'single-nft', nft.id]"
   [ngClass]="[
     small ? 'container-inner-small' : 'container-inner-big',
-    !nft.owner && (nft.status === 0 || !timeLeft) && 'grayscale'
+    !nft.owner && (nft.status === 0 || !timeLeft) && !nft.resaleId ? 'grayscale' : ''
   ]"
 >
   <div class="spinner">

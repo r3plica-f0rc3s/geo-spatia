@@ -1,106 +1,127 @@
-<div class="progress" *ngIf="timeLeft">
-  <mat-progress-bar mode="determinate" [value]="endedPercent"></mat-progress-bar>
 
-  <div class="time">
-    <span>Time left:</span>
-    <span> {{ Math.floor(timeLeft.getTime() / (1000 * 60 * 60 * 24)) }} days </span>
-    <span> {{ timeLeft.getUTCHours()}}h : {{ timeLeft | date: "mm" }}m : {{ timeLeft | date: "ss"}}s</span>
-  </div>
-</div>
+  <div class="progress" *ngIf="timeLeft">
+    <mat-progress-bar
+      mode="determinate"
+      [color]="nft.status === SoldStatus.RESALE ? 'accent' : 'primary'"
+      [value]="endedPercent"
+    ></mat-progress-bar>
 
-
-<div class="main-container">
-  <div class="nft-image">
-    <button
-      mat-fab
-      class="nft-svg"
-      preserveAspectRatio="none"
-      viewBox="0 0 300 300"
-      [innerHTML]="nft?.image"
-    ></button>
-  </div>
-  <div class="item-description">
-    <div class="section-one">
-      <div class="name">
-        <span>
-          {{ nft?.name }}
-        </span>
-      </div>
-      <mat-chip-list aria-label="labels" >
-        <mat-chip disableRipple color="primary" selected>
-          {{  nft.bidInfo ? (nft.bidInfo.highestBid | weiToOne: 4) : (nft?.price | weiToOne: 4) }} ONE</mat-chip
-        >
-        <mat-chip disableRipple *ngIf="nft.owner" color="accent" selected
-          >Owned</mat-chip
-        >
-        <mat-chip
-          color="accent"
-          *ngIf="!nft.owner && nft.status === 1 && !nft.hasUserBids && timeLeft && !bidsViewModel?.outBidden"
-          selected
-          >On sale</mat-chip
-        >
-        <mat-chip
-        color="accent"
-        *ngIf="nft.status === 3"
-        selected
-        >Resale</mat-chip
+    <div class="time">
+      <span [ngClass]="nft.status === SoldStatus.RESALE ? 'accent' : 'primary'"
+        >Time left:</span
       >
-
-        <mat-chip
-          *ngIf="nft.hasUserBids && nft.bidInfo && nft.bidInfo.bidderAddress.toLowerCase() === contractService.selectedAddress.toLowerCase() && !nft.owner"
-          color="accent"
-          selected
-          >Highest Bid</mat-chip
-        >
-        <mat-chip
-          *ngIf="nft.bidInfo && nft.bidInfo.bidderAddress.toLowerCase() !== contractService.selectedAddress.toLowerCase() && nft.hasUserBids && !nft.ownerAddress"
-          color="warn"
-          selected
-          >Outbidden</mat-chip
-        >
-        <mat-chip
-          *ngIf="!nft.owner && (nft.status === 0 || !timeLeft)"
-          color="primary"
-          selectable
-          >Sold</mat-chip
-        >
-        <!-- <mat-chip color="accent" selected>Accent fish</mat-chip> -->
-      </mat-chip-list>
+      <span [ngClass]="nft.status === SoldStatus.RESALE ? 'accent' : 'primary'">
+        {{ Math.floor(timeLeft.getTime() / (1000 * 60 * 60 * 24)) }} days
+      </span>
+      <span [ngClass]="nft.status === SoldStatus.RESALE ? 'accent' : 'primary'">
+        {{ timeLeft.getUTCHours() }}h : {{ timeLeft | date: "mm" }}m :
+        {{ timeLeft | date: "ss" }}s</span
+      >
     </div>
-    <!-- <div class="list-item section">
-      <span class="label">Location</span>
-      <div class="details">
-        <span>
-          {{ nft?.location }}
-        </span>
-      </div>
-    </div> -->
-    <!-- <div class="list-item section">
-      <span class="label">Price</span>
-      <div class="details">
-        <span> {{ nft?.price | weiToOne }} ONE </span>
-      </div>
-    </div> -->
-    <div class="second-section">
-      <div class="progress-spinner"></div>
-      <!-- TODO: replace to mat-chip -->
+  </div>
 
-      <!-- <span class="label">{{
-          nft?.status === 1 ? "AVAILABLE" : nft.owner ? "OWNED" : "SOLD"
-        }}</span> -->
-
+  <div class="main-container">
+    <div
+      class="nft-image"
+      [ngClass]="[
+        !nft.owner && (nft.status === 0 || !timeLeft) && !nft.resaleId
+          ? 'grayscale'
+          : ''
+      ]"
+    >
       <button
-        *ngIf="nft?.status === 1 && !latestBidIsOwn && timeLeft"
-        disableRipple
-        mat-raised-button
-        color="primary"
-      >
-      <mat-icon>shopping_basket</mat-icon>
-        Bid
-      </button>
-      <!-- <button *ngIf="nft?.owner" disableRipple mat-raised-button color="warn">
+        mat-fab
+        class="nft-svg"
+        preserveAspectRatio="none"
+        viewBox="0 0 300 300"
+        [innerHTML]="nft?.image"
+      ></button>
+    </div>
+    <div class="item-description">
+      <div class="section-one">
+        <div class="name">
+          <span>
+            {{ nft?.name }}
+          </span>
+        </div>
+        <mat-chip-list aria-label="labels">
+          <mat-chip disableRipple color="primary" selected>
+            {{
+              nft.bidInfo
+                ? (nft.bidInfo.highestBid | weiToOne: 4)
+                : (nft?.price | weiToOne: 4)
+            }}
+            ONE</mat-chip
+          >
+          <mat-chip disableRipple *ngIf="nft.owner" color="accent" selected
+            >Owned</mat-chip
+          >
+          <mat-chip
+            color="accent"
+            *ngIf="
+              !nft.owner &&
+              nft.status === 1 &&
+              !nft.hasUserBids &&
+              timeLeft &&
+              !bidsViewModel?.outBidden
+            "
+            selected
+            >On sale</mat-chip
+          >
+          <mat-chip color="accent" *ngIf="nft.status === 3" selected
+            >Resale</mat-chip
+          >
+
+          <mat-chip
+            *ngIf="
+              nft.hasUserBids &&
+              nft.bidInfo &&
+              nft.bidInfo.bidderAddress.toLowerCase() ===
+                contractService.selectedAddress.toLowerCase() &&
+              !nft.owner
+            "
+            color="accent"
+            selected
+            >Highest Bid</mat-chip
+          >
+          <mat-chip
+            *ngIf="
+              nft.bidInfo &&
+              nft.bidInfo.bidderAddress.toLowerCase() !==
+                contractService.selectedAddress.toLowerCase() &&
+              nft.hasUserBids &&
+              !nft.ownerAddress
+            "
+            color="warn"
+            selected
+            >Outbidden</mat-chip
+          >
+          <mat-chip
+            *ngIf="
+              !nft.owner && (nft.status === 0 || !timeLeft) && !nft.resaleId
+            "
+            color="primary"
+            selectable
+            >Sold</mat-chip
+          >
+        </mat-chip-list>
+      </div>
+
+      <div class="second-section">
+        <div class="progress-spinner"></div>
+
+        <button
+          *ngIf="nft?.status === 1 && !latestBidIsOwn && timeLeft"
+          disableRipple
+          mat-raised-button
+          color="primary"
+        >
+          <mat-icon>shopping_basket</mat-icon>
+          Bid
+        </button>
+        <!-- <button *ngIf="nft?.owner" disableRipple mat-raised-button color="warn">
         Sell
       </button> -->
+      </div>
     </div>
   </div>
-</div>
