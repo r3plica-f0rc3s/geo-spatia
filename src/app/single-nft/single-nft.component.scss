@@ -1,7 +1,7 @@
 .main-container-big {
   position: absolute;
   bottom: 0;
-  height: 45%;
+  height: auto;
   background-color: #212121;
   opacity: 0.9;
   border-top-left-radius: 24px;
@@ -119,7 +119,6 @@
   align-items: center;
   place-content: center;
   margin-top: 40px;
-  position: absolute;
   width: 100%;
   bottom: 8px;
   min-height: 0px;

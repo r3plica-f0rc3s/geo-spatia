@@ -134,8 +134,8 @@ export interface ResaleRetrieve {
 export type TransactionEventUnion = TransactionResultEvent | TransactionStartedEvent;
 @Injectable()
 export class ContractService {
-  contractAddress = '0x767C21dA8bd9553e36E2763ba05135D25F25C446';
-  blockNumber = 12681941;
+  contractAddress = '0x16834ef1229FDeF54ff4E75ef7cE54FB723CB74f';
+  blockNumber = 12689119;
   private loggedSubject = new BehaviorSubject<boolean>(false);
   logged$ = this.loggedSubject.asObservable();
 
@@ -671,6 +671,7 @@ export class ContractService {
         console.log('Transaction Hash is ', hash);
       })
       .on('error', (error) => {
+        console.error(error);
         this.transactionsSubject.error(error);
       })
       .once('confirmation', async (confirmationNumber, receipt) => {
