@@ -9,6 +9,13 @@ This is a submission for Harmony Hackathon (Harmony-One-Love-2). ONE World: Geos
 
 [APP DEMO](https://thecyberd3m0n.gitlab.io/geo-spatia/)
 
+
+## Features
+
+- Admin creates NFT using Remix (CreateNew method, see example NFTS)
+- NFT Auction system
+- NFT Resale
+- Realtime UI updates
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
