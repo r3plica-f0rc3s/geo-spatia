@@ -15,7 +15,7 @@ pages:
   stage: deploy
   script:
     - npm ci
-    - ng build --prod --base-href="https://geo-spatia.gitlab.io/geo-spatia/"
+    - ng build --prod --base-href="https://thecyberd3m0n.gitlab.io/geo-spatia/"
     - rm -rf public
     - mkdir public
     - mv dist/geo-spatia/* public/
