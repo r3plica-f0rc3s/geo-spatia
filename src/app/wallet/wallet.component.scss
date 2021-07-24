@@ -123,25 +123,31 @@
   padding-left: 16px;
   place-content: space-between;
   box-sizing: border-box;
-  span {
-    font-size: 16px;
-    color: grey;
-    letter-spacing: 1px;
-    font-family: 'Kanit', sans-serif;
-  }
-}
+  
+  
 .divider {
   height: 1px;
-  width: 62%;
+  width: 60%;
   background-color: grey;
   opacity: 0.2;
 }
 .divider-2 {
   height: 1px;
-  width: 65%;
+  width: 62%;
   background-color: grey;
   opacity: 0.2;
 
+}
+.wallet-label-text {
+  font-size: 16px;
+  color: grey;
+  letter-spacing: 1px;
+  font-family: 'Kanit', sans-serif;
+  display: flex;
+  place-content: flex-end;
+  align-items: center;
+  text-align: right;
+}
 }
 .description-wallet {
   height: 100%;

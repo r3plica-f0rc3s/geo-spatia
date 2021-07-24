@@ -42,7 +42,7 @@
 
   <div class="wallet-label">
     <div class="divider-2"></div>
-    <span> Wallet status </span>
+    <div class="wallet-label-text"> Wallet status </div>
   </div>
   <div class="description-wallet">
     <div>
@@ -67,6 +67,6 @@
 <div class="wallet-label" *ngIf="(ownedNFTs$ | async)?.length > 0">
   <div class="divider"></div>
 
-  <span class="collection-label"> NFT collection </span>
+  <div class="wallet-label-text"> NFT collection </div>
 </div>
 <app-nft-grid *ngIf="(ownedNFTs$ | async)?.length > 0" [nfts]="ownedNFTs$ | async"></app-nft-grid>

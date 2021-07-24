@@ -5,11 +5,11 @@
 ::ng-deep .mat-calendar {
   display: block;
   position: absolute;
-  width: 72%;
+  width: 58%;
   background-color: black;
   opacity: 0.93;
   border-radius: 25px;
-  left: 0px;
+  right: 70px;
   bottom: 4px;
 }
 :host {
@@ -51,7 +51,10 @@
 }
 .date-picker {
   position: relative;
-  width: 250px;
+  display: flex;
+  place-items: center;
+  width: 100%;
+  place-content: flex-end;
 }
 ::ng-deep .ngx-mat-timepicker {
   position: absolute;

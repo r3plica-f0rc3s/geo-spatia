@@ -85,7 +85,7 @@ export interface NftBidEvent {
 export interface ResaleBidEvent {
   returnValues: {
     latestInfo: ResaleInfo; // name of the property? auctionInfo, or something else?
-    tokenId: string;
+    tokenID: string;
     resaleId: string;
   };
 }
@@ -134,8 +134,8 @@ export interface ResaleRetrieve {
 export type TransactionEventUnion = TransactionResultEvent | TransactionStartedEvent;
 @Injectable()
 export class ContractService {
-  contractAddress = '0x2111Fb953b5C0b4748060953A08ea9938c4A9eEc';
-  blockNumber = 12664489;
+  contractAddress = '0x767C21dA8bd9553e36E2763ba05135D25F25C446';
+  blockNumber = 12681941;
   private loggedSubject = new BehaviorSubject<boolean>(false);
   logged$ = this.loggedSubject.asObservable();
 
@@ -423,7 +423,7 @@ export class ContractService {
         });
 
         resaleBids.forEach((resaleBid: ResaleBidEvent) => {
-          const nftId = resaleBid.returnValues.tokenId;
+          const nftId = resaleBid.returnValues.tokenID;
           const nft = nftList.find(x => String(x.id) === nftId);
           const nftIdx = nftList.findIndex(x => String(x.id) === nftId);
 
@@ -512,6 +512,9 @@ export class ContractService {
   private applyResaleBidToNft(nft: GeoNFT, resaleBidEvent: ResaleBidEvent): GeoNFT {
     // set price to new price, set latest bidInfo to new bid
     nft.price = resaleBidEvent.returnValues.latestInfo.resalePrice;
+    if (resaleBidEvent.returnValues.latestInfo.bidderAddress.toLowerCase() === this.selectedAddress.toLowerCase()) {
+      nft.hasUserBids = true;
+    }
     nft.bidInfo = {
       bidderAddress: resaleBidEvent.returnValues.latestInfo.bidderAddress,
       highestBid: resaleBidEvent.returnValues.latestInfo.highestBid
