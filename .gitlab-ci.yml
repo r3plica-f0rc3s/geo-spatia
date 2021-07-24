@@ -14,7 +14,6 @@ pages:
       - client/node_modules/
   stage: deploy
   script:
-    - cd client/
     - npm ci
     - ng build --prod --base-href="https://geo-spatia.gitlab.io/geo-spatia/"
     - rm -rf public
