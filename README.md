@@ -1,6 +1,13 @@
 # GeoSpatia
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.8.
+Map-based NFT Marketplace
+
+This is a submission for Harmony Hackathon (Harmony-One-Love-2). ONE World: Geospatial NFT Marketplace.
+
+[![VIDEO DEMO](https://img.youtube.com/vi/WV7UHb4XQ6Q/0.jpg)](https://www.youtube.com/watch?v=WV7UHb4XQ6Q)
+
+
+[APP DEMO](https://thecyberd3m0n.gitlab.io/geo-spatia/)
 
 ## Development server
 
