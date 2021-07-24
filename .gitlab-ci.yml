@@ -19,6 +19,8 @@ pages:
     - rm -rf public
     - mkdir public
     - mv dist/geo-spatia/* public/
+    - cp public/index.html public/404.html
+
   artifacts:
     paths:
       - public
