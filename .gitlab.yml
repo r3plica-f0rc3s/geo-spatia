@@ -1,0 +1,22 @@
+image: node:12.18.3
+
+before_script:
+  - npm install -g @angular/cli
+
+pages:
+  cache:
+    paths:
+      - client/node_modules/
+  stage: deploy
+  script:
+    - cd client/
+    - npm ci
+    - ng build --prod --base-href="https://geo-spatia.gitlab.io/geo-spatia/"
+    - rm -rf public
+    - mkdir public
+    - mv dist/geo-spatia/* public/
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
