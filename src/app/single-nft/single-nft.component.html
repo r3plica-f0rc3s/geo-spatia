@@ -88,7 +88,7 @@
         ></app-price-picker>
       </div>
     </div>
-    <div *ngIf="nft.owner || nft.resaleId && !(nft.bidInfo &&
+    <div *ngIf="nft.owner || nft.status === SoldStatus.RESALE && !(nft.bidInfo &&
     nft.bidInfo.bidderAddress.toLowerCase() ===
       contractService.selectedAddress.toLowerCase())">
       <div class="resale-wrapper">

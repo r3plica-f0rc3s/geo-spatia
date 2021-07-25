@@ -98,7 +98,7 @@
           >
           <mat-chip
             *ngIf="
-              !nft.owner && (nft.status === 0 || !timeLeft) && !nft.resaleId
+              !nft.owner && (nft.status === 0 || !timeLeft) && !(nft.status === SoldStatus.RESALE)
             "
             color="primary"
             selectable
