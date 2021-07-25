@@ -14,6 +14,7 @@ This is a submission for Harmony Hackathon (Harmony-One-Love-2). ONE World: Geos
 
 - Admin creates NFT using Remix (CreateNew method, see example NFTS)
 - User can bid and outbid each other
+- Desktop and mobile UI (mobile UI requires some fixes)
 - User can resale NFTs to each other
 - Realtime UI updates, route switches, timers. No need to refresh the app
 - Map usage. 3D Camera animations.
