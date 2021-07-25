@@ -23,6 +23,7 @@ This is a submission for Harmony Hackathon (Harmony-One-Love-2). ONE World: Geos
 - Realtime UI updates, route switches, timers. No need to refresh the app
 - Map usage. 3D Camera animations.
 - Layering. You can add NFTs to deeper layers. They'll be visible after zooming in the map, but you should always see them on the right.
+- Mapbox supports Augmented Reality, so we can do it too.
 
 ## Libraries
 
