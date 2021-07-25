@@ -134,7 +134,7 @@ export interface ResaleRetrieve {
 export type TransactionEventUnion = TransactionResultEvent | TransactionStartedEvent;
 @Injectable()
 export class ContractService {
-  contractAddress = '0xE91a7A50E34474E1E77596c8A344c999b2E2c9EC';
+  contractAddress = '0xe07494a0094CeB1215038e0fb140007dc5202Ab0';
   blockNumber = 12703002;
   private loggedSubject = new BehaviorSubject<boolean>(false);
   logged$ = this.loggedSubject.asObservable();
