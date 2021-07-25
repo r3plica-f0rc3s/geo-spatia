@@ -35,6 +35,7 @@ This is a submission for Harmony Hackathon (Harmony-One-Love-2). ONE World: Geos
 
 ## Roadmap
 
+- Move from layers approach to just storing "z" coordinate, and place NFT in natural 3d space. That will make animations and graphics much more awesome.
 - IPFS integration
 - Add some introducing information to Curtain
 - Allowing upload 3D Models as NFTs (fbx graphics). Maybe animated one?
