@@ -1,7 +1,7 @@
 :host {
   position: absolute;
   bottom: 0;
-  height: 40%;
+  height: 35%;
   background-color: #212121;
   opacity: 0.9;
   border-top-left-radius: 24px;
@@ -22,7 +22,7 @@
 }
 @media only screen and (min-width: 601px) {
   :host {
-    width: 60%;
+    width: 40%;
   }
 }
 .close-wrapper {

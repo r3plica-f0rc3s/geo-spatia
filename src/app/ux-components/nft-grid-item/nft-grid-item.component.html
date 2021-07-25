@@ -21,17 +21,18 @@
     <span>{{ nft?.name }}</span>
   </div>
   <div
+    *ngIf="nft.image"
     [ngClass]="[
       nft?.owner ? 'owned' : nft?.ownerAddress ? 'ownedByOther' : 'available',
       small ? 'circle-small' : 'circle-big'
     ]"
   >
-    <div class="svg-icon" [innerHTML]="nft.image"></div>
+    <div class="svg-icon" [innerHTML]="nft?.image"></div>
   </div>
   <div [ngClass]="[small ? 'label-wrapper-small' : 'label-wrapper-big']">
     <mat-chip
       disableRipple
-      *ngIf="!(!nft.owner && (nft.status === 0 || !timeLeft))"
+      *ngIf="!(!nft.owner && (nft.status !== SoldStatus.AVAILABLE && nft.status !== SoldStatus.RESALE))"
       [color]="nft.status === SoldStatus.RESALE ? 'accent' : 'primary'"
       selected
     >

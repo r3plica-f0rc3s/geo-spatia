@@ -38,6 +38,7 @@
     <div class="divider-2"></div>
     <div class="wallet-label-text"> Wallet status </div>
   </div>
+  
   <div class="description-wallet">
     <div>
       <span> ~ {{ convertedBalance }} $ </span>
@@ -54,7 +55,7 @@
 <div class="wallet-label" *ngIf="nftsWithBids.length > 0">
   <div class="divider"></div>
 
-  <span class="collection-label"> Nfts with your bids </span>
+  <span class="wallet-label-text"> Nfts with your bids </span>
 </div>
 <app-nft-grid *ngIf="nftsWithBids.length > 0" [nfts]="nftsWithBids"></app-nft-grid>
 <!-- TODO -->

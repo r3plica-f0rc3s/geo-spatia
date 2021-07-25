@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { GeoNFT, SoldStatus } from 'src/app/services/contract.service';
+import { ContractService, GeoNFT, SoldStatus } from 'src/app/services/contract.service';
 
 export enum NftUxState {
   AVAILABLE, OWNEDBYME, OWNEDBYSOMEBODY
@@ -19,7 +19,7 @@ export class NftMarkerComponent implements OnInit {
   @Input()
   focused: boolean;
   SoldStatus = SoldStatus;
-  constructor(private router: Router) { }
+  constructor(private router: Router, public contractService: ContractService) { }
 
   ngOnInit(): void {
 

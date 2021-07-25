@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, ChangeDetectorRef, OnChanges, SimpleChanges } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
 import { BidInfo, BidViewModel, ContractService, GeoNFT, SoldStatus } from 'src/app/services/contract.service';
 
@@ -19,8 +19,7 @@ export class NftGridItemComponent implements OnInit, OnDestroy {
   endedPercent: number;
   SoldStatus = SoldStatus;
   Math = Math;
-  constructor(private contractService: ContractService, private changeDetector: ChangeDetectorRef) { }
-
+  constructor(private contractService: ContractService) { }
   ngOnInit(): void {
 
     this.subscriptions.push(
@@ -30,7 +29,6 @@ export class NftGridItemComponent implements OnInit, OnDestroy {
           // console.log('endedPercent', this.endedPercent);
           const timeFromCreated = this.nft.saleTime.getTime() - Date.now();
           this.endedPercent = (100 - (timeFromCreated / (this.nft.saleTime.getTime() - this.nft.creationTime.getTime())) * 100);
-          this.changeDetector.detectChanges();
         }
       })
     );
@@ -44,7 +42,6 @@ export class NftGridItemComponent implements OnInit, OnDestroy {
       }
       const timeFromCreated = this.nft.saleTime.getTime() - Date.now();
       this.endedPercent = (100 - (timeFromCreated / (this.nft.saleTime.getTime() - this.nft.creationTime.getTime())) * 100);
-      this.changeDetector.detectChanges();
     }));
 
   }
@@ -59,7 +56,6 @@ export class NftGridItemComponent implements OnInit, OnDestroy {
             this.timeLeft = new Date(this.timeLeft.getTime() - 1000);
             const timeFromCreated = this.nft.saleTime.getTime() - Date.now();
             this.endedPercent = (100 - (timeFromCreated / (this.nft.saleTime.getTime() - this.nft.creationTime.getTime())) * 100);
-            this.changeDetector.detectChanges();
           }
         })
       );

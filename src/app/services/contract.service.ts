@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { LngLat } from 'mapbox-gl';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import abi from './abi/ABI.json';
 const Web3 = require('web3');
 
@@ -134,8 +134,8 @@ export interface ResaleRetrieve {
 export type TransactionEventUnion = TransactionResultEvent | TransactionStartedEvent;
 @Injectable()
 export class ContractService {
-  contractAddress = '0xC93fa11b79a406766b137817856DEa603239867e';
-  blockNumber = 12689119;
+  contractAddress = '0xE91a7A50E34474E1E77596c8A344c999b2E2c9EC';
+  blockNumber = 12703002;
   private loggedSubject = new BehaviorSubject<boolean>(false);
   logged$ = this.loggedSubject.asObservable();
 
@@ -622,7 +622,8 @@ export class ContractService {
   getNftsToRetrieve$(): Observable<GeoNFT[]> {
     return this.nfts$.pipe(
       map(nfts => nfts.filter(nft => nft.bidInfo && nft.bidInfo.bidderAddress.toLowerCase() === this.selectedAddress.toLowerCase() &&
-        nft.saleTime.getTime() < Date.now() && !nft.owner))
+        nft.saleTime.getTime() < Date.now() && !nft.owner)),
+        tap(x => console.log('retrieve', x))
     );
   }
 

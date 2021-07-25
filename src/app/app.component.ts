@@ -107,6 +107,7 @@ export class AppComponent implements OnInit {
     this.subscriptions.push(
       this.contractService.nfts$.subscribe((nfts) => {
         this.nfts = nfts;
+        this.router.navigate(['/', 'all-nfts']);
       })
     );
 
@@ -119,30 +120,30 @@ export class AppComponent implements OnInit {
     try {
       this.loading = true;
       await this.contractService.init();
-      this.subscriptions.push(
-        this.contractService.getNftsToRetrieve$()
-          .subscribe(async (nftsToRetrieve: GeoNFT[]) => {
-            if (nftsToRetrieve.length > 0) {
-              console.log('current url', this.router.url);
-              // if (this.router.url !== '/retrieve-nfts') {
-              await this.router.navigate(['/', 'retrieve-nfts']);
+      this.curtain = false;
+      // this.subscriptions.push(
+      //   this.contractService.getNftsToRetrieve$()
+      //     .subscribe(async (nftsToRetrieve: GeoNFT[]) => {
+      //       if (nftsToRetrieve.length > 0) {
+      //         console.log('current url', this.router.url);
+      //         // if (this.router.url !== '/retrieve-nfts') {
+      //         await this.router.navigate(['/', 'retrieve-nfts']);
 
-              console.log('nftsToRetrieve', nftsToRetrieve);
-              // }
-              this.curtain = false;
+      //         console.log('nftsToRetrieve', nftsToRetrieve);
+      //         // }
 
-            } else {
-              if (this.router.url === '/') {
-                await this.router.navigate(['/', 'all-nfts']);
-              }
-              this.curtain = false;
-              setTimeout(() => {
-                this.loading = false;
-              }, 2000);
+      //       } else {
+      //         if (this.router.url === '/') {
+      //           await this.router.navigate(['/', 'all-nfts']);
+      //         }
+      //         this.curtain = false;
+      //         setTimeout(() => {
+      //           this.loading = false;
+      //         }, 2000);
 
-            }
-          })
-      );
+      //       }
+      //     })
+
 
       // convert nfts to imagemarkers
     } catch (error) {

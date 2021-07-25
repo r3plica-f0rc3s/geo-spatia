@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   ActivatedRouteSnapshot,
   CanActivate,
@@ -13,7 +14,7 @@ import { UxService } from '../ux.service';
 @Injectable()
 export class RouteLockGuard
   implements CanDeactivate<RetrieveNftsComponent>, CanActivate {
-  constructor(private uxService: UxService) {}
+  constructor(private uxService: UxService, private matSnackBar: MatSnackBar) { }
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
@@ -28,12 +29,16 @@ export class RouteLockGuard
     component: RetrieveNftsComponent,
     currentRoute: ActivatedRouteSnapshot,
     currentState: RouterStateSnapshot,
-    nextState?: RouterStateSnapshot
+    nextState?: RouterStateSnapshot,
   ):
     | boolean
     | UrlTree
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree> {
+    this.matSnackBar.open('For now retrievals are forced. Please retrieve your NFT', 'Dismiss', {
+      horizontalPosition: 'end',
+      duration: 3000
+    });
     return !this.uxService.routeLock;
   }
 }

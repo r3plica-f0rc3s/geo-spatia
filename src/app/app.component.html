@@ -11,9 +11,9 @@
     <app-wallet></app-wallet>
   </mat-drawer>
 
-  <!-- Move to separate component -->
   <app-map-gl></app-map-gl>
   <div [@slideUpIn]="outletRef.isActivated ? outletRef.activatedRoute : ''">
+
     <router-outlet #outletRef="outlet"></router-outlet>
   </div>
 

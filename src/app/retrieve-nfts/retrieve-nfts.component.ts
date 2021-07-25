@@ -22,13 +22,14 @@ export class RetrieveNftsComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    this.uxService.disableLeftSidenav();
-    this.uxService.disableSidenav();
+    // this.uxService.disableLeftSidenav();
+    // this.uxService.disableSidenav();
     this.subscriptions.push(
       this.contractService.getNftsToRetrieve$().pipe(filter(x => x.length > 0)).subscribe((nftsToRetrieve) => {
         this.mapHelperService.setMultipleMarkers(nftsToRetrieve);
 
         this.nftsToRetrieve = nftsToRetrieve;
+        this.uxService.routeLock = true;
       })
     );
 
@@ -40,6 +41,7 @@ export class RetrieveNftsComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.contractService.transactions$.subscribe((transactionEvent: TransactionResultEvent) => {
         if (transactionEvent && transactionEvent.success !== undefined) {
+          this.uxService.routeLock = false;
           this.router.navigate(['/', 'transaction-result'], { state: { ...{ closable: true }, ...transactionEvent } });
         }
       }, (err) => {

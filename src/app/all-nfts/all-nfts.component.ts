@@ -34,8 +34,24 @@ export class AllNFTsComponent implements OnInit {
     }, (err) => {
     });
     this.isMobile = this.media.matchMedia('(max-width: 700px)').matches;
-    this.uxService.enableSidenav();
-    this.uxService.enableLeftSidenav();
+
+    this.contractService.getNftsToRetrieve$()
+      .subscribe(async (nftsToRetrieve: GeoNFT[]) => {
+        if (nftsToRetrieve.length > 0) {
+          console.log('current url', this.router.url);
+          // if (this.router.url !== '/retrieve-nfts') {
+          // this.uxService.disableLeftSidenav();
+          // this.uxService.disableSidenav();
+          this.router.navigate(['/', 'retrieve-nfts']);
+          console.log('nftsToRetrieve', nftsToRetrieve);
+          // }
+        } else {
+          this.uxService.enableSidenav();
+          this.uxService.enableLeftSidenav();
+        }
+      });
+
+
     // this.mapHelperService.setMultipleMarkers(this.NFTs.map((nft) => {
     //   return {
     //     image: nft.svg,

@@ -124,7 +124,7 @@
   place-content: space-between;
   box-sizing: border-box;
   
-  
+}
 .divider {
   height: 1px;
   width: 60%;
@@ -139,7 +139,7 @@
 
 }
 .wallet-label-text {
-  font-size: 16px;
+  font-size: 15px;
   color: grey;
   letter-spacing: 1px;
   font-family: 'Kanit', sans-serif;
@@ -148,7 +148,7 @@
   align-items: center;
   text-align: right;
 }
-}
+
 .description-wallet {
   height: 100%;
   display: flex;

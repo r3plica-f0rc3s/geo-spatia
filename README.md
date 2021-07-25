@@ -21,9 +21,34 @@ This is a submission for Harmony Hackathon (Harmony-One-Love-2). ONE World: Geos
 ## Libraries
 
 - Mapbox
-- Vanta.js (for Curtain)
+- Vanta.js (for intro animation)
 - Angular with Angular Material
+- Three.js
 - Web3
+
+## Adding NFTs
+
+- go to Remix, load our Smart Contract
+- put well formatted NFTs using CreateNew method
+
+3 example NFTs
+
+```
+[["RandomLocation","54.229676,22.012229","1","2500000000000000000",1]],["%3Csvg%20viewBox%3D%220%200%2090%2090%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%25%22%20height%3D%22100%25%22%3E%3Cmask%20id%3D%22mask__ring%22%20maskUnits%3D%22userSpaceOnUse%22%20x%3D%220%22%20y%3D%220%22%20width%3D%2290%22%20height%3D%2290%22%3E%3Crect%20width%3D%2290%22%20height%3D%2290%22%20rx%3D%22180%22%20fill%3D%22white%22%3E%3C%2Frect%3E%3C%2Fmask%3E%3Cg%20mask%3D%22url%28%23mask__ring%29%22%3E%3Cpath%20d%3D%22M0%200h90v45H0z%22%20fill%3D%22%23ffc978%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M0%2045h90v45H0z%22%20fill%3D%22%23c9c987%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M83%2045a38%2038%200%2000-76%200h76z%22%20fill%3D%22%23c9c987%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M83%2045a38%2038%200%2001-76%200h76z%22%20fill%3D%22%23d1a664%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M77%2045a32%2032%200%2010-64%200h64z%22%20fill%3D%22%23d1a664%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M77%2045a32%2032%200%2011-64%200h64z%22%20fill%3D%22%23c27b57%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M71%2045a26%2026%200%2000-52%200h52z%22%20fill%3D%22%23c27b57%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M71%2045a26%2026%200%2001-52%200h52z%22%20fill%3D%22%23ffc978%22%3E%3C%2Fpath%3E%3Ccircle%20cx%3D%2245%22%20cy%3D%2245%22%20r%3D%2223%22%20fill%3D%22%23ffe7bf%22%3E%3C%2Fcircle%3E%3C%2Fg%3E%3C%2Fsvg%3E"],[3600]
+
+
+[["Very Nice place","56.229676,24.012229","1","1500000000000000000",1]],["%3Csvg%20viewBox%3D%220%200%2080%2080%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%25%22%20height%3D%22100%25%22%3E%3Cmask%20id%3D%22mask__bauhaus%22%20maskUnits%3D%22userSpaceOnUse%22%20x%3D%220%22%20y%3D%220%22%20width%3D%2280%22%20height%3D%2280%22%3E%3Crect%20width%3D%2280%22%20height%3D%2280%22%20rx%3D%22160%22%20fill%3D%22white%22%3E%3C%2Frect%3E%3C%2Fmask%3E%3Cg%20mask%3D%22url%28%23mask__bauhaus%29%22%3E%3Crect%20width%3D%2280%22%20height%3D%2280%22%20fill%3D%22%23ec6c2b%22%3E%3C%2Frect%3E%3Crect%20x%3D%2210%22%20y%3D%2230%22%20width%3D%2280%22%20height%3D%2210%22%20fill%3D%22%23feae4b%22%20transform%3D%22translate%2810%2010%29%20rotate%28196%2040%2040%29%22%3E%3C%2Frect%3E%3Ccircle%20cx%3D%2240%22%20cy%3D%2240%22%20fill%3D%22%23bdbf90%22%20r%3D%2216%22%20transform%3D%22translate%280%200%29%22%3E%3C%2Fcircle%3E%3Cline%20x1%3D%220%22%20y1%3D%2240%22%20x2%3D%2280%22%20y2%3D%2240%22%20stroke-width%3D%222%22%20stroke%3D%22%2335352b%22%20transform%3D%22translate%2812%20-12%29%20rotate%2832%2040%2040%29%22%3E%3C%2Fline%3E%3C%2Fg%3E%3C%2Fsvg%3E"],[300]
+
+
+
+
+[["34vtu84m8vt","51.229676,30.012229","1","1000000000000000000",1]],["%3Csvg%20viewBox%3D%220%200%2090%2090%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%25%22%20height%3D%22100%25%22%3E%3Cmask%20id%3D%22mask__ring%22%20maskUnits%3D%22userSpaceOnUse%22%20x%3D%220%22%20y%3D%220%22%20width%3D%2290%22%20height%3D%2290%22%3E%3Crect%20width%3D%2290%22%20height%3D%2290%22%20rx%3D%22180%22%20fill%3D%22white%22%3E%3C%2Frect%3E%3C%2Fmask%3E%3Cg%20mask%3D%22url%28%23mask__ring%29%22%3E%3Cpath%20d%3D%22M0%200h90v45H0z%22%20fill%3D%22%23a0ded6%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M0%2045h90v45H0z%22%20fill%3D%22%23c7ede8%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M83%2045a38%2038%200%2000-76%200h76z%22%20fill%3D%22%23c7ede8%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M83%2045a38%2038%200%2001-76%200h76z%22%20fill%3D%22%231693a5%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M77%2045a32%2032%200%2010-64%200h64z%22%20fill%3D%22%231693a5%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M77%2045a32%2032%200%2011-64%200h64z%22%20fill%3D%22%2345b5c4%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M71%2045a26%2026%200%2000-52%200h52z%22%20fill%3D%22%2345b5c4%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M71%2045a26%2026%200%2001-52%200h52z%22%20fill%3D%22%23a0ded6%22%3E%3C%2Fpath%3E%3Ccircle%20cx%3D%2245%22%20cy%3D%2245%22%20r%3D%2223%22%20fill%3D%22%237ececa%22%3E%3C%2Fcircle%3E%3C%2Fg%3E%3C%2Fsvg%3E"],[600]
+
+```
+
+Svgs should have width and height set to 100%, and should be urlencoded.
+
+You'll see new NFT in the app without refreshing.
 
 ## Development server
 
