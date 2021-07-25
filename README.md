@@ -17,6 +17,7 @@ This is a submission for Harmony Hackathon (Harmony-One-Love-2). ONE World: Geos
 - User can resale NFTs to each other
 - Realtime UI updates, route switches, timers. No need to refresh the app
 - Map usage. 3D Camera animations.
+- Layering. You can add NFTs to deeper layers. They'll be visible after zooming in the map, but you should always see them on the right.
 
 ## Libraries
 
@@ -25,6 +26,14 @@ This is a submission for Harmony Hackathon (Harmony-One-Love-2). ONE World: Geos
 - Angular with Angular Material
 - Three.js
 - Web3
+
+## Future improvements
+
+- IPFS integration
+- Allowing upload 3D Models as NFTs (fbx graphics)
+- Administrator options (adding)
+- layering filters
+- Cancel resale, resign from retrieve.
 
 ## Adding NFTs
 
