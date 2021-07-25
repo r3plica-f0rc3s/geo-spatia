@@ -30,6 +30,7 @@ This is a submission for Harmony Hackathon (Harmony-One-Love-2). ONE World: Geos
 ## Future improvements
 
 - IPFS integration
+- Add some introducing information to Curtain
 - Allowing upload 3D Models as NFTs (fbx graphics)
 - Administrator options (adding)
 - layering filters
