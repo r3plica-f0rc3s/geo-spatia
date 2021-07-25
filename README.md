@@ -70,3 +70,7 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
+
+## Improve Performance
+
+App will load faster if connected to dedicated Harmony node.
