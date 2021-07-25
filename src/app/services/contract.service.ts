@@ -11,6 +11,7 @@ export enum SoldStatus {
   AVAILABLE,
   OWNED,
   RESALE,
+  AWAITING_TRANSFER
 }
 // declare let window: any;
 export interface NFT {
@@ -134,7 +135,7 @@ export interface ResaleRetrieve {
 export type TransactionEventUnion = TransactionResultEvent | TransactionStartedEvent;
 @Injectable()
 export class ContractService {
-  contractAddress = '0xe07494a0094CeB1215038e0fb140007dc5202Ab0';
+  contractAddress = '0xF66bF75491859A1d6fb60E6eb1890a02fea58D9d';
   blockNumber = 12703002;
   private loggedSubject = new BehaviorSubject<boolean>(false);
   logged$ = this.loggedSubject.asObservable();
@@ -253,11 +254,11 @@ export class ContractService {
       .on('data', (bidEvent: NftBidEvent) => {
         // TODO: update bidsMap
         // console.log('nft created', nft);
+        this.loadWalletInfo();
         const nft = this.getNftById(Number(bidEvent.returnValues.tokenId));
         const nftIdx = this.nftsSubject.getValue().findIndex(x => x.id === Number(bidEvent.returnValues.tokenId));
         const nfts = this.nftsSubject.getValue();
         // set status to resale
-
         // nft.price = resaleEvent.
         // set date to new date
         nfts[nftIdx] = this.applyNftBid(nft, bidEvent);
@@ -267,6 +268,7 @@ export class ContractService {
 
     this.contract.events.SaleRetrieve({})
       .on('data', (saleEvent: SaleRetrieveEvent) => {
+        this.loadWalletInfo();
         const nft = this.getNftById(Number(saleEvent.returnValues.tokenID));
         const nftIdx = this.nftsSubject.getValue().findIndex(x => x.id === Number(saleEvent.returnValues.tokenID));
         const nfts = this.nftsSubject.getValue();
@@ -290,6 +292,7 @@ export class ContractService {
 
     this.contract.events.ResaleBid({})
       .on('data', (resaleBidEvent) => {
+        this.loadWalletInfo();
         // add resaleBid to bidsMap, just reusing existing bids system
         console.log('ResaleBid', resaleBidEvent);
         const nft = this.getNftById(Number(resaleBidEvent.returnValues.tokenID));
@@ -301,6 +304,7 @@ export class ContractService {
 
     this.contract.events.ResaleRetrieve({})
       .on('data', (resaleRetrieveEvent) => {
+        this.loadWalletInfo();
         // same as sale retrieve
         const nft = this.getNftById(Number(resaleRetrieveEvent.returnValues.tokenID));
         const nftIdx = this.nftsSubject.getValue().findIndex(x => x.id === Number(resaleRetrieveEvent.returnValues.tokenID));

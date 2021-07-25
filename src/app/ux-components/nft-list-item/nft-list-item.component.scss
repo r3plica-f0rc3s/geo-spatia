@@ -9,7 +9,12 @@
 .second-section {
   display: flex;
   flex-direction: column;
-  width: 30%;
+  width: 40%;
+  align-items: center;
+  place-content: flex-end;
+  button {
+    max-width: 120px;
+  }
 }
 mat-list-option {
   border-bottom: rgb(92, 92, 92) 1px solid;
@@ -64,7 +69,7 @@ mat-list-option {
 }
 
 .section-one {
-  width: 70%;
+  width: 60%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;

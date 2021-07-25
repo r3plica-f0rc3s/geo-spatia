@@ -9,6 +9,7 @@ This is a submission for Harmony Hackathon (Harmony-One-Love-2). ONE World: Geos
 
 [APP DEMO](https://thecyberd3m0n.gitlab.io/geo-spatia/)
 
+[CONTRACT REPO](https://thecyberd3m0n.gitlab.io/geo-spatia/)
 
 ## Features
 
@@ -38,6 +39,7 @@ This is a submission for Harmony Hackathon (Harmony-One-Love-2). ONE World: Geos
 - Cancel resale, resign from retrieve.
 - Selling areas, not just objects
 - More controls, map perspectives for game-like experience
+
 
 ## Adding NFTs
 

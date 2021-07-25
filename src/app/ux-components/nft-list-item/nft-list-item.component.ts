@@ -32,8 +32,10 @@ export class NftListItemComponent implements OnInit, OnDestroy {
       timer(1000, 1000).subscribe(() => {
         if (this.timeLeft && this.timeLeft.getTime() > 1000) {
           this.timeLeft = new Date(this.timeLeft.getTime() - 1000);
+          // const saleTime = this.nft.resaleId ? this.nft.resaleTime : this.nft.saleTime;
+          const creationTime = this.nft.resaleId ? this.nft.resaleTime : this.nft.creationTime;
           const timeFromCreated = this.nft.saleTime.getTime() - Date.now();
-          this.endedPercent = (100 - (timeFromCreated / (this.nft.saleTime.getTime() - this.nft.creationTime.getTime())) * 100);
+          this.endedPercent = (100 - (timeFromCreated / (this.nft.saleTime.getTime() - creationTime.getTime())) * 100);
           this.changeDetector.detectChanges();
         } else {
           this.timePassed();
