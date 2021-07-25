@@ -1,6 +1,6 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, ChangeDetectorRef, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
-import { BidInfo, BidViewModel, ContractService, GeoNFT, SoldStatus } from 'src/app/services/contract.service';
+import { ContractService, GeoNFT, SoldStatus } from 'src/app/services/contract.service';
 
 @Component({
   selector: 'app-nft-grid-item',
@@ -27,7 +27,7 @@ export class NftGridItemComponent implements OnInit, OnDestroy {
         if (this.timeLeft && this.nft) {
           this.timeLeft = new Date(this.timeLeft.getTime() - 1000);
           // const saleTime = this.nft.resaleId ? this.nft.resaleTime : this.nft.saleTime;
-          const creationTime = this.nft.resaleId ? this.nft.resaleTime : this.nft.creationTime;
+          const creationTime = this.nft.status === SoldStatus.RESALE ? this.nft.resaleTime : this.nft.creationTime;
           const timeFromCreated = this.nft.saleTime.getTime() - Date.now();
           this.endedPercent = (100 - (timeFromCreated / (this.nft.saleTime.getTime() - creationTime.getTime())) * 100);
         }

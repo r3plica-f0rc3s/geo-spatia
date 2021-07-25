@@ -1,5 +1,8 @@
 # GeoSpatia
 
+![Screenshot 1](https://cloud.ipv8.pl/s/RtwoRrnGekqWzYY/preview)
+![Screenshot 2](https://cloud.ipv8.pl/s/f288fLfngLWtQgj/preview)
+
 Map-based NFT Marketplace
 
 This is a submission for Harmony Hackathon (Harmony-One-Love-2). ONE World: Geospatial NFT Marketplace.
