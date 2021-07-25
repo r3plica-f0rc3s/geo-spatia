@@ -36,6 +36,7 @@ This is a submission for Harmony Hackathon (Harmony-One-Love-2). ONE World: Geos
 - layering filters
 - Cancel resale, resign from retrieve.
 - Selling areas, not just objects
+- More controls, map perspectives for game-like experience
 
 ## Adding NFTs
 
