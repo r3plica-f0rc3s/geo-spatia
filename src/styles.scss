@@ -70,9 +70,18 @@ mat-chip {
   font-size: 10px;
   padding: 4px 9px !important;
   border-radius: 25px;
+
 }
 
-
+.mat-chip.mat-standard-chip.mat-chip-selected.mat-primary {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 62px;
+  text-align: center;
+  display: flex;
+  place-content: center;
+}
 .grayscale {
   filter: grayscale(1);
 }
