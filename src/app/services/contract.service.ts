@@ -223,6 +223,7 @@ export class ContractService {
       await this.loadPassedEvents();
       this.setEvents();
       this.initializing = false;
+      this.loggedSubject.next(true);
     } catch (error) {
       this.initializing = false;
       this.errorSubject.next(error);
@@ -711,6 +712,9 @@ export class ContractService {
     this.contract = null;
     this.selectedAddress = null;
     this.nftsSubject.next([]);
+    this.ownedNFTsSubject.next([]);
+    this.loggedSubject.next(false);
+    window.localStorage.removeItem('wasStarted');
 
   }
 

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { filter, switchMap, tap } from 'rxjs/operators';
 import { ContractService, WalletInfo } from './../services/contract.service';
 import { DeviceDetectorService } from './../services/device-detector.service';
@@ -24,6 +25,7 @@ export class WalletComponent implements OnInit {
     private deviceDetectorService: DeviceDetectorService,
     public contractService: ContractService,
     public priceConverter: PriceConverterService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -59,7 +61,8 @@ export class WalletComponent implements OnInit {
     }
   }
 
-  logout(): void {
+  async logout(): Promise<void> {
+    await this.router.navigate(['/']);
     this.contractService.logout();
   }
 

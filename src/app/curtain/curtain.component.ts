@@ -17,22 +17,24 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Outp
       state('true', style({ width: '*' })),
       state('false', style({ width: '20px' })),
       transition('false <=> true', animate('500ms cubic-bezier(0.32,0,1,1)')),
+
     ]),
   ],
 })
-export class CurtainComponent implements AfterViewInit {
+export class CurtainComponent implements AfterViewInit, OnInit {
   @Output()
   connectToMetamask = new EventEmitter();
   @Input()
   loading = false;
-  preparingGraphics = true;
+  preparingGraphics = false;
   @ViewChild('container') vantaElement: ElementRef;
   constructor() { }
   ngAfterViewInit(): void {
-    import('three').then((three) => {
+          import('three').then((three) => {
       console.log('three loaded');
-      this.preparingGraphics = false;
       (window as any).THREE = three;
+                        this.preparingGraphics = false;
+
       import('node_modules/vanta/src/vanta.globe').then((vanta) => {
         vanta.default({
           el: this.vantaElement.nativeElement,
@@ -46,13 +48,15 @@ export class CurtainComponent implements AfterViewInit {
           color: 0x7f3bb1,
           THREE: three
         });
+
       });
     });
+    
   }
 
   ngOnInit() {
     // import 3d graphics
-
+    this.preparingGraphics = false;
   }
 
   connect() {

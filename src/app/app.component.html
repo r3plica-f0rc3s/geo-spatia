@@ -1,4 +1,4 @@
-<mat-drawer-container class="main-wrapper">
+<mat-drawer-container *ngIf="!curtain" class="main-wrapper">
   <mat-drawer
     #drawer2
     mode="side"
@@ -13,7 +13,6 @@
 
   <app-map-gl></app-map-gl>
   <div [@slideUpIn]="outletRef.isActivated ? outletRef.activatedRoute : ''">
-
     <router-outlet #outletRef="outlet"></router-outlet>
   </div>
 

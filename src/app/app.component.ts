@@ -110,6 +110,14 @@ export class AppComponent implements OnInit {
         this.router.navigate(['/', 'all-nfts']);
       })
     );
+    this.subscriptions.push(
+      this.contractService.logged$.subscribe((logged: boolean) => {
+        this.curtain = !logged;
+        if (logged) {
+          this.loading = false;
+        }
+      })
+    );
 
 
   }
@@ -120,7 +128,6 @@ export class AppComponent implements OnInit {
     try {
       this.loading = true;
       await this.contractService.init();
-      this.curtain = false;
       // this.subscriptions.push(
       //   this.contractService.getNftsToRetrieve$()
       //     .subscribe(async (nftsToRetrieve: GeoNFT[]) => {
@@ -155,9 +162,6 @@ export class AppComponent implements OnInit {
       });
       console.error(error);
     }
-  }
-  async buyNft() {
-    this.router.navigate(['/', 'nft-bought']);
   }
 
 }
