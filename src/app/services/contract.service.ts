@@ -510,6 +510,8 @@ export class ContractService {
       nft.saleTime = this.epochToDate(resaleCreation.returnValues.Info.resaleTime);
       nft.resaleTime = this.epochToDate(resaleCreation.returnValues.creationTime);
       nft.resaleId = resaleCreation.returnValues.resaleID;
+    } else {
+      nft.resaleId = resaleCreation.returnValues.resaleID;
     }
     return nft;
   }
@@ -660,8 +662,8 @@ export class ContractService {
    * TODO: retrieve many NFTs at once
    * @param tokenId
    */
-  retrieveResaleNFT(tokenId: string): void {
-    const transaction = this.contract.methods.RetrieveReSale(tokenId).send({ from: this.selectedAddress });
+retrieveResaleNFT(resaleId: string[], tokenId: string[]): void {
+    const transaction = this.contract.methods.RetrieveReSale(resaleId, tokenId).send({ from: this.selectedAddress });
     this.listenToTransaction(transaction);
   }
 

@@ -34,7 +34,8 @@ export class AllNFTsComponent implements OnInit {
     }, (err) => {
     });
     this.isMobile = this.media.matchMedia('(max-width: 700px)').matches;
-
+    this.uxService.enableSidenav();
+    this.uxService.enableLeftSidenav();
     this.contractService.getNftsToRetrieve$()
       .subscribe(async (nftsToRetrieve: GeoNFT[]) => {
         if (nftsToRetrieve.length > 0) {
@@ -46,8 +47,7 @@ export class AllNFTsComponent implements OnInit {
           console.log('nftsToRetrieve', nftsToRetrieve);
           // }
         } else {
-          this.uxService.enableSidenav();
-          this.uxService.enableLeftSidenav();
+
         }
       });
 
