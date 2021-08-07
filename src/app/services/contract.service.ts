@@ -58,6 +58,7 @@ export interface GeoNFT {
 export interface WalletInfo {
   address: string;
   balance: string;
+  isContractOwner?: boolean;
 }
 
 export interface TransactionStartedEvent {
@@ -135,7 +136,7 @@ export interface ResaleRetrieve {
 export type TransactionEventUnion = TransactionResultEvent | TransactionStartedEvent;
 @Injectable()
 export class ContractService {
-  contractAddress = '0xF66bF75491859A1d6fb60E6eb1890a02fea58D9d';
+  contractAddress = '0x58851eE0ec314763DEa6C7c662664a3d43eA95Bb';
   blockNumber = 12703002;
   private loggedSubject = new BehaviorSubject<boolean>(false);
   logged$ = this.loggedSubject.asObservable();
@@ -149,7 +150,7 @@ export class ContractService {
   private nftsSubject = new BehaviorSubject<GeoNFT[]>([]);
   nfts$ = this.nftsSubject.asObservable().pipe(
     map(nfts => nfts.sort((a, b) => new Date(b.saleTime).getTime() - new Date(a.saleTime).getTime()),
-  ));
+    ));
 
   nftsOnSale$ = this.nftsSubject.asObservable().pipe(
     filter(x => !!x),
@@ -195,6 +196,7 @@ export class ContractService {
   initializing = false;
   applyNftProcessing: boolean;
 
+  contractOwnerAddress: string;
   constructor(private domSanitizer: DomSanitizer) { }
 
   async init(): Promise<void> {
@@ -218,9 +220,9 @@ export class ContractService {
 
       this.selectedAddress = this.wallet.selectedAddress;
       console.log('selected address', this.selectedAddress);
+
       await this.loadWalletInfo();
-      // await this.loadOwnedNFTs();
-      // await this.loadNFTs(1);
+      await this.loadContractOwnerAddress();
       await this.loadPassedEvents();
       this.setEvents();
       this.initializing = false;
@@ -630,7 +632,7 @@ export class ContractService {
     return this.nfts$.pipe(
       map(nfts => nfts.filter(nft => nft.bidInfo && nft.bidInfo.bidderAddress.toLowerCase() === this.selectedAddress.toLowerCase() &&
         nft.saleTime.getTime() < Date.now() && !nft.owner)),
-        tap(x => console.log('retrieve', x))
+      tap(x => console.log('retrieve', x))
     );
   }
 
@@ -652,6 +654,15 @@ export class ContractService {
     return this.contract.methods.isApprovedForAll(this.selectedAddress, this.contractAddress);
   }
 
+  private async loadContractOwnerAddress(): Promise<void> {
+    this.contractOwnerAddress = await this.contract.methods.owner().call({ from: this.selectedAddress });
+
+    this.walletInfoSubject.next({
+      ...this.walletInfoSubject.getValue(),
+      ...{ isContractOwner: this.contractOwnerAddress && this.contractOwnerAddress.toLowerCase() === this.selectedAddress }
+    });
+  }
+
   retrieveNFTs(tokenIds: string[]): void {
     const transaction = this.contract.methods.RetrieveNFT(tokenIds).send({ from: this.selectedAddress });
     this.listenToTransaction(transaction);
@@ -662,7 +673,7 @@ export class ContractService {
    * TODO: retrieve many NFTs at once
    * @param tokenId
    */
-retrieveResaleNFT(resaleId: string[], tokenId: string[]): void {
+  retrieveResaleNFT(resaleId: string[], tokenId: string[]): void {
     const transaction = this.contract.methods.RetrieveReSale(resaleId, tokenId).send({ from: this.selectedAddress });
     this.listenToTransaction(transaction);
   }
@@ -712,6 +723,7 @@ retrieveResaleNFT(resaleId: string[], tokenId: string[]): void {
   oneToWei(balance): string {
     return this.currentWeb3.utils.toWei(balance, 'ether');
   }
+
   logout(): void {
     // TODO: to implement
     this.currentWeb3 = null;

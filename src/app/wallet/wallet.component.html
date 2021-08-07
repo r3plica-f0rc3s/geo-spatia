@@ -36,10 +36,15 @@
 
   <div class="wallet-label">
     <div class="divider-2"></div>
-    <div class="wallet-label-text"> Wallet status </div>
+    <div class="wallet-label-text">Wallet status</div>
   </div>
-  
+
   <div class="description-wallet">
+    <div class="badges">
+      <mat-chip-list>
+        <mat-chip *ngIf="isAdmin">Contract admin</mat-chip>
+      </mat-chip-list>
+    </div>
     <div>
       <span> ~ {{ convertedBalance }} $ </span>
     </div>
@@ -48,8 +53,9 @@
 
       <span> ONE </span>
     </div>
-    <button (click)="logout()" mat-raised-button color="primary"><mat-icon>power_settings_new</mat-icon>
-      Logout</button>
+    <button (click)="logout()" mat-raised-button color="primary">
+      <mat-icon>power_settings_new</mat-icon> Logout
+    </button>
   </div>
 </div>
 <div class="wallet-label" *ngIf="nftsWithBids.length > 0">
@@ -57,11 +63,17 @@
 
   <span class="wallet-label-text"> Nfts with your bids </span>
 </div>
-<app-nft-grid *ngIf="nftsWithBids.length > 0" [nfts]="nftsWithBids"></app-nft-grid>
+<app-nft-grid
+  *ngIf="nftsWithBids.length > 0"
+  [nfts]="nftsWithBids"
+></app-nft-grid>
 <!-- TODO -->
 <div class="wallet-label" *ngIf="(ownedNFTs$ | async)?.length > 0">
   <div class="divider"></div>
 
-  <div class="wallet-label-text"> NFT collection </div>
+  <div class="wallet-label-text">NFT collection</div>
 </div>
-<app-nft-grid *ngIf="(ownedNFTs$ | async)?.length > 0" [nfts]="ownedNFTs$ | async"></app-nft-grid>
+<app-nft-grid
+  *ngIf="(ownedNFTs$ | async)?.length > 0"
+  [nfts]="ownedNFTs$ | async"
+></app-nft-grid>

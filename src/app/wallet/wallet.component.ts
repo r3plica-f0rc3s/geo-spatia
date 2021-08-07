@@ -17,6 +17,7 @@ export class WalletComponent implements OnInit {
   convertedBalance: string;
   walletInfo: WalletInfo;
   enableSales: boolean;
+  isAdmin: boolean;
   ownedNFTs$ = this.contractService.getOwnedNFTs$().pipe(tap(x => console.log('owned nfts', x)));
   nftsWithBids = [];
   nftsWithBids$ = this.contractService.getNftsWithMyBids$().pipe(tap(x => console.log('nfts with bids', x)));
@@ -32,6 +33,7 @@ export class WalletComponent implements OnInit {
     this.contractService.walletInfo$.pipe(
       filter(x => !!x),
       tap(walletInfo => this.walletInfo = walletInfo),
+      tap(walletInfo => this.isAdmin = walletInfo.isContractOwner),
       switchMap(walletInfo => this.priceConverter.convertOneToUSDT(Number(walletInfo.balance)))
     ).subscribe((convertedBalance: number) => {
       this.convertedBalance = convertedBalance.toFixed(2);
