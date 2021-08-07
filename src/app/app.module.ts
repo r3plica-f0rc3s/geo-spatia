@@ -32,12 +32,11 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { AllNFTsComponent } from './all-nfts/all-nfts.component';
 import { LoadingButtonComponent } from './ux-components/loading-button/loading-button.component';
 import { NftMarkerComponent } from './ux-components/nft-marker/nft-marker.component';
-import { SellComponent } from './sell/sell.component';
 import { ButtonComponent } from './ux-components/button/button.component';
 import { NftListItemComponent } from './ux-components/nft-list-item/nft-list-item.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PricePickerComponent } from './ux-components/price-picker/price-picker.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -50,6 +49,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
+import { ResaleNftsComponent } from './resale-nfts/resale-nfts.component';
+import { BidComponent } from './bid/bid.component';
 
 
 @NgModule({
@@ -68,7 +69,6 @@ import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerMod
     WeiToOnePipe,
     LoadingButtonComponent,
     NftMarkerComponent,
-    SellComponent,
     ButtonComponent,
     NftListItemComponent,
     PricePickerComponent,
@@ -76,6 +76,8 @@ import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerMod
     NftGridItemComponent,
     RetrieveNftsComponent,
     DatePickerComponent,
+    ResaleNftsComponent,
+    BidComponent,
   ],
   imports: [
     BrowserModule,
@@ -100,6 +102,7 @@ import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerMod
     MatProgressSpinnerModule,
     MatSlideToggleModule,
     FormsModule,
+    ReactiveFormsModule,
     MatDatepickerModule,
     MatNativeDateModule,
     MatFormFieldModule,

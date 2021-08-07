@@ -1,0 +1,117 @@
+<div
+  class="main-container-small">
+  <form 
+  [formGroup]="resaleForm" class="main-container-inner">
+    <div class="top-wrapper">
+      <div class="top-label">
+        <span> Resale NFT </span>
+      </div>
+      <div class="close-wrapper">
+        <button mat-icon-button [routerLink]="['/', 'all-nfts']">
+          <mat-icon color="primary">close</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="progress" *ngIf="timeLeft">
+      <mat-progress-bar
+        [color]="nft.status === SoldStatus.RESALE ? 'accent' : 'primary'"
+        mode="determinate"
+        [value]="endedPercent"
+      ></mat-progress-bar>
+
+      <div class="time">
+        <span class="accent">Time left:</span>
+        <span class="accent">
+          {{ Math.floor(timeLeft?.getTime() / (1000 * 60 * 60 * 24)) }} days
+        </span>
+        <span class="accent">
+          {{ timeLeft?.getUTCHours() }}h : {{ timeLeft | date: "mm" }}m :
+          {{ timeLeft | date: "ss" }}s</span
+        >
+      </div>
+    </div>
+
+    <div class="nft-name" *ngIf="nft">
+      <button mat-fab viewBox="0 0 300 300" [innerHTML]="nft.image"></button>
+
+      <div class="description">
+        <div class="nft-name-2">
+          <span>{{ nft.name }}</span>
+        </div>
+        <div class="price">
+          <span class="mat-h3">{{ minPrice }} ONE</span>
+        </div>
+      </div>
+    </div>
+    <div
+      *ngIf="
+        nft &&
+        !nft.owner &&
+        nft.bidInfo &&
+        nft.bidInfo.bidderAddress.toLowerCase() ===
+          contractService.selectedAddress.toLowerCase()
+      "
+      class="highest-label"
+    >
+      <span> Your bet is the highest </span>
+    </div>
+
+    <div *ngIf="nft.owner" class="highest-label">
+      <span> You are the owner of this NFT </span>
+    </div>
+    <div *ngIf="!nft.owner && !(nft.bidInfo &&
+    nft.bidInfo.bidderAddress.toLowerCase() ===
+      contractService.selectedAddress.toLowerCase())" class="highest-label">
+      <span> {{ nft.ownerAddress }} </span>
+    </div>
+    
+    <div *ngIf="nft.owner || nft.status === SoldStatus.RESALE && !(nft.bidInfo &&
+    nft.bidInfo.bidderAddress.toLowerCase() ===
+      contractService.selectedAddress.toLowerCase())">
+      <div class="resale-wrapper">
+        <div class="bid-label">
+          <span> Put your price </span>
+        </div>
+        <div class="price-picker">
+          <app-price-picker
+          formControlName="price"
+              
+            (bidChanged)="resalePriceChanged($event)"
+            [minPrice]="minPrice"
+          ></app-price-picker>
+        </div>
+      </div>
+      <div class="resale-wrapper" *ngIf="nft.owner">
+        <div class="bid-label">
+          <span> Expiration date </span>
+        </div>
+        <div class="date-picker">
+          <!-- <app-date-picker
+            (dateSelected)="resaleDateSelected($event)"
+          ></app-date-picker> -->
+        </div>
+      </div>
+    </div>
+    <div
+      class="buy-button"
+      *ngIf="nft.owner && nft.status !== 3"
+
+    >
+      <app-loading-button
+        color="accent"
+        (click)="submitResale()"
+        [loading]="resaling"
+      >
+        <mat-icon>shopping_basket</mat-icon>
+        <span class="button-label"> Resale </span>
+      </app-loading-button>
+    </div>
+
+    <div class="sold" *ngIf="!nft.owner && (nft.status === 0 || !timeLeft)">
+      <span>
+        {{ nft.owner ? "Owned" : "Sold" }}
+      </span>
+    </div>
+  </form>
+</div>

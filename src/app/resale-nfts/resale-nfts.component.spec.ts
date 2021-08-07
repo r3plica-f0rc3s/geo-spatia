@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SellComponent } from './sell.component';
+import { ResaleNftsComponent } from './resale-nfts.component';
 
-describe('SellComponent', () => {
-  let component: SellComponent;
-  let fixture: ComponentFixture<SellComponent>;
+describe('ResaleNftsComponent', () => {
+  let component: ResaleNftsComponent;
+  let fixture: ComponentFixture<ResaleNftsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SellComponent ]
+      declarations: [ ResaleNftsComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SellComponent);
+    fixture = TestBed.createComponent(ResaleNftsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

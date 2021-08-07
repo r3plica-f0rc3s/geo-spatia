@@ -4,9 +4,10 @@ import { SingleNftComponent } from './single-nft/single-nft.component';
 import { StartComponent } from './start/start.component';
 import { TransactionResultComponent } from './transaction-result/transaction-result.component';
 import { AllNFTsComponent } from './all-nfts/all-nfts.component';
-import { SellComponent } from './sell/sell.component';
 import { RetrieveNftsComponent } from './retrieve-nfts/retrieve-nfts.component';
 import { RouteLockGuard } from './services/guards/route-lock.guard';
+import { ResaleNftsComponent } from './resale-nfts/resale-nfts.component';
+import { BidComponent } from './bid/bid.component';
 
 const routes: Routes = [
   {
@@ -27,8 +28,12 @@ const routes: Routes = [
     path: 'single-nft/:id',
   },
   {
-    component: SellComponent,
-    path: 'sell/:id'
+    component: ResaleNftsComponent,
+    path: 'resale/:id'
+  },
+  {
+    component: BidComponent,
+    path: 'bid/:id'
   },
   {
     component: TransactionResultComponent,

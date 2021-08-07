@@ -38,7 +38,8 @@ export class RetrieveNftsComponent implements OnInit, OnDestroy {
   retrieve(): void {
     this.retrieving = true;
     if (this.nftsToRetrieve[0].resaleId) {
-      this.contractService.retrieveResaleNFT(this.nftsToRetrieve.map(nft => String(nft.resaleId)), this.nftsToRetrieve.map(nft => String(nft.id)));
+      this.contractService.retrieveResaleNFT(
+        this.nftsToRetrieve.map(nft => String(nft.resaleId)), this.nftsToRetrieve.map(nft => String(nft.id)));
 
     } else {
 

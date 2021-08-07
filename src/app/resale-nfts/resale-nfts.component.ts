@@ -1,38 +1,43 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, timer } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { ContractService, GeoNFT, SoldStatus, TransactionResultEvent } from '../services/contract.service';
 import { MapHelperService } from '../services/map-helper.service';
-@Component({
-  templateUrl: './single-nft.component.html',
-  styleUrls: ['./single-nft.component.scss'],
-})
-export class SingleNftComponent implements OnInit, OnDestroy {
-  timeLeft: Date;
-  Math = Math;
-  public nft: GeoNFT;
 
+@Component({
+  templateUrl: './resale-nfts.component.html',
+  styleUrls: ['./resale-nfts.component.scss']
+})
+export class ResaleNftsComponent implements OnInit, OnDestroy {
+  // resaleForm = {
+  //   resalePrice: 0,
+  //   resaleDate: new Date(Date.now())
+  // };
+  resaleForm = this.formBuilder.group({
+    resalePrice: ['', Validators.required],
+    resaleDate: ['', Validators.required],
+  });
+  resaling = false;
   subscriptions: Subscription[] = [];
   SoldStatus = SoldStatus;
-  buying = false;
+  newBid = -1;
+  minPrice = 0;
+  public nft: GeoNFT;
   highestBid: string;
   endedPercent: number;
   latestBidIsOwn: boolean;
-  resaling = false;
-  newBid = -1;
-  minPrice = 0;
-  resaleForm = {
-    resalePrice: 0,
-    resaleDate: new Date(Date.now())
-  };
+  timeLeft: Date;
+  Math = Math;
   constructor(
     private activatedRoute: ActivatedRoute,
-    private router: Router,
-    public contractService: ContractService,
     private mapHelperService: MapHelperService,
-    private changeDetector: ChangeDetectorRef
-  ) { }
+    public contractService: ContractService,
+    private router: Router,
+    private formBuilder: FormBuilder
+    ) { }
+
   ngOnInit(): void {
     this.subscriptions.push(
       this.activatedRoute.params.pipe(
@@ -45,18 +50,16 @@ export class SingleNftComponent implements OnInit, OnDestroy {
           this.router.navigate(['/', 'all-nfts']);
           return;
         }
-
         this.minPrice = this.getMinPrice();
         this.mapHelperService.setSingleMarker(nft);
         this.calculateTimeLeft();
         this.latestBidIsOwn = nft.bidInfo && nft.bidInfo.bidderAddress.toLowerCase() === this.contractService.selectedAddress.toLowerCase();
 
-        this.changeDetector.detectChanges();
       })
     );
-
-
   }
+
+
 
   calculateTimeLeft(): void {
     if (Math.max(this.nft.saleTime.getTime() - Date.now(), 0) === 0) {
@@ -77,39 +80,6 @@ export class SingleNftComponent implements OnInit, OnDestroy {
     );
   }
 
-  submitBid(): void {
-    console.log('new bid', this.newBid);
-    if (this.nft.resaleId) {
-      this.contractService.bidResale(this.nft.resaleId, String(this.nft.id), this.contractService.oneToWei(String(this.newBid)));
-    } else {
-      this.contractService.bidNFT(this.nft.id, this.contractService.oneToWei(String(this.newBid)));
-    }
-    this.buying = true;
-
-    this.handleTransaction();
-
-  }
-
-  resalePriceChanged(newPrice): void {
-    this.resaleForm.resalePrice = newPrice;
-    this.newBid = newPrice;
-  }
-
-  resaleDateSelected($event): void {
-    this.resaleForm.resaleDate = $event;
-  }
-
-  submitResale(): void {
-    this.resaling = true;
-    this.contractService.resaleNft(
-      this.contractService.oneToWei(String(this.resaleForm.resalePrice)),
-      String(this.nft.id), this.resaleForm.resaleDate.getTime());
-    // listen to transactions$ to change view
-    this.handleTransaction();
-  }
-
-
-
   getMinPrice(): number {
     if (!this.nft) {
       return null;
@@ -118,14 +88,21 @@ export class SingleNftComponent implements OnInit, OnDestroy {
     return Number(this.contractService.weiToOne(price));
   }
 
-  bidChanged(newBid: number): void {
-    this.newBid = newBid;
+  resalePriceChanged(newPrice): void {
+    // this.resaleForm.resalePrice = newPrice;
+    this.newBid = newPrice;
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((sub: Subscription) => {
-      sub.unsubscribe();
-    });
+  // resaleDateSelected($event): void {
+  //   this.resaleForm.resaleDate = $event;
+  // }
+
+  submitResale(): void {
+    // this.contractService.resaleNft(
+    //   this.contractService.oneToWei(String(this.resaleForm.resalePrice)),
+    //   String(this.nft.id), this.resaleForm.resaleDate.getTime());
+    // // listen to transactions$ to change view
+    // this.handleTransaction();
   }
 
   private handleTransaction(): void {
@@ -139,5 +116,11 @@ export class SingleNftComponent implements OnInit, OnDestroy {
       })
     );
   }
-}
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
+  }
+
+}
