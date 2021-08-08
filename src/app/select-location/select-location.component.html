@@ -1,0 +1,13 @@
+<div class="container">
+  <div class="top-wrapper" *ngIf="label">
+    <div class="top-label">
+      <span> {{label}} </span>
+    </div>
+    <div class="close-wrapper">
+      <button mat-icon-button [routerLink]="['/', 'all-nfts']">
+        <mat-icon color="primary">close</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="inner-wrapper">Please select location</div>
+</div>

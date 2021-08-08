@@ -4,9 +4,9 @@ import { SingleNftComponent } from './single-nft/single-nft.component';
 import { StartComponent } from './start/start.component';
 import { TransactionResultComponent } from './transaction-result/transaction-result.component';
 import { AllNFTsComponent } from './all-nfts/all-nfts.component';
-import { SellComponent } from './sell/sell.component';
 import { RetrieveNftsComponent } from './retrieve-nfts/retrieve-nfts.component';
 import { RouteLockGuard } from './services/guards/route-lock.guard';
+import { SelectLocationComponent } from './select-location/select-location.component';
 
 const routes: Routes = [
   {
@@ -27,8 +27,8 @@ const routes: Routes = [
     path: 'single-nft/:id',
   },
   {
-    component: SellComponent,
-    path: 'sell/:id'
+    component: SelectLocationComponent,
+    path: 'select-location'
   },
   {
     component: TransactionResultComponent,
@@ -43,7 +43,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { enableTracing: true })],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

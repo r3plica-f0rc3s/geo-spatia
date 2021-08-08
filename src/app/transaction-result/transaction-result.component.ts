@@ -33,7 +33,9 @@ export class TransactionResultComponent implements OnInit {
   }
 
   close(): void {
+    console.log('close invoked');
     if (this.success && this.closable) {
+      console.log('navigating to all-nfts');
       this.router.navigate(['/', 'all-nfts']);
     } else {
       this.location.back();

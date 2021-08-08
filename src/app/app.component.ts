@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LngLat, Map } from 'mapbox-gl';
-import { ContractService, GeoNFT } from './services/contract.service';
+import { ContractService, GeoNFT, WalletInfo } from './services/contract.service';
 import { ImageMarker } from './services/map-helper.service';
 import { SidenavState, UxService } from './services/ux.service';
 @Component({
@@ -65,6 +65,7 @@ export class AppComponent implements OnInit {
   loading = false;
   subscriptions = [];
   nfts: GeoNFT[] = [];
+  isAdmin: boolean;
 
   constructor(
     public uxService: UxService,
@@ -83,6 +84,10 @@ export class AppComponent implements OnInit {
     if (wasStarted) {
       this.connectToMetamask();
     }
+
+    this.contractService.walletInfo$.subscribe((walletInfo: WalletInfo) => {
+      this.isAdmin = walletInfo ? walletInfo.isContractOwner : false;
+    });
 
     this.isMobile = this.media.matchMedia('(max-width: 700px)').matches;
     this.uxService.sidenavOpened$.subscribe((sideNavOpened) => {
@@ -118,10 +123,16 @@ export class AppComponent implements OnInit {
         }
       })
     );
-
-
   }
 
+createNft(): void {
+  this.router.navigate(['/', 'select-location'], {
+    state: {
+      moveTo: 'create-nft',
+      label: 'Create NFT'
+    }
+  });
+}
 
   async connectToMetamask(): Promise<void> {
     window.localStorage.setItem('wasStarted', 'true');

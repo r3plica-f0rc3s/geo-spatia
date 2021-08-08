@@ -8,7 +8,8 @@ import { GeolocationService } from './geolocation-service.service';
 export enum CameraState {
   IDLE,
   NEARBY,
-  SINGLE
+  SINGLE,
+  SELECT
 }
 export interface MapStatus {
   cameraState: CameraState;
@@ -49,6 +50,13 @@ export class MapHelperService {
       });
       return lngLat;
     });
+  }
+
+  setSelectMode(): void {
+    // this.mapStatusSubject.next({
+    //   cameraState: CameraState.SINGLE,
+
+    // });
   }
 
   setNearby(imageMarkers: GeoNFT[]): void {

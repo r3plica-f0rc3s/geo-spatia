@@ -110,8 +110,6 @@ export class SingleNftComponent implements OnInit, OnDestroy {
     this.handleTransaction();
   }
 
-
-
   getMinPrice(): number {
     if (!this.nft) {
       return null;
@@ -124,12 +122,6 @@ export class SingleNftComponent implements OnInit, OnDestroy {
     this.newBid = newBid;
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((sub: Subscription) => {
-      sub.unsubscribe();
-    });
-  }
-
   private handleTransaction(): void {
     this.subscriptions.push(
       this.contractService.transactions$.subscribe((transactionEvent: TransactionResultEvent) => {
@@ -140,6 +132,12 @@ export class SingleNftComponent implements OnInit, OnDestroy {
         this.router.navigate(['/', 'transaction-result'], { state: { success: false, closable: true } });
       })
     );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
   }
 }
 

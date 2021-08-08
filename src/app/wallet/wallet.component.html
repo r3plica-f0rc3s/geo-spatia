@@ -42,7 +42,7 @@
   <div class="description-wallet">
     <div class="badges">
       <mat-chip-list>
-        <mat-chip *ngIf="isAdmin">Contract admin</mat-chip>
+        <mat-chip *ngIf="isAdmin">Contract owner</mat-chip>
       </mat-chip-list>
     </div>
     <div>
@@ -50,7 +50,6 @@
     </div>
     <div class="info-inner">
       <span class="amount"> {{ walletInfo?.balance.substring(0, 12) }} </span>
-
       <span> ONE </span>
     </div>
     <button (click)="logout()" mat-raised-button color="primary">
