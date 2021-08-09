@@ -37,6 +37,7 @@ export class MapGlComponent implements OnChanges, OnDestroy {
   level = 1;
   CameraState = CameraState;
   NftUxState = NftUxState;
+  selectionControls = false;
   @ViewChildren('markers') public markerViews: QueryList<MarkerComponent>;
   constructor(
     private mapHelperService: MapHelperService,
@@ -84,6 +85,15 @@ export class MapGlComponent implements OnChanges, OnDestroy {
           }
         }
         break;
+      case CameraState.SELECT:
+        this.map.flyTo({
+          zoom: 0,
+          bearing: 0,
+          pitch: 0,
+          offset: [-400, -60]
+        });
+        this.enableSelectionControls();
+        break;
       case CameraState.SINGLE:
         if (!this.mapStatus.markers) {
           return;
@@ -98,6 +108,10 @@ export class MapGlComponent implements OnChanges, OnDestroy {
         });
         break;
     }
+  }
+
+  enableSelectionControls(): void {
+    this.selectionControls = true;
   }
 
   ngOnChanges(changes: SimpleChanges): void {

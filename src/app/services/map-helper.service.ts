@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';
-import { LngLat, LngLatBounds } from 'mapbox-gl';
+import { LngLat } from 'mapbox-gl';
 import { BehaviorSubject } from 'rxjs';
 import { GeoNFT } from './contract.service';
 import { GeolocationService } from './geolocation-service.service';
@@ -53,10 +53,12 @@ export class MapHelperService {
   }
 
   setSelectMode(): void {
-    // this.mapStatusSubject.next({
-    //   cameraState: CameraState.SINGLE,
-
-    // });
+    this.mapStatusSubject.next({
+      cameraState: CameraState.SELECT,
+      showUser: false,
+      changeCameraState: true,
+      markers: []
+    });
   }
 
   setNearby(imageMarkers: GeoNFT[]): void {
