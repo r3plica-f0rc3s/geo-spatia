@@ -21,7 +21,10 @@ mgl-map {
   overflow: hidden;
 }
 .selection-controls {
-  position:absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
   width: 100vw;
   height: 100vw;
 }

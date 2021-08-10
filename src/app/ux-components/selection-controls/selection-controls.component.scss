@@ -1,10 +1,16 @@
-.x {
-    width: 100vw;
-    height: 1px;
-    background-color: white;
-}
-.y {
-    width: 1px;
-    height: 100vh;
-    background-color: white;
+:host {
+    position: absolute;
+    top: 0;
+    left: 0;
+    .x {
+        width: 100vw;
+        height: 1px;
+        background-color: white;
+    }
+    .y {
+        width: 1px;
+        height: 100vh;
+        background-color: white;
+    }
+    
 }

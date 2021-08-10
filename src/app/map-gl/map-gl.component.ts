@@ -131,8 +131,7 @@ export class MapGlComponent implements OnChanges, OnDestroy {
       // apply status
       this.nfts = mapState.markers;
       this.setCamera();
-      if (mapState.changeCameraState) {
-      }
+
     });
   }
 
