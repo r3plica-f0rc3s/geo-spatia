@@ -637,6 +637,10 @@ export class ContractService {
     );
   }
 
+  createNft(nft: GeoNFT): void {
+    // TODO
+  }
+
   enableResalePermission(): void {
     const transaction = this.contract.methods
       .enableResale()

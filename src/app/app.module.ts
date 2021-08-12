@@ -54,6 +54,7 @@ import { CreateNftComponent } from './create-nft/create-nft.component';
 import { SelectLocationComponent } from './select-location/select-location.component';
 import { SelectionControlsComponent } from './ux-components/selection-controls/selection-controls.component';
 import { InputComponent } from './ux-components/input/input.component';
+import { NgxFileDropModule } from 'ngx-file-drop';
 
 
 @NgModule({
@@ -113,7 +114,7 @@ import { InputComponent } from './ux-components/input/input.component';
     MatFormFieldModule,
     NgxMatNativeDateModule,
     NgxMatTimepickerModule,
-
+    NgxFileDropModule
   ],
   providers: [
     GeolocationService,
