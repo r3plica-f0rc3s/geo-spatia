@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';
 import { LngLat } from 'mapbox-gl';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { GeoNFT } from './contract.service';
 import { GeolocationService } from './geolocation-service.service';
 
@@ -36,6 +36,8 @@ export class MapHelperService {
     changeCameraState: false
   });
   userLocation: LngLat = null;
+  mapSelectedSubject = new Subject<LngLat>();
+  mapSelected$ = this.mapSelectedSubject.asObservable();
   mapStatus$ = this.mapStatusSubject.asObservable();
   constructor(private locationService: GeolocationService) { }
 
@@ -93,4 +95,8 @@ export class MapHelperService {
     });
   }
 
+  selected(coords: LngLat): void {
+    console.log('selected', coords);
+    this.mapSelectedSubject.next(coords);
+  }
 }

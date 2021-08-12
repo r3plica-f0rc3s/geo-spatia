@@ -1,0 +1,11 @@
+<div class="input-control">
+  <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+    <input
+      type="text"
+      [value]="value"
+      [(ngModel)]="value"
+      (ngModelChange)="updateChanges()"
+      [placeholder]="placeholder"
+    />
+  </mat-button-toggle-group>
+</div>

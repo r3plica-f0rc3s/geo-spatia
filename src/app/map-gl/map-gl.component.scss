@@ -26,5 +26,6 @@ mgl-map {
   overflow: hidden;
   position: absolute;
   width: 100vw;
-  height: 100vw;
+  height: 100vh;
+  pointer-events: none;
 }

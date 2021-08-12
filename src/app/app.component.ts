@@ -128,7 +128,7 @@ export class AppComponent implements OnInit {
 createNft(): void {
   this.router.navigate(['/', 'select-location'], {
     state: {
-      moveTo: 'create-nft',
+      moveTo: '/create-nft',
       label: 'Create NFT'
     }
   });

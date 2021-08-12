@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LngLat } from 'mapbox-gl';
 import { MapHelperService } from '../services/map-helper.service';
@@ -8,6 +8,7 @@ export interface LocationSelectorState {
   label: string;
   moveTo: string;
   withState: any;
+  selectedLocation: LngLat;
 }
 
 @Component({
@@ -17,23 +18,26 @@ export interface LocationSelectorState {
 export class SelectLocationComponent implements OnInit {
   label: string;
   selectedLocation: LngLat;
-
+  navParams: LocationSelectorState;
   constructor(
     private router: Router,
     private mapHelperService: MapHelperService,
     private uxService: UxService) {
-    this.label = this.router.getCurrentNavigation().extras.state.label;
+    this.navParams = this.router.getCurrentNavigation().extras.state as LocationSelectorState;
   }
+
   ngOnInit(): void {
     this.mapHelperService.setSelectMode();
     this.uxService.disableLeftSidenav();
     this.uxService.disableSidenav();
-  }
 
-  submitLocation(): void {
-    if (this.selectedLocation) {
-
-    }
+    this.mapHelperService.mapSelected$.subscribe((selected) => {
+      this.uxService.enableLeftSidenav();
+      this.uxService.enableSidenav();
+      this.router.navigateByUrl(this.navParams.moveTo, {
+        state: { ...this.navParams.withState, selected }
+      });
+    });
   }
 
 }

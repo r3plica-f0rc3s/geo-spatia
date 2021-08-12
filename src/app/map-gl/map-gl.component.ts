@@ -8,7 +8,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { LngLat, LngLatBounds, Map } from 'mapbox-gl';
+import { LngLat, LngLatBounds, Map, MapEventType } from 'mapbox-gl';
 import { MarkerComponent } from 'ngx-mapbox-gl/lib/marker/marker.component';
 import { fromEvent, Subscription, timer } from 'rxjs';
 import { debounce } from 'rxjs/operators';
@@ -38,12 +38,49 @@ export class MapGlComponent implements OnChanges, OnDestroy {
   CameraState = CameraState;
   NftUxState = NftUxState;
   selectionControls = false;
+  selectionMarker = null;
   @ViewChildren('markers') public markerViews: QueryList<MarkerComponent>;
   constructor(
     private mapHelperService: MapHelperService,
     private router: Router
   ) { }
 
+  enableSelectionControls(): void {
+    this.selectionControls = true;
+    this.map.on('click', (event) => {
+      this.selectionMarker = event.lngLat;
+      // report it to service
+      this.mapHelperService.selected(this.selectionMarker);
+    });
+  }
+
+  disableSelectionControls(): void {
+    this.selectionControls = false;
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.bounds = new LngLatBounds();
+
+    if (changes.markers.currentValue) {
+      this.map.fitBounds(this.bounds, { padding: 50 });
+    }
+  }
+
+  onMapLoaded($event): void {
+    this.map = $event;
+    this.setEvents();
+    this.mapHelperService.mapStatus$.subscribe((mapState) => {
+      this.mapStatus = mapState;
+      // apply status
+      this.nfts = mapState.markers;
+      this.setCamera();
+
+    });
+  }
+
+  markerClicked(marker: ImageMarker): void {
+    this.router.navigate(['single-nft', marker.id]);
+  }
 
   private setEvents(): void {
     const source = fromEvent(this.map, 'zoom');
@@ -67,6 +104,8 @@ export class MapGlComponent implements OnChanges, OnDestroy {
         if (this.map) {
           this.map.fitBounds(this.bounds, { zoom: 1 });
         }
+
+        this.disableSelectionControls();
         break;
       case CameraState.IDLE:
 
@@ -84,6 +123,8 @@ export class MapGlComponent implements OnChanges, OnDestroy {
             });
           }
         }
+
+        this.disableSelectionControls();
         break;
       case CameraState.SELECT:
         this.map.flyTo({
@@ -106,37 +147,9 @@ export class MapGlComponent implements OnChanges, OnDestroy {
           zoom: 10,
           offset: [-400, -60]
         });
+        this.disableSelectionControls();
         break;
     }
-  }
-
-  enableSelectionControls(): void {
-    this.selectionControls = true;
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    this.bounds = new LngLatBounds();
-
-    if (changes.markers.currentValue) {
-
-      this.map.fitBounds(this.bounds, { padding: 50 });
-    }
-  }
-
-  onMapLoaded($event): void {
-    this.map = $event;
-    this.setEvents();
-    this.mapHelperService.mapStatus$.subscribe((mapState) => {
-      this.mapStatus = mapState;
-      // apply status
-      this.nfts = mapState.markers;
-      this.setCamera();
-
-    });
-  }
-
-  markerClicked(marker: ImageMarker): void {
-    this.router.navigate(['single-nft', marker.id]);
   }
 
   ngOnDestroy(): void {

@@ -1,1 +1,34 @@
-<p>create-nft works!</p>
+<div class="container">
+    <div class="top-wrapper">
+      <div class="top-label">
+        <span> Create NFT</span>
+      </div>
+      <div class="close-wrapper">
+        <button mat-icon-button [routerLink]="['/', 'all-nfts']">
+          <mat-icon color="primary">close</mat-icon>
+        </button>
+      </div>
+    </div>
+    <!-- TODO: create nft form -->
+    <form class="create-nft form">
+      <div class="form-field">
+        <label>Name</label>
+        <div class="control-wrapper">
+          <app-input></app-input>
+        </div>
+      </div>
+      <div class="form-field">
+        <label>Location</label>
+        <div class="control-wrapper">
+          <app-input></app-input>
+        </div>
+      </div>
+      <div class="form-field">
+        <label>SVG File</label>
+        <div class="control-wrapper">
+          <app-input></app-input>
+        </div>
+      </div>
+    </form>
+  </div>
+ 

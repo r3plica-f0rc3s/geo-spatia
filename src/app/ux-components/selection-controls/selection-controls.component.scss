@@ -3,14 +3,15 @@
     top: 0;
     left: 0;
     .x {
+        position: absolute;
         width: 100vw;
-        height: 1px;
-        background-color: white;
+        height: 2px;
+        background-color: #7b1fa2;
     }
     .y {
-        width: 1px;
+        position: absolute;
+        width: 2px;
         height: 100vh;
-        background-color: white;
+        background-color: #7b1fa2;
     }
-    
 }

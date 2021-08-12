@@ -1,7 +1,7 @@
 :host {
     position: absolute;
     bottom: 0;
-    height: 35%;
+    height: 11%;
     background-color: #212121;
     opacity: 0.9;
     border-top-left-radius: 24px;
@@ -26,7 +26,6 @@
     }
   }
   .close-wrapper {
-    width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -82,5 +81,8 @@
     align-items: center;
     place-content: center;
     height: 100%;
+    font-size: 20px;
+    line-height: 32px;
+    letter-spacing: 1px;
   }
   

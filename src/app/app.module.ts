@@ -53,6 +53,7 @@ import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerMod
 import { CreateNftComponent } from './create-nft/create-nft.component';
 import { SelectLocationComponent } from './select-location/select-location.component';
 import { SelectionControlsComponent } from './ux-components/selection-controls/selection-controls.component';
+import { InputComponent } from './ux-components/input/input.component';
 
 
 @NgModule({
@@ -82,6 +83,7 @@ import { SelectionControlsComponent } from './ux-components/selection-controls/s
     CreateNftComponent,
     SelectLocationComponent,
     SelectionControlsComponent,
+    InputComponent,
   ],
   imports: [
     BrowserModule,

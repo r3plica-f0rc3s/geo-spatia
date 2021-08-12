@@ -55,6 +55,7 @@ export interface GeoNFT {
   hasUserBids?: boolean;
   resaleId?: string;
 }
+
 export interface WalletInfo {
   address: string;
   balance: string;
@@ -136,8 +137,8 @@ export interface ResaleRetrieve {
 export type TransactionEventUnion = TransactionResultEvent | TransactionStartedEvent;
 @Injectable()
 export class ContractService {
-  contractAddress = '0x9Bba0Fe6520a3d18209b07D4b3A736Fba2604fd6';
-  blockNumber = 13286288;
+  contractAddress = '0x9060fA7Cbc5Ae5349F28A7cbA70a013cAc042389';
+  blockNumber = 13472752;
   private loggedSubject = new BehaviorSubject<boolean>(false);
   logged$ = this.loggedSubject.asObservable();
 

@@ -6,7 +6,6 @@
   (load)="onMapLoaded($event)"
 >
   <mgl-marker
-
     *ngIf="mapStatus?.showUser"
     [lngLat]="[mapStatus?.userLocation.lng, mapStatus?.userLocation.lat]"
     #markers

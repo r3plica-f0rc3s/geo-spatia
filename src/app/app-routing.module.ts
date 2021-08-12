@@ -7,6 +7,7 @@ import { AllNFTsComponent } from './all-nfts/all-nfts.component';
 import { RetrieveNftsComponent } from './retrieve-nfts/retrieve-nfts.component';
 import { RouteLockGuard } from './services/guards/route-lock.guard';
 import { SelectLocationComponent } from './select-location/select-location.component';
+import { CreateNftComponent } from './create-nft/create-nft.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,10 @@ const routes: Routes = [
   {
     component: SelectLocationComponent,
     path: 'select-location'
+  },
+  {
+    component: CreateNftComponent,
+    path: 'create-nft'
   },
   {
     component: TransactionResultComponent,
