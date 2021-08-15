@@ -134,11 +134,19 @@ export interface ResaleRetrieve {
   };
 }
 
+export interface CreateNft {
+  name: string;
+  location: LngLat;
+  svg: string;
+  price: string;
+  tillDate: string;
+}
+
 export type TransactionEventUnion = TransactionResultEvent | TransactionStartedEvent;
 @Injectable()
 export class ContractService {
   contractAddress = '0x713e085aBE415d8c53dcf8E96f8b8f4E23A083B8';
-  blockNumber = 13560417;
+  blockNumber = 13634915;
   private loggedSubject = new BehaviorSubject<boolean>(false);
   logged$ = this.loggedSubject.asObservable();
 
@@ -637,8 +645,12 @@ export class ContractService {
     );
   }
 
-  createNft(nft: GeoNFT): void {
-    // TODO
+  createNft(nft: CreateNft): void {
+    const transaction = this.contract.methods.CreateNew(
+      [[nft.name, `${nft.location.lng},${nft.location.lat}`, 1, this.oneToWei(String(nft.price)), 1]],
+      ['%3Csvg%20viewBox%3D%220%200%2090%2090%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%25%22%20height%3D%22100%25%22%3E%3Cmask%20id%3D%22mask__ring%22%20maskUnits%3D%22userSpaceOnUse%22%20x%3D%220%22%20y%3D%220%22%20width%3D%2290%22%20height%3D%2290%22%3E%3Crect%20width%3D%2290%22%20height%3D%2290%22%20rx%3D%22180%22%20fill%3D%22white%22%3E%3C%2Frect%3E%3C%2Fmask%3E%3Cg%20mask%3D%22url%28%23mask__ring%29%22%3E%3Cpath%20d%3D%22M0%200h90v45H0z%22%20fill%3D%22%23ffc978%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M0%2045h90v45H0z%22%20fill%3D%22%23c9c987%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M83%2045a38%2038%200%2000-76%200h76z%22%20fill%3D%22%23c9c987%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M83%2045a38%2038%200%2001-76%200h76z%22%20fill%3D%22%23d1a664%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M77%2045a32%2032%200%2010-64%200h64z%22%20fill%3D%22%23d1a664%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M77%2045a32%2032%200%2011-64%200h64z%22%20fill%3D%22%23c27b57%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M71%2045a26%2026%200%2000-52%200h52z%22%20fill%3D%22%23c27b57%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M71%2045a26%2026%200%2001-52%200h52z%22%20fill%3D%22%23ffc978%22%3E%3C%2Fpath%3E%3Ccircle%20cx%3D%2245%22%20cy%3D%2245%22%20r%3D%2223%22%20fill%3D%22%23ffe7bf%22%3E%3C%2Fcircle%3E%3C%2Fg%3E%3C%2Fsvg%3E'],
+      [3600]).send({ from: this.selectedAddress });
+    this.listenToTransaction(transaction);
   }
 
   enableResalePermission(): void {

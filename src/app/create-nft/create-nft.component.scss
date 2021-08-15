@@ -1,7 +1,7 @@
 :host {
   position: absolute;
   bottom: 0;
-  height: 40%;
+  height: auto;
   background-color: #212121;
   opacity: 0.9;
   border-top-left-radius: 24px;
@@ -9,7 +9,6 @@
   display: flex;
   flex-direction: column;
   place-content: space-between;
-  padding-bottom: 32px;
   left: 0;
   right: 0;
   margin-left: auto;
@@ -22,7 +21,7 @@
 }
 @media only screen and (min-width: 601px) {
   :host {
-    width: 70%;
+    width: 50%;
   }
 }
 
@@ -81,8 +80,4 @@
     }
   }
 }
-.date-picker {
-  display: flex;
-  align-items: center;
-  width: 40%;
-}
+

@@ -1,5 +1,12 @@
 :host {
-    width: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+::ng-deep .mat-button-toggle-standalone.mat-button-toggle-appearance-standard, .mat-button-toggle-group-appearance-standard {
+  width: 100%;
+  display: flex;
+  align-items: center;
 }
 .price-ticker {
     display: flex;
@@ -8,9 +15,10 @@
     place-content: flex-end;
 }
 .middle {
-    width: 168px;
+    width: 80%;
     border: none;
     overflow: hidden;
+    display: flex;
 }
 
 .toggle {
@@ -23,11 +31,15 @@
 .minus {
     border-top-left-radius: 25px;
     border-bottom-left-radius: 25px;
+    width: 10%;
+    display: flex;
 }
 .plus {
     border-top-right-radius: 25px;
     border-bottom-right-radius: 25px;
-  
+    width: 10%;
+    display: flex;
+
 }
 ::ng-deep .mat-button-toggle-group {
     border: none;

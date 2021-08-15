@@ -15,31 +15,24 @@
     <!-- TODO: create nft form -->
     <form
         (ngSubmit)="submit()"
+        [formGroup]="createNftForm"
         class="create-nft form"
     >
-
-        <div class="form-field">
-            <label>Name</label>
-            <div class="control-wrapper">
-                <app-input></app-input>
-            </div>
-        </div>
-        <div class="form-field">
-            <label>Location</label>
-            <div class="control-wrapper">
-                <app-input></app-input>
-            </div>
-        </div>
-        <div class="form-field">
-            <label>SVG File</label>
-            <div class="control-wrapper">
-                <app-input></app-input>
-            </div>
-        </div>
-        <div class="form-field">
-            <label>Expiration date</label>
-            <app-date-picker class="date-picker"></app-date-picker>
-        </div>
+        <app-form-field label="Name">
+            <app-input formControlName="name"></app-input>
+        </app-form-field>
+        <app-form-field label="Location">
+            <app-input formControlName="location"></app-input>
+        </app-form-field>
+        <app-form-field label="SVG">
+            <app-textarea formControlName="SVG"></app-textarea>
+        </app-form-field>
+        <app-form-field label="Price">
+            <app-price-picker [minPrice]="0.1" (priceChanged)="priceChanged($event)"></app-price-picker>
+        </app-form-field>
+        <app-form-field label="Expiration date">
+            <app-date-picker (dateSelected)="dateChanged($event)"></app-date-picker>
+        </app-form-field>
 
         <div class="submit-button">
             <app-loading-button

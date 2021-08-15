@@ -83,7 +83,7 @@
       </div>
       <div class="price-picker">
         <app-price-picker
-          (bidChanged)="bidChanged($event)"
+          (priceChanged)="bidChanged($event)"
           [minPrice]="minPrice"
         ></app-price-picker>
       </div>
@@ -97,7 +97,7 @@
         </div>
         <div class="price-picker">
           <app-price-picker
-            (bidChanged)="resalePriceChanged($event)"
+            (priceChanged)="resalePriceChanged($event)"
             [minPrice]="minPrice"
           ></app-price-picker>
         </div>

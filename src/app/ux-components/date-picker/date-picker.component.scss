@@ -16,6 +16,8 @@
   bottom: 4px;
 }
 :host {
+  display: flex;
+  align-items: center;
   width: 100%;
 }
 .date-time-picker {
