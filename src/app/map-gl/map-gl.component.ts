@@ -49,7 +49,7 @@ export class MapGlComponent implements OnChanges, OnDestroy {
   enableSelectionControls(): void {
     this.selectionControls = true;
     this.map.on('click', (event) => {
-      this.selectionMarker = event.lngLat;
+      this.selectionMarker = new LngLat(event.lngLat.lng % 90, event.lngLat.lat % 90);
       // report it to service
       this.mapHelperService.selected(this.selectionMarker);
     });
@@ -155,7 +155,7 @@ export class MapGlComponent implements OnChanges, OnDestroy {
           offset: [-400, -60]
         });
         }
-       
+
         break;
     }
   }

@@ -145,8 +145,8 @@ export interface CreateNft {
 export type TransactionEventUnion = TransactionResultEvent | TransactionStartedEvent;
 @Injectable()
 export class ContractService {
-  contractAddress = '0x713e085aBE415d8c53dcf8E96f8b8f4E23A083B8';
-  blockNumber = 13634915;
+  contractAddress = '0x0b3d371B10ED574ADdc5901DDEEb4060053063c8';
+  blockNumber = 13644397;
   private loggedSubject = new BehaviorSubject<boolean>(false);
   logged$ = this.loggedSubject.asObservable();
 
