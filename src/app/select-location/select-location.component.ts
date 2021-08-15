@@ -32,10 +32,9 @@ export class SelectLocationComponent implements OnInit {
     this.uxService.disableSidenav();
 
     this.mapHelperService.mapSelected$.subscribe((selected) => {
-      this.uxService.enableLeftSidenav();
-      this.uxService.enableSidenav();
+
       this.router.navigateByUrl(this.navParams.moveTo, {
-        state: { ...this.navParams.withState, selected }
+        state: { moveTo: this.navParams.moveTo, label: this.navParams.label, withState: this.navParams.withState, selectedLocation: selected } as LocationSelectorState
       });
     });
   }

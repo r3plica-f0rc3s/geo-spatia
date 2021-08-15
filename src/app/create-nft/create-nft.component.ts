@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LngLat } from 'mapbox-gl';
+import { LocationSelectorState } from '../select-location/select-location.component';
 import { ContractService } from '../services/contract.service';
 import { MapHelperService } from '../services/map-helper.service';
 
@@ -12,6 +13,7 @@ import { MapHelperService } from '../services/map-helper.service';
 export class CreateNftComponent implements OnInit {
   selected: LngLat;
   creating = false;
+  navExtras: LocationSelectorState;
   createNftForm = this.formBuilder.group({
     name: ['', [Validators.required]],
     location: ['45,45', [Validators.required]],
@@ -25,13 +27,15 @@ export class CreateNftComponent implements OnInit {
     private contractServuce: ContractService,
     ) {
     // get new markers location
-    this.selected = this.router.getCurrentNavigation().extras.state as LngLat;
+    this.navExtras = this.router.getCurrentNavigation().extras.state as LocationSelectorState;
+    console.log('navExtras', this.navExtras);
   }
 
   ngOnInit(): void {
-    // this.mapHelperService.setSingleMarker({
-
-    // })
+    if (this.navExtras.selectedLocation) {
+      debugger;
+      this.mapHelperService.setSingleNewNftMarker();
+    }
   }
 
   submit(): void {

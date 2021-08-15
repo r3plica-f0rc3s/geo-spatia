@@ -1,36 +1,38 @@
 :host {
-    position: absolute;
-    bottom: 0;
-    height: 40%;
-    background-color: #212121;
-    opacity: 0.9;
-    border-top-left-radius: 24px;
-    border-top-right-radius: 24px;
-    display: flex;
-    flex-direction: column;
-    place-content: space-between;
-    padding-bottom: 32px;
-    left: 0;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
+  position: absolute;
+  bottom: 0;
+  height: 40%;
+  background-color: #212121;
+  opacity: 0.9;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  place-content: space-between;
+  padding-bottom: 32px;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media only screen and (max-width: 600px) {
+  :host {
+    width: 100%;
   }
-  @media only screen and (max-width: 600px) {
-    :host {
-      width: 100%;
-    }
+}
+@media only screen and (min-width: 601px) {
+  :host {
+    width: 70%;
   }
-  @media only screen and (min-width: 601px) {
-    :host {
-      width: 70%;
-    }
-  }
+}
 
 .form-field {
   display: flex;
   align-items: center;
   width: 100%;
   place-content: space-between;
+  margin-top: 16px;
+  margin-bottom: 16px;
   label {
     font-size: 20px;
     letter-spacing: 1px;
@@ -41,12 +43,13 @@
   }
 }
 .control-wrapper {
+  width: 40%;
+  display: flex;
+  align-items: center;
   input {
     border-radius: 25px;
     border: none;
     height: 48px;
-    min-width: 200px;
-
   }
 }
 .submit-button {
@@ -77,4 +80,9 @@
       margin-right: 8px;
     }
   }
+}
+.date-picker {
+  display: flex;
+  align-items: center;
+  width: 40%;
 }

@@ -1,6 +1,12 @@
+import { LngLat } from 'mapbox-gl';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
 import { ContractService, GeoNFT, SoldStatus } from 'src/app/services/contract.service';
+
+export interface EmptyNft {
+  location: LngLat;
+  name: string;
+}
 
 @Component({
   selector: 'app-nft-grid-item',

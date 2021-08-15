@@ -27,16 +27,17 @@ import {
   styleUrls: ['./map-gl.component.scss'],
 })
 export class MapGlComponent implements OnChanges, OnDestroy {
-  nfts: GeoNFT[] = [];
+  nfts: Partial<GeoNFT>[] = [];
   @Input()
   userLocation: LngLat = null;
   public bounds: LngLatBounds;
   public map: Map;
   public mapStatus: MapStatus;
-  subscription = [];
+  subscriptions = [];
   level = 1;
   CameraState = CameraState;
   NftUxState = NftUxState;
+  newNft = false;
   selectionControls = false;
   selectionMarker = null;
   @ViewChildren('markers') public markerViews: QueryList<MarkerComponent>;
@@ -84,7 +85,7 @@ export class MapGlComponent implements OnChanges, OnDestroy {
 
   private setEvents(): void {
     const source = fromEvent(this.map, 'zoom');
-    this.subscription.push(source.pipe(debounce(() => timer(500))).subscribe(() => {
+    this.subscriptions.push(source.pipe(debounce(() => timer(500))).subscribe(() => {
       if (this.mapStatus.markers && this.mapStatus.cameraState !== CameraState.SINGLE) {
         this.nfts = this.mapStatus.markers.filter((marker) => {
           return Math.max(Math.floor(this.map.getZoom()), 1) === marker.layer;
@@ -136,24 +137,31 @@ export class MapGlComponent implements OnChanges, OnDestroy {
         this.enableSelectionControls();
         break;
       case CameraState.SINGLE:
+              this.disableSelectionControls();
+        if (this.mapStatus.newNft) {
+          // TODO: add new nft
+          this.newNft = true;
+        }
         if (!this.mapStatus.markers) {
           return;
         }
-        const coords = this.mapStatus.markers[0].location;
-        this.map.flyTo({
+        if (this.mapStatus.markers[0]) {
+          const coords = this.mapStatus.markers[0].location;
+           this.map.flyTo({
           center: coords,
           essential: true,
           pitch: 60,
           zoom: 10,
           offset: [-400, -60]
         });
-        this.disableSelectionControls();
+        }
+       
         break;
     }
   }
 
   ngOnDestroy(): void {
-    this.subscription.forEach((sub: Subscription) => {
+    this.subscriptions.forEach((sub: Subscription) => {
       sub.unsubscribe();
     });
   }

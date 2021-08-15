@@ -13,10 +13,11 @@ export enum CameraState {
 }
 export interface MapStatus {
   cameraState: CameraState;
-  markers?: GeoNFT[];
+  markers?: Partial<GeoNFT>[];
   showUser: boolean;
   userLocation?: LngLat;
   changeCameraState: boolean;
+  newNft?: boolean;
 }
 
 export interface ImageMarker {
@@ -58,6 +59,7 @@ export class MapHelperService {
     this.mapStatusSubject.next({
       cameraState: CameraState.SELECT,
       showUser: false,
+      newNft: false,
       changeCameraState: true,
       markers: []
     });
@@ -70,6 +72,7 @@ export class MapHelperService {
         cameraState: CameraState.NEARBY,
         showUser: true,
         markers: imageMarkers,
+      newNft: false,
         userLocation: new LngLat(userLocation.longitude, userLocation.latitude),
         changeCameraState: true
       });
@@ -81,6 +84,18 @@ export class MapHelperService {
       cameraState: CameraState.SINGLE,
       showUser: false,
       markers: [imageMarker],
+      newNft: false,
+      userLocation: this.mapStatusSubject.getValue().userLocation,
+      changeCameraState: true
+    });
+  }
+
+  setSingleNewNftMarker(): void {
+    this.mapStatusSubject.next({
+      cameraState: CameraState.SINGLE,
+      showUser: false,
+      markers: [],
+      newNft: true,
       userLocation: this.mapStatusSubject.getValue().userLocation,
       changeCameraState: true
     });

@@ -1,6 +1,9 @@
 ::ng-deep .mat-button-toggle-standalone.mat-button-toggle-appearance-standard,
 .mat-button-toggle-group-appearance-standard {
   border-radius: 25px;
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 ::ng-deep .mat-calendar {
   display: block;
@@ -23,8 +26,9 @@
   bottom: 50px;
 }
 .middle {
-  width: 208px;
+  width: 90%;
   border: none;
+  display: flex;
   overflow: hidden;
 }
 

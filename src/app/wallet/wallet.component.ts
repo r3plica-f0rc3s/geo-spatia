@@ -18,7 +18,7 @@ export class WalletComponent implements OnInit {
   walletInfo: WalletInfo;
   enableSales: boolean;
   isAdmin: boolean;
-  ownedNFTs$ = this.contractService.getOwnedNFTs$().pipe(tap(x => console.log('owned nfts', x)));
+  ownedNFTs$ = this.contractService.getOwnedNFTs$();
   nftsWithBids = [];
   nftsWithBids$ = this.contractService.getNftsWithMyBids$().pipe(tap(x => console.log('nfts with bids', x)));
   constructor(

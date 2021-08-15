@@ -1,21 +1,36 @@
 :host {
-    outline: none;
+  outline: none;
 }
 ::ng-deep .mat-button-toggle-group {
-    border: none;
+  border: none;
 }
 input {
-    background-color: #424242;
-    border-top-left-radius: 25px;
-    border-bottom-left-radius: 25px;
-    border-top-right-radius: 25px;
-    border-bottom-right-radius: 25px;
+  background-color: #424242;
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+  height: 48px;
+  border: none;
+  width: 100%;
+  min-width: 249px;
+  color: white;
+  letter-spacing: 1px;
+  padding: 0 12px;
+  &:active &:focus {
+    border: none;
+    outline: none;
+  }
+  &:focus-visible {
+      border: none;
+      outline: none;
+  }
 }
 
 .toggle {
-    width: 40px;
-    background-color: #6F1C92;
-    border: none;
-    font-weight: bold;
-    outline: none;
+  width: 40px;
+  background-color: #6f1c92;
+  border: none;
+  font-weight: bold;
+  outline: none;
 }

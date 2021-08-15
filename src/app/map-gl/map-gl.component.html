@@ -26,6 +26,9 @@
     <app-nft-grid-item [small]="true" [nftId]="marker.id"></app-nft-grid-item>
     <!-- </div> -->
   </mgl-marker>
+  <mgl-marker *ngIf="newNft">
+    <span>Your new NFT</span>
+  </mgl-marker>
 </mgl-map>
 <div *ngIf="selectionControls" class="selection-controls">
   <app-selection-controls></app-selection-controls>

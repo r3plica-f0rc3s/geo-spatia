@@ -25,12 +25,10 @@ export class DatePickerComponent implements OnInit {
   }
 
   timeChanged(event: Date): void {
-    console.log(event);
     const hours = event.getHours();
     const minutes = event.getMinutes();
     this.currentDate.setHours(hours);
     this.currentDate.setMinutes(minutes);
-    console.log(this.currentDate.getTime());
   }
 
 }

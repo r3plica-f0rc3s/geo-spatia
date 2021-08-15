@@ -55,6 +55,8 @@ import { SelectLocationComponent } from './select-location/select-location.compo
 import { SelectionControlsComponent } from './ux-components/selection-controls/selection-controls.component';
 import { InputComponent } from './ux-components/input/input.component';
 import { NgxFileDropModule } from 'ngx-file-drop';
+import { FormFieldComponent } from './ux-components/form-field/form-field.component';
+import { EmptyNftSvgComponent } from './ux-components/empty-nft-svg/empty-nft-svg.component';
 
 
 @NgModule({
@@ -85,6 +87,8 @@ import { NgxFileDropModule } from 'ngx-file-drop';
     SelectLocationComponent,
     SelectionControlsComponent,
     InputComponent,
+    FormFieldComponent,
+    EmptyNftSvgComponent,
   ],
   imports: [
     BrowserModule,
