@@ -139,13 +139,13 @@ export interface CreateNft {
   location: LngLat;
   svg: string;
   price: string;
-  tillDate: string;
+  tillDate: Date;
 }
 
 export type TransactionEventUnion = TransactionResultEvent | TransactionStartedEvent;
 @Injectable()
 export class ContractService {
-  contractAddress = '0x0b3d371B10ED574ADdc5901DDEEb4060053063c8';
+  contractAddress = '0x9C7216f80e73F1CBAa97E801D79Ad87DE615035F';
   blockNumber = 13644397;
   private loggedSubject = new BehaviorSubject<boolean>(false);
   logged$ = this.loggedSubject.asObservable();
@@ -231,7 +231,6 @@ export class ContractService {
       console.log('selected address', this.selectedAddress);
 
       await this.loadWalletInfo();
-      await this.loadContractOwnerAddress();
       await this.loadPassedEvents();
       this.setEvents();
       this.initializing = false;
@@ -364,13 +363,19 @@ export class ContractService {
   private async loadWalletInfo(): Promise<void> {
     return new Promise((resolve, reject) => {
       const address = this.wallet.selectedAddress;
-      this.currentWeb3.eth
-        .getBalance(this.selectedAddress)
-        .then((balance) => {
+      Promise.all(
+        [
+          this.currentWeb3.eth
+          .getBalance(this.selectedAddress),
+          this.loadContractOwnerAddress()
+        ]
+      )
+        .then(([balance]) => {
           const displayBalance = this.currentWeb3.utils.fromWei(balance, 'ether');
           this.walletInfoSubject.next({
             address,
             balance: displayBalance,
+            isContractOwner: this.contractOwnerAddress.toLowerCase() === this.contractOwnerAddress.toLowerCase()
           });
           resolve();
         }, (err) => reject(err));
@@ -634,7 +639,6 @@ export class ContractService {
           (x.saleTime.getTime() > Date.now()) && x.hasUserBids && !x.owner);
       })
     );
-
   }
 
   getNftsToRetrieve$(): Observable<GeoNFT[]> {
@@ -647,9 +651,9 @@ export class ContractService {
 
   createNft(nft: CreateNft): void {
     const transaction = this.contract.methods.CreateNew(
-      [[nft.name, `${nft.location.lng},${nft.location.lat}`, 1, this.oneToWei(String(nft.price)), 1]],
-      ['%3Csvg%20viewBox%3D%220%200%2090%2090%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%25%22%20height%3D%22100%25%22%3E%3Cmask%20id%3D%22mask__ring%22%20maskUnits%3D%22userSpaceOnUse%22%20x%3D%220%22%20y%3D%220%22%20width%3D%2290%22%20height%3D%2290%22%3E%3Crect%20width%3D%2290%22%20height%3D%2290%22%20rx%3D%22180%22%20fill%3D%22white%22%3E%3C%2Frect%3E%3C%2Fmask%3E%3Cg%20mask%3D%22url%28%23mask__ring%29%22%3E%3Cpath%20d%3D%22M0%200h90v45H0z%22%20fill%3D%22%23ffc978%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M0%2045h90v45H0z%22%20fill%3D%22%23c9c987%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M83%2045a38%2038%200%2000-76%200h76z%22%20fill%3D%22%23c9c987%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M83%2045a38%2038%200%2001-76%200h76z%22%20fill%3D%22%23d1a664%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M77%2045a32%2032%200%2010-64%200h64z%22%20fill%3D%22%23d1a664%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M77%2045a32%2032%200%2011-64%200h64z%22%20fill%3D%22%23c27b57%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M71%2045a26%2026%200%2000-52%200h52z%22%20fill%3D%22%23c27b57%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M71%2045a26%2026%200%2001-52%200h52z%22%20fill%3D%22%23ffc978%22%3E%3C%2Fpath%3E%3Ccircle%20cx%3D%2245%22%20cy%3D%2245%22%20r%3D%2223%22%20fill%3D%22%23ffe7bf%22%3E%3C%2Fcircle%3E%3C%2Fg%3E%3C%2Fsvg%3E'],
-      [3600]).send({ from: this.selectedAddress });
+      [[nft.name, `${nft.location.lat},${nft.location.lng}`, 1, this.oneToWei(String(nft.price)), 1]],
+      [encodeURIComponent(nft.svg)],
+      [Math.floor((nft.tillDate.getTime() - Date.now()) / 1000)]).send({ from: this.selectedAddress });
     this.listenToTransaction(transaction);
   }
 

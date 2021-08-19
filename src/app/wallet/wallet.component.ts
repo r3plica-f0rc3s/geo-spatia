@@ -33,7 +33,6 @@ export class WalletComponent implements OnInit {
     this.contractService.walletInfo$.pipe(
       filter(x => !!x),
       tap(walletInfo => this.walletInfo = walletInfo),
-      tap(walletInfo => this.isAdmin = walletInfo.isContractOwner),
       switchMap(walletInfo => this.priceConverter.convertOneToUSDT(Number(walletInfo.balance)))
     ).subscribe((convertedBalance: number) => {
       this.convertedBalance = convertedBalance.toFixed(2);

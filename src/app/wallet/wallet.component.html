@@ -42,7 +42,7 @@
   <div class="description-wallet">
     <div class="badges">
       <mat-chip-list>
-        <mat-chip *ngIf="isAdmin">Contract owner</mat-chip>
+        <mat-chip *ngIf="(contractService.walletInfo$ | async)?.isContractOwner">Contract owner</mat-chip>
       </mat-chip-list>
     </div>
     <div>

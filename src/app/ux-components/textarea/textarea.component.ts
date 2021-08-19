@@ -12,7 +12,6 @@ import { Component, OnInit, ChangeDetectionStrategy, Input, forwardRef } from '@
   }]
 })
 export class TextareaComponent implements ControlValueAccessor {
-  @Input()
   public value: string = null;
   @Input()
   public cdkAutosizeMinRows: string;
@@ -28,15 +27,18 @@ export class TextareaComponent implements ControlValueAccessor {
   disabled = false;
   onChange;
   onTouched = () => {};
-  updateChanges() {
+
+  updateChanges(): void {
     if (this.onChange) {
       this.onChange(this.value);
     }
   }
+
   writeValue(value: any): void {
     this.value = value;
     this.updateChanges();
   }
+
   registerOnChange(fn: any): void {
     this.onChange = fn;
   }
