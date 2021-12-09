@@ -1,5 +1,7 @@
 # GeoSpatia
 
+the project requires you to connect your Metamask to Harmony.ONE Testnet network - https://docs.harmony.one/home/network/wallets/browser-extensions-wallets/metamask-wallet. 
+
 ![Screenshot 1](https://cloud.ipv8.pl/s/RtwoRrnGekqWzYY/preview)
 ![Screenshot 2](https://cloud.ipv8.pl/s/f288fLfngLWtQgj/preview)
 
